@@ -8,12 +8,12 @@ Operator reference for running Pocora as a multi-tenant service for many familie
 
 ## Deployment Modes
 
-| Mode        | Who hosts the hub | Platform admin needed |
-| ----------- | ----------------- | --------------------- |
-| Self-hosted | The family        | No                    |
-| Platform    | The operator      | Yes                   |
+| Mode        | Who hosts the hub | Platform supervisor needed |
+| ----------- | ----------------- | -------------------------- |
+| Self-hosted | The family        | No                         |
+| Platform    | The operator      | Yes                        |
 
-Both modes use the same hub codebase. Platform mode enables multi-tenancy and the admin panel. Self-hosted families bypass this layer entirely.
+Both modes use the same hub codebase. Platform mode enables multi-tenancy and the supervisor panel. Self-hosted families bypass this layer entirely.
 
 ---
 
@@ -21,7 +21,7 @@ Both modes use the same hub codebase. Platform mode enables multi-tenancy and th
 
 ```
 ┌─────────────────────────┐
-│   PLATFORM ADMIN (web)  │
+│   PLATFORM SUPERVISOR   │
 │   families              │
 │   subscriptions         │
 │   shared presets        │
@@ -45,7 +45,7 @@ Each family is fully isolated — data, devices, rules, and schedules are privat
 
 ---
 
-## Admin Capabilities
+## Supervisor Capabilities
 
 ### Family Management
 
@@ -66,10 +66,10 @@ Platform-wide presets are maintained centrally and available to all families:
 
 | Preset        | Maintained by  |
 | ------------- | -------------- |
-| Iran internet | Platform admin |
-| aparat.com    | Platform admin |
-| Educational   | Platform admin |
-| Social media  | Platform admin |
+| Iran internet | Platform supervisor |
+| aparat.com    | Platform supervisor |
+| Educational   | Platform supervisor |
+| Social media  | Platform supervisor |
 
 Families may use shared presets or define custom rules on top.
 
@@ -96,4 +96,4 @@ Plans are fully configurable — these are examples, not fixed values.
 
 ## Data Isolation
 
-Each family's data is stored in a separate schema or namespace in Postgres. The platform admin can view aggregate metrics but has no access to individual family telemetry or child device data.
+Each family's data is stored in a separate schema or namespace in Postgres. The platform supervisor can view aggregate metrics but has no access to individual family telemetry or child device data.

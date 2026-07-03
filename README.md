@@ -4,7 +4,7 @@ A self-hosted parental supervision app — private, no third-party services, and
 
 Parent and child apps are available for both **Android and iOS**, free of charge.
 
-> Technical design: [`STRUCTURE.md`](./STRUCTURE.md) · Platform / admin layer: [`PLATFORM.md`](./PLATFORM.md)
+> Technical design: [`STRUCTURE.md`](./STRUCTURE.md) · Platform / supervisor layer: [`PLATFORM.md`](./PLATFORM.md)
 
 ---
 
