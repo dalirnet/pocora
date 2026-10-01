@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Months, days, durations, sizes and dates. Used through ui/Format.kt. -->
+    <string name="month_1">فروردین</string>
+    <string name="month_2">اردیبهشت</string>
+    <string name="month_3">خرداد</string>
+    <string name="month_4">تیر</string>
+    <string name="month_5">مرداد</string>
+    <string name="month_6">شهریور</string>
+    <string name="month_7">مهر</string>
+    <string name="month_8">آبان</string>
+    <string name="month_9">آذر</string>
+    <string name="month_10">دی</string>
+    <string name="month_11">بهمن</string>
+    <string name="month_12">اسفند</string>
+    <string name="day_0">شنبه</string>
+    <string name="day_1">یکشنبه</string>
+    <string name="day_2">دوشنبه</string>
+    <string name="day_3">سه‌شنبه</string>
+    <string name="day_4">چهارشنبه</string>
+    <string name="day_5">پنجشنبه</string>
+    <string name="day_6">جمعه</string>
+    <string name="day_date_0">شنبه</string>
+    <string name="day_date_1">یکشنبه</string>
+    <string name="day_date_2">دوشنبه</string>
+    <string name="day_date_3">سه‌شنبه</string>
+    <string name="day_date_4">چهارشنبه</string>
+    <string name="day_date_5">پنجشنبه</string>
+    <string name="day_date_6">جمعه</string>
+    <string name="day_short_0">ش</string>
+    <string name="day_short_1">ی</string>
+    <string name="day_short_2">د</string>
+    <string name="day_short_3">س</string>
+    <string name="day_short_4">چ</string>
+    <string name="day_short_5">پ</string>
+    <string name="day_short_6">ج</string>
+    <string name="duration_minutes">%1$d دقیقه</string>
+    <string name="duration_hours">%1$d ساعت</string>
+    <string name="duration_hours_short">%1$s ساعت</string>
+    <string name="duration_hours_minutes">%1$d ساعت و %2$d دقیقه</string>
+    <string name="size_under_megabyte">کمتر از ۱ مگ</string>
+    <string name="size_megabytes">%1$s مگ</string>
+    <string name="size_gigabytes">%1$s گیگ</string>
+    <string name="date_day_month">%1$s %2$s</string>
+    <string name="date_weekday_day_month">%1$s %2$s</string>
+    <string name="date_range_same_month">%1$s تا %2$s %3$s</string>
+    <string name="date_range">%1$s تا %2$s</string>
+    <string name="today">امروز</string>
+</resources>
