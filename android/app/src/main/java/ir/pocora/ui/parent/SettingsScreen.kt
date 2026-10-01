@@ -1,0 +1,183 @@
+package ir.pocora.ui.parent
+
+import android.Manifest
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BatteryChargingFull
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.PersonRemove
+import androidx.compose.material.icons.filled.WarningAmber
+import androidx.compose.material.icons.filled.Wifi
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.LifecycleResumeEffect
+import ir.pocora.PocoraApp
+import ir.pocora.R
+import ir.pocora.config.Look
+import ir.pocora.model.Peer
+import ir.pocora.ui.AppColors
+import ir.pocora.ui.Dimens
+import ir.pocora.ui.LocalPalette
+import ir.pocora.ui.common.LanguageAndLook
+import ir.pocora.ui.common.Permissions
+import ir.pocora.ui.component.Avatar
+import ir.pocora.ui.component.ButtonPair
+import ir.pocora.ui.component.Card
+import ir.pocora.ui.component.CardTitle
+import ir.pocora.ui.component.IconTile
+import ir.pocora.ui.component.Screen
+import ir.pocora.ui.component.SectionTitle
+import ir.pocora.ui.component.Sheet
+import ir.pocora.ui.component.SmallButton
+import ir.pocora.ui.component.SwitchRow
+
+// Children, notifications, language and theme.
+@Composable
+fun SettingsScreen(
+    children: List<Peer>,
+    onForget: (Peer) -> Unit,
+    onBack: (() -> Unit)?,
+    onLanguage: (String) -> Unit,
+    onLook: (Look) -> Unit,
+    bottom: (@Composable () -> Unit)? = null,
+) {
+    val palette = LocalPalette.current
+    val context = LocalContext.current
+    val config = (context.applicationContext as PocoraApp).configStore
+    var removing by remember { mutableStateOf<Peer?>(null) }
+    var home by remember { mutableStateOf(config.notifyHome) }
+    var alerts by remember { mutableStateOf(config.notifyAlerts) }
+    var suggestions by remember { mutableStateOf(config.notifySuggestions) }
+    var checks by remember { mutableIntStateOf(0) }
+    LifecycleResumeEffect(Unit) {
+        checks++
+        onPauseOrDispose { }
+    }
+    val canNotify = remember(checks) { Permissions.canNotify(context) }
+    val exempt = remember(checks) { Permissions.isBatteryExempt(context) }
+    val askNotifications = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { checks++ }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Screen(title = stringResource(R.string.settings), onBack = onBack, bottom = bottom) {
+            if (children.isNotEmpty()) {
+                SectionTitle(stringResource(R.string.children))
+                Card {
+                    for (child in children) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(Dimens.row),
+                        ) {
+                            Avatar(child.name, 40.dp)
+                            Column(modifier = Modifier.weight(1f)) {
+                                CardTitle(child.name)
+                                // A phone's name is Latin; the Persian font would turn its digits Persian.
+                                Text(
+                                    text = child.deviceName,
+                                    color = palette.muted,
+                                    fontSize = Dimens.label,
+                                    fontFamily = FontFamily.Default,
+                                )
+                            }
+                            SmallButton(text = stringResource(R.string.remove), onClick = { removing = child })
+                        }
+                    }
+                }
+            }
+
+            SectionTitle(stringResource(R.string.notifications))
+            Card {
+                PermissionRow(
+                    Icons.Filled.Notifications,
+                    AppColors.pink,
+                    stringResource(R.string.show_notifications),
+                    canNotify,
+                ) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        askNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    } else {
+                        context.startActivity(Permissions.notificationSettingsIntent(context))
+                    }
+                }
+                SwitchRow(stringResource(R.string.notify_when_connects), home, {
+                    home = it
+                    config.notifyHome = it
+                }, enabled = canNotify, icon = Icons.Filled.Wifi, iconColor = AppColors.teal)
+                SwitchRow(stringResource(R.string.alerts), alerts, {
+                    alerts = it
+                    config.notifyAlerts = it
+                }, enabled = canNotify, icon = Icons.Filled.WarningAmber, iconColor = AppColors.orange)
+                SwitchRow(stringResource(R.string.schedule_suggestions), suggestions, {
+                    suggestions = it
+                    config.notifySuggestions = it
+                }, enabled = canNotify, icon = Icons.Filled.CalendarMonth, iconColor = AppColors.violet)
+                PermissionRow(
+                    Icons.Filled.BatteryChargingFull,
+                    AppColors.green,
+                    stringResource(R.string.run_in_background),
+                    exempt,
+                ) {
+                    context.startActivity(Permissions.batteryExemptionIntent(context))
+                }
+            }
+
+            LanguageAndLook(onLanguage, onLook)
+        }
+        removing?.let { child ->
+            Sheet(
+                onDismiss = { removing = null },
+                title = stringResource(R.string.remove_child, child.name),
+                icon = Icons.Filled.PersonRemove,
+                color = AppColors.orange,
+                subtitle = stringResource(R.string.remove_child_text, child.name),
+            ) {
+                ButtonPair(stringResource(R.string.cancel), { removing = null }, stringResource(R.string.remove), {
+                    removing = null
+                    onForget(child)
+                }, danger = true)
+            }
+        }
+    }
+}
+
+// A permission: "On" once granted, otherwise a button that asks for it.
+@Composable
+private fun PermissionRow(
+    icon: ImageVector,
+    color: Color,
+    title: String,
+    granted: Boolean,
+    onAllow: () -> Unit,
+) {
+    val palette = LocalPalette.current
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Dimens.row)) {
+        IconTile(icon, color, Dimens.rowIcon)
+        Text(text = title, color = palette.text, fontSize = Dimens.body, modifier = Modifier.weight(1f))
+        if (granted) {
+            Text(text = stringResource(R.string.granted), color = palette.done, fontSize = 14.sp)
+        } else {
+            SmallButton(text = stringResource(R.string.allow), onClick = onAllow, filled = true)
+        }
+    }
+}
