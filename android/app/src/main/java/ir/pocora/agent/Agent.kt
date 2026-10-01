@@ -54,6 +54,9 @@ class Agent(
 ) {
     companion object {
         private const val TAG = "Agent"
+
+        // How long an answer to the parent waits for a change to be applied on the agent's thread.
+        private const val APPLY_TIMEOUT_MILLISECONDS = 10_000L
         private const val TICK_MILLISECONDS = 60_000L
         private const val STOP_GAP_MILLISECONDS = 3 * 60_000L
         private const val WATCH_SESSION_MILLISECONDS = 30 * 60_000L
@@ -371,7 +374,7 @@ class Agent(
     ) {
         app.peerLink.remember(parent.id, InetSocketAddress(connection.peerAddress, parent.port ?: Protocol.PARENT_PORT))
         app.configStore.lastParentContact = clock.now()
-        when (val message = connection.receive(Protocol.PAIR_REQUEST_TIMEOUT_MILLISECONDS)) {
+        when (val message = connection.receive(Protocol.REQUEST_TIMEOUT_MILLISECONDS)) {
             is Read -> {
                 clock.setFromParent(message.time)
                 connection.send(Applied(snapshot(fresh = true)))
@@ -414,7 +417,7 @@ class Agent(
                 done.countDown()
             }
         }
-        done.await(Protocol.HANDSHAKE_TIMEOUT_MILLISECONDS.toLong(), TimeUnit.MILLISECONDS)
+        done.await(APPLY_TIMEOUT_MILLISECONDS, TimeUnit.MILLISECONDS)
     }
 
     // --- The child's own actions ---

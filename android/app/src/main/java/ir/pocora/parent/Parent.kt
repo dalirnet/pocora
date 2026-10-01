@@ -71,7 +71,7 @@ class Parent(
         connection: Connection,
         child: Peer,
     ) {
-        val sync = connection.receive(Protocol.PAIR_REQUEST_TIMEOUT_MILLISECONDS) as? Sync
+        val sync = connection.receive(Protocol.REQUEST_TIMEOUT_MILLISECONDS) as? Sync
         if (sync == null || sync.snapshot.childId != child.id) {
             FileLogger.w(TAG, "Unexpected message from ${child.name}")
             return

@@ -40,7 +40,7 @@ class PairingHost(
 
     // Runs on the connection's own thread and keeps it until the parent has answered.
     fun handle(connection: Connection) {
-        val request = connection.receive(Protocol.PAIR_REQUEST_TIMEOUT_MILLISECONDS) as? PairRequest ?: return
+        val request = connection.receive(Protocol.REQUEST_TIMEOUT_MILLISECONDS) as? PairRequest ?: return
         val decisions = ArrayBlockingQueue<Decision>(1)
         synchronized(lock) {
             // One request at a time. A second phone asking meanwhile is turned away.

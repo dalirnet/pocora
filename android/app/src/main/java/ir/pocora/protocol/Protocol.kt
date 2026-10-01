@@ -16,7 +16,9 @@ object Protocol {
     const val CONNECT_TIMEOUT_MILLISECONDS = 5_000
     const val HANDSHAKE_TIMEOUT_MILLISECONDS = 10_000
     const val DISCOVERY_TIMEOUT_MILLISECONDS = 4_000L
-    const val PAIR_REQUEST_TIMEOUT_MILLISECONDS = 10_000
+
+    // How long a new connection waits for its first message.
+    const val REQUEST_TIMEOUT_MILLISECONDS = 10_000
 
     // How long the child waits for the parent to tap Accept.
     const val PAIR_ANSWER_TIMEOUT_MILLISECONDS = 180_000
