@@ -94,9 +94,7 @@ The apps are on the [Releases](https://github.com/dalirnet/pocora/releases) page
 - **Every push** runs `.github/workflows/build.yml`: presets up to date, tests, debug APKs kept as a run artifact for 14 days.
 - **A version tag** runs `.github/workflows/release.yml`: tests, signed and minified APKs, and a GitHub Release with generated notes.
 
-```bash
-git tag v0.2.0 && git push origin v0.2.0
-```
+To release, run `./publish.sh` from the repo root with a clean tree. It asks for a patch, minor or major bump (or a rebuild of the current version), writes it into `android/version.properties` with the next `versionCode`, commits it, merges into `main`, and pushes the `vX.Y.Z` tag that starts the release. A rebuild replaces the published release and tag, so it asks you to type the tag to confirm.
 
 Release signing needs four repository secrets, set once. Keep the keystore safe: every future release must be signed with it, or Android refuses to update the installed app.
 
