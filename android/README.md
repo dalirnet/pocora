@@ -32,6 +32,8 @@ make run ROLE=parent
 make run-both      # both apps, each on its own phone
 make pair          # pair the two virtual phones, in place of scanning the code
 
+make publish       # cut a release: bump the version, merge to main, tag; GitHub builds it
+
 make clean         # remove build output and caches
 ```
 
@@ -49,6 +51,7 @@ Every target runs one script from `scripts/`. The scripts share `scripts/common.
 | `compile.sh` | Builds both apps, debug or release |
 | `run.sh` | Builds, installs and opens one app or both |
 | `pair.sh` | Pairs the two virtual phones without the camera |
+| `publish.sh` | Bumps the version, merges to main and pushes the tag that starts the GitHub release |
 | `clean.sh` | Removes build output and caches |
 
 ## Virtual phones

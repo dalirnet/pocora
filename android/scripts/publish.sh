@@ -1,7 +1,6 @@
-#!/usr/bin/env bash
-set -euo pipefail
-
-# Cut a release: bump the version in android/version.properties, commit it, merge to main and tag it.
+#!/bin/bash
+#
+# Cut a release: bump the version in version.properties, commit it, merge to main and tag it.
 # Pushing the tag is what starts release.yml, which builds both apps signed and minified and publishes
 # pocora-parent-<version>.apk and pocora-child-<version>.apk as a GitHub Release.
 #
@@ -9,13 +8,19 @@ set -euo pipefail
 # refuses a tag that does not match it. versionCode goes up by one with every release, since Android
 # installs an update only over a lower one.
 #
-# Usage: ./publish.sh    # interactive: bump the version, or rebuild the current one
+# Usage:  make publish    # interactive: bump the version, or rebuild the current one
+
+. "$(dirname "$0")/common.sh"
+
+# From the repo root: checking out main can remove android/ for a moment, when main does not have it yet,
+# and a script standing inside it would lose its working directory.
+cd "$(git rev-parse --show-toplevel)"
 
 REMOTE="origin"
 RELEASE_BRANCH="main"
 VERSION_FILE="android/version.properties"
 
-die() { echo "Error: $*" >&2; exit 1; }
+die() { fail "$@"; }
 confirm() { read -rp "$1 [y/N]: " r; [[ "$r" == [yY] ]] || { echo "Aborted."; exit 0; }; }
 confirm_text() { read -rp "$1: " r; [[ "$r" == "$2" ]] || die "input did not match '$2' — aborted"; }
 
@@ -31,7 +36,7 @@ set_version() {
 
 # Preflight: the tools, the right directory, and nothing uncommitted to sweep into the bump.
 command -v git >/dev/null 2>&1        || die "git is required"
-[[ -f "$VERSION_FILE" && -f publish.sh ]] || die "run from the pocora repo root"
+[[ -f "$VERSION_FILE" ]]              || die "$VERSION_FILE not found"
 [[ -z "$(git status --porcelain)" ]]  || die "working tree is not clean"
 
 current="$(read_property versionName)"

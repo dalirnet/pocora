@@ -26,6 +26,8 @@ help:
 	@echo "  make run-both      the same for both apps"
 	@echo "                     add SERIAL=<serial> to use another device"
 	@echo "  make pair          pair the two virtual phones, in place of scanning the code"
+	@echo "Release"
+	@echo "  make publish       bump the version, merge to main and tag it; GitHub builds the release"
 	@echo "Clean"
 	@echo "  make clean         remove build output and caches"
 
@@ -84,6 +86,13 @@ run-both:
 .PHONY: pair
 pair:
 	@bash scripts/pair.sh
+
+# --- Release ---
+
+# Interactive: it asks which version to release.
+.PHONY: publish
+publish:
+	@bash scripts/publish.sh
 
 # --- Clean ---
 

@@ -13,7 +13,7 @@ android {
     defaultConfig {
         minSdk = 28
         targetSdk = 35
-        // From android/version.properties, which publish.sh writes for each release.
+        // From android/version.properties, which make publish writes for each release.
         val release = Properties().apply { rootProject.file("version.properties").inputStream().use { load(it) } }
         versionCode = release.getProperty("versionCode").toInt()
         versionName = release.getProperty("versionName")

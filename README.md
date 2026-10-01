@@ -58,8 +58,9 @@ On top of the preset the parent changes single days, for this week or every week
 preset/         presets and app groups as markdown, the source of truth (make presets writes the app's JSON)
 assets/         source artwork: fonts/ (Dana), icon/ (the app icon as SVG)
 android/        one Gradle project that builds both apps
-  Makefile      check, image, phones, presets, format, test, build, release, run, pair, clean
-  scripts/      one shell script per Makefile target
+  Makefile      check, image, phones, presets, format, test, build, release, run, pair, publish, clean
+  scripts/      one shell script per Makefile target, publish.sh included
+  version.properties  the released version, written by make publish
   app/src/main/java/ir/pocora/
     ui/         screens and drawn components; colours in AppColors, sizes in Dimens
     agent/      the child's phone at work: clock, rules, data per mark, events, sync
@@ -94,7 +95,7 @@ The apps are on the [Releases](https://github.com/dalirnet/pocora/releases) page
 - **Every push** runs `.github/workflows/build.yml`: presets up to date, tests, debug APKs kept as a run artifact for 14 days.
 - **A version tag** runs `.github/workflows/release.yml`: tests, signed and minified APKs, and a GitHub Release with generated notes.
 
-To release, run `./publish.sh` from the repo root with a clean tree. It asks for a patch, minor or major bump (or a rebuild of the current version), writes it into `android/version.properties` with the next `versionCode`, commits it, merges into `main`, and pushes the `vX.Y.Z` tag that starts the release. A rebuild replaces the published release and tag, so it asks you to type the tag to confirm.
+To release, run `make publish` in `android/` with a clean tree. It asks for a patch, minor or major bump (or a rebuild of the current version), writes it into `android/version.properties` with the next `versionCode`, commits it, merges into `main`, and pushes the `vX.Y.Z` tag that starts the release. A rebuild replaces the published release and tag, so it asks you to type the tag to confirm.
 
 Release signing needs four repository secrets, set once. Keep the keystore safe: every future release must be signed with it, or Android refuses to update the installed app.
 

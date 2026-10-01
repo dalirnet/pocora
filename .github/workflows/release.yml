@@ -1,5 +1,5 @@
 # A version tag, such as v1.2.0, builds both apps signed and minified and publishes them as a GitHub Release.
-# publish.sh makes the tag, after writing the same version into android/version.properties.
+# make publish (android/scripts/publish.sh) makes the tag, after writing the same version into android/version.properties.
 #
 # Needs four repository secrets:
 #   POCORA_KEYSTORE_BASE64    the release keystore, base64-encoded
