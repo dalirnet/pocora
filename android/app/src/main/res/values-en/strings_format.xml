@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Months, days, durations, sizes and dates. Used through ui/Format.kt. -->
+    <string name="month_1">Farvardin</string>
+    <string name="month_2">Ordibehesht</string>
+    <string name="month_3">Khordad</string>
+    <string name="month_4">Tir</string>
+    <string name="month_5">Mordad</string>
+    <string name="month_6">Shahrivar</string>
+    <string name="month_7">Mehr</string>
+    <string name="month_8">Aban</string>
+    <string name="month_9">Azar</string>
+    <string name="month_10">Dey</string>
+    <string name="month_11">Bahman</string>
+    <string name="month_12">Esfand</string>
+    <string name="day_0">Saturday</string>
+    <string name="day_1">Sunday</string>
+    <string name="day_2">Monday</string>
+    <string name="day_3">Tuesday</string>
+    <string name="day_4">Wednesday</string>
+    <string name="day_5">Thursday</string>
+    <string name="day_6">Friday</string>
+    <string name="day_date_0">Sat</string>
+    <string name="day_date_1">Sun</string>
+    <string name="day_date_2">Mon</string>
+    <string name="day_date_3">Tue</string>
+    <string name="day_date_4">Wed</string>
+    <string name="day_date_5">Thu</string>
+    <string name="day_date_6">Fri</string>
+    <string name="day_short_0">Sa</string>
+    <string name="day_short_1">Su</string>
+    <string name="day_short_2">Mo</string>
+    <string name="day_short_3">Tu</string>
+    <string name="day_short_4">We</string>
+    <string name="day_short_5">Th</string>
+    <string name="day_short_6">Fr</string>
+    <string name="duration_minutes">%1$dm</string>
+    <string name="duration_hours">%1$dh</string>
+    <string name="duration_hours_short">%1$sh</string>
+    <string name="duration_hours_minutes">%1$dh %2$dm</string>
+    <string name="size_under_megabyte">under 1 MB</string>
+    <string name="size_megabytes">%1$s MB</string>
+    <string name="size_gigabytes">%1$s GB</string>
+    <string name="date_day_month">%1$s %2$s</string>
+    <string name="date_weekday_day_month">%1$s %2$s</string>
+    <string name="date_range_same_month">%1$s - %2$s %3$s</string>
+    <string name="date_range">%1$s to %2$s</string>
+    <string name="today">Today</string>
+</resources>

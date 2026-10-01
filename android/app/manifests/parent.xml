@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Parent build only: the listener. It never declares VPN, usage or device admin access. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <service android:name=".service.ListenerService" android:exported="false" android:foregroundServiceType="specialUse">
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE" android:value="Parental supervision: receives the child's phone reports on the local network and raises alerts."/>
+        </service>
+    </application>
+</manifest>

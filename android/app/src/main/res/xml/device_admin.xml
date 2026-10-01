@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- No powers at all. Being an admin only means Pocora cannot be removed until this is turned off, and that is seen. -->
+<device-admin>
+    <uses-policies/>
+</device-admin>

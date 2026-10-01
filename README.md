@@ -1,94 +1,132 @@
 # Pocora
 
-A self-hosted parental supervision app for families in Iran. Private, no third-party services, and built to start conversations rather than silently enforce rules.
+Parental supervision for families in Iran. Two Android apps, one on the parent's phone and one on the child's, talk directly over the home Wi-Fi. No server, no account, nothing leaves the home. Persian by default, and English.
 
-Free and open source. Parents use the hub's dashboard, a PWA that installs to the phone's home screen or the desktop. The child agent is an **Android** app, since Android is what children in Iran carry.
+Pocora is not a lock. It turns what happens on the child's phone into moments for a conversation: "Aparat, 3 hours today" is a reason to talk, and so is a child turning Pocora off.
 
-> Technical design: [`STRUCTURE.md`](./STRUCTURE.md)
+> Presets: [`preset/`](./preset/README.md) · Android project: [`android/`](./android/README.md)
 
----
+## Principles
 
-## The Idea
+1. **No server.** The two apps talk only to each other, on the same Wi-Fi or a phone's hotspot.
+2. **No routing.** Pocora does not bypass the national filter. Its local VPN only cuts apps that must not have internet now.
+3. **No cage.** No root, no Device Owner. The child can turn Pocora off; the parent hears about it.
+4. **Observe always, enforce network only.** Usage is recorded at all times. Enforcement means cutting internet, nothing more.
 
-Most parental control tools act like silent walls. They block, punish, and report without the child ever understanding why.
+Made for children aged 8 to 16. Outside Iran, Google Family Link already does this job.
 
-Pocora creates **moments for conversation**.
-
-> The technology triggers the moment. The family handles it.
-
-"Aparat, 3 hours today" is a reason to sit down and talk. An app removal request is an invitation for the child to explain. A child who turns Pocora off is a conversation too.
-
-Pocora is not a lock. The child can turn it off. That is a visible choice, not a blocked one.
-
----
-
-## Who It's For
-
-**Families in Iran.**
-
-Outside Iran, tools like Google Family Link already cover parental supervision. Inside Iran they are unavailable or unreliable. Pocora fills that gap.
-
-Pocora does not bypass the national filter and does not route traffic anywhere. It filters and observes the internet that is already reachable, on the device itself. Nothing leaves the hub the family chose.
-
-Pocora assumes the family has decided the child uses domestic internet only. A parent who allows a VPN for filtered apps has already accepted that connection and does not need Pocora. For everyone else, a VPN appearing on the child's device is exactly the kind of moment Pocora exists to surface.
-
----
-
-## How It Works
-
-The parent installs the agent on the child's device once. No router changes, no factory reset.
+## How it works
 
 ```
-Agent runs in background → local VPN filters reachable internet
-        ↓
-Syncs app usage, traffic, and rules with the hub on interval
-        ↓
-Parent sees the timeline in the dashboard
+┌─────────────────────────────┐   sync every minute    ┌─────────────────────────────┐
+│ PARENT APP (parent's phone) │◄───────────────────────┤ CHILD APP (child's phone)   │
+│ schedule editor, alerts,    │                        │ local VPN, usage, events,   │
+│ last snapshot of each child ├───────────────────────►│ rules + 7 days of record    │
+└─────────────────────────────┘  changes, while open   └─────────────────────────────┘
+                  same Wi-Fi, mutual TLS, nothing queued, no server
 ```
 
-Everything is **blocked by default**. The parent draws a **timeline**: each block opens allowed apps and traffic for a time range. Inside a block, the hub expects the agent to be alive. If it goes silent, the parent knows.
+- **The child's phone is the source of truth.** It holds the rules and the last 7 days, and keeps enforcing them when no parent is around.
+- **The parent sees things when the phones meet**, usually in the evening. Away from the child, the parent app shows the last snapshot with its time.
+- **Changes need the child's phone in reach.** Nothing is queued; a change that gets no answer offers a retry.
+- **A family** can have two parents and many children. Each parent pairs with each child; parents never sync with each other.
 
----
+## Rules
 
-## What Parents See
+Each child has three settings, all picked from [presets](./preset/README.md):
 
-| View      | Detail                                                       |
-| --------- | ------------------------------------------------------------ |
-| Timeline  | Active and inactive periods drawn over the parent's schedule |
-| App usage | Every app, screen time and traffic, offline apps included    |
-| App list  | Every installed app with version and last used time          |
-| Signals   | VPN turned off, VPN app installed, watched app used, reboot  |
+| Setting | What it says |
+| --- | --- |
+| **Schedule** | When the internet is on. One week from Saturday, each day 48 half-hour marks, each **Allowed** or **Limited** (the default). Presets fit the Iranian year: school shifts, exams, Ramadan, summer. The app suggests the one for the time of year and the day before a holiday. |
+| **Apps** | Which apps have internet in an Allowed mark. Lists are built from groups (School, Games, Video, Messaging…), by age (Kids, Everyday, Teen) or purpose. Single apps can be always in or always out. System apps always have internet, VPN apps never. |
+| **Quota** | How much data the child may use: Light, Medium, High or No limit. Shown per hour, applied per half hour: when a half hour's share is used up, internet stops until the next one. The app also shows the most it can add up to in a month. |
 
-## What Parents Can Do
+On top of the preset the parent changes single days, for this week or every week, or with one tap: 30 more minutes, stop internet, allow internet. Apps can be marked **watched**: using one raises an alert.
 
-- Draw the **timeline**: time blocks with allowed apps and traffic presets
-- Set per-day **overrides** for holidays, exams, or sick days
-- Mark apps to **watch**: using one creates an alert
-- **Suggest app installs** from Google Play, Bazar, or Myket. Child confirms or ignores
-- **Request app removal**. Child confirms or ignores
+**Alerts** reach the parent as local notifications when the phones meet: Pocora stopped, VPN turned off, another VPN app, a VPN app installed, device admin off, a watched app used, a child missing for 7 days.
 
-Alerts are read in the dashboard. There is no push notification.
+## Connection and security
 
----
+- **Discovery:** both apps announce `_pocora._tcp` with Android's NSD, carrying only a random id and a port (parent 47601, child 47602). On a hotspot, where discovery is unreliable, the child tries the gateway address; with both apps on one phone, loopback.
+- **Pairing:** the parent app shows a QR code with its id, certificate fingerprint and port. The child scans it and asks; the parent accepts. Both keep the other's fingerprint. A leaked code pairs nothing without the parent's approval.
+- **Security:** every connection is TLS in both directions, each side pinned to the other's certificate fingerprint, kept in Android's Keystore. Another device on the Wi-Fi cannot read or change anything.
+- **Parent app password:** a 4-digit PIN, asked every time the app comes back to the screen, since the child may use the same phone. Only a salted hash is stored.
 
-## Components
+## Project
 
 ```
-┌─────────────────────────────────┐          ┌──────────────────────────────┐
-│           HUB SERVER            │          │  AGENT  (child's device)     │
-│  parent dashboard (PWA)         │          │                              │
-│  REST API                       │◄─────────┤  xray local VPN              │
-│  rule compiler (timeline→xray)  │  HTTPS   │  filters traffic on-device   │
-│  silence detection              │  on      │  reads app usage             │
-│  SQLite (rules + telemetry)     │  interval│                              │
-│  alerts (pull, no push)         │          │                              │
-└──────────────┬──────────────────┘          └──────────────────────────────┘
-               │ PWA, HTTPS / WS
-               ▼
-            PARENT
+preset/         presets and app groups as markdown, the source of truth (make presets writes the app's JSON)
+assets/         source artwork: fonts/ (Dana), icon/ (the app icon as SVG)
+android/        one Gradle project that builds both apps
+  Makefile      check, image, phones, presets, format, test, build, release, run, pair, publish, clean
+  scripts/      one shell script per Makefile target, publish.sh included
+  version.properties  the released version, written by make publish
+  app/src/main/java/ir/pocora/
+    ui/         screens and drawn components; colours in AppColors, sizes in Dimens
+    agent/      the child's phone at work: clock, rules, data per mark, events, sync
+    parent/     the parent's phone at work: snapshots, contact, alerts, actions
+    service/    agent, listener and tunnel services, notifications, receivers, tile
+    transport/  TLS, frames, discovery, pairing
+    protocol/   messages, pairing code, ports and timeouts
+    model/      schedule, apps, quota, events, snapshot, Iranian calendar
+    preset/     loading the shipped presets
+    config/     settings, language, password, this phone's identity, paired phones
+    debug/      file logger
 ```
 
-- **Hub**: serves the parent dashboard as a PWA, compiles the timeline into xray config, stores telemetry, detects silence, keeps alerts. Device traffic never passes through it.
-- **Agent**: native Android app. Runs xray as a local VPN, filters on-device, reports usage, syncs on interval.
+**Two apps, one codebase.** Product flavors `child` and `parent` differ only in application id, app name, a small manifest each, and one generated constant read through `Role.current`. Both can be installed side by side. The parent build never asks for VPN, usage or device-admin access.
 
-`CORA` = **C**lock · **O**versight · **R**oute · **A**pps. One module per concern.
+**Stack.** Kotlin only (no Java sources), Jetpack Compose with Material 3, kotlinx.serialization, the platform's TLS sockets with length-prefixed JSON, `NsdManager`, `VpnService` with no core, ML Kit to read QR codes and ZXing to draw them. No database: JSON files, SharedPreferences and the Keystore. Android 9 (API 28) and up.
+
+```bash
+cd android
+make check            # check this machine can build the project
+make test             # unit tests of both apps
+make build            # debug APKs
+make run ROLE=parent  # build, install and open one app (ROLE=child by default)
+```
+
+More, including virtual phones and pairing without a camera: [`android/README.md`](./android/README.md).
+
+## Download and releases
+
+The apps are on the [Releases](https://github.com/dalirnet/pocora/releases) page: `pocora-parent-<version>.apk` for the parent's phone and `pocora-child-<version>.apk` for the child's, with their SHA-256 sums.
+
+- **Every push** runs `.github/workflows/build.yml`: presets up to date, tests, debug APKs kept as a run artifact for 14 days.
+- **A version tag** runs `.github/workflows/release.yml`: tests, signed and minified APKs, and a GitHub Release with generated notes.
+
+To release, run `make publish` in `android/` with a clean tree. It asks for a patch, minor or major bump (or a rebuild of the current version), writes it into `android/version.properties` with the next `versionCode`, commits it, merges into `main`, and pushes the `vX.Y.Z` tag that starts the release. A rebuild replaces the published release and tag, so it asks you to type the tag to confirm.
+
+Release signing needs four repository secrets, set once. Keep the keystore safe: every future release must be signed with it, or Android refuses to update the installed app.
+
+```bash
+keytool -genkeypair -keystore pocora.jks -alias pocora -keyalg RSA -keysize 4096 -validity 10000
+base64 -i pocora.jks | gh secret set POCORA_KEYSTORE_BASE64
+gh secret set POCORA_KEYSTORE_PASSWORD
+gh secret set POCORA_KEY_ALIAS     # pocora
+gh secret set POCORA_KEY_PASSWORD
+```
+
+## Code style
+
+- ktlint, official Kotlin style, 4 spaces, lines up to 120. `make format` formats Kotlin, JSON and XML.
+- Names in full, never abbreviated; a constant with a measure names its unit: `SYNC_INTERVAL_MILLISECONDS`.
+- One file per concern. Nothing twice: a pattern used in two places becomes one shared function.
+- No text in code: every label is a string resource, Persian in `values/`, English in `values-en/`. No colour or size outside `AppColors` and `Dimens`.
+- Comments say why, not what.
+- Unit tests for plain logic, named `function_case`.
+
+## Limitations
+
+| Case | Result |
+| --- | --- |
+| App swiped away, force-stopped, phone rebooted | Always-on VPN brings it back; stops and reboots are logged |
+| Child turns Always-on VPN off | Internet is open, the parent gets an alert, usage is still recorded |
+| Child installs another VPN app | Refused while Always-on is on; installing it is an alert |
+| Offline apps | Cannot be blocked; their time is recorded |
+| Phones apart | Nothing is seen or changed until they meet; after 7 days the oldest record is gone |
+| Child clears Pocora's data | The record is lost; the child shows as missing |
+| Router isolates Wi-Fi devices | Use a phone's hotspot |
+| Parent has an iPhone | Not supported |
+
+A child who truly wants to get around Pocora probably will. That is a conversation worth having.

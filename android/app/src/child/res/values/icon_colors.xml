@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Pocora Child's icon and notification colour: cyan, the colour of internet time. -->
+<resources>
+    <color name="icon_start">#FF3DD6F5</color>
+    <color name="icon_end">#FF0E9FCC</color>
+</resources>

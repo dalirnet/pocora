@@ -1,1 +1,13 @@
-node_modules/
+.gradle/
+.kotlin/
+build/
+local.properties
+captures/
+.cxx/
+*.apk
+*.aab
+*.jks
+*.keystore
+.idea/
+*.iml
+.DS_Store
