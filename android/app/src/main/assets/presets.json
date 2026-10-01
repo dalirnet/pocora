@@ -1,0 +1,2991 @@
+{
+    "schedules": [
+        {
+            "id": "school-morning",
+            "name": {
+                "en": "School, morning shift",
+                "fa": "مدرسه، نوبت صبح"
+            },
+            "section": "school_year",
+            "week": [
+                [
+                    [
+                        34,
+                        41
+                    ]
+                ],
+                [
+                    [
+                        34,
+                        41
+                    ]
+                ],
+                [
+                    [
+                        34,
+                        41
+                    ]
+                ],
+                [
+                    [
+                        34,
+                        41
+                    ]
+                ],
+                [
+                    [
+                        34,
+                        41
+                    ]
+                ],
+                [
+                    [
+                        20,
+                        24
+                    ],
+                    [
+                        34,
+                        44
+                    ]
+                ],
+                [
+                    [
+                        20,
+                        24
+                    ],
+                    [
+                        32,
+                        40
+                    ]
+                ]
+            ],
+            "seasons": [
+                {
+                    "from": "07-01",
+                    "to": "09-30"
+                },
+                {
+                    "from": "10-21",
+                    "to": "12-24"
+                },
+                {
+                    "from": "01-14",
+                    "to": "02-31"
+                }
+            ]
+        },
+        {
+            "id": "school-afternoon",
+            "name": {
+                "en": "School, afternoon shift",
+                "fa": "مدرسه، نوبت عصر"
+            },
+            "section": "school_year",
+            "week": [
+                [
+                    [
+                        19,
+                        22
+                    ],
+                    [
+                        38,
+                        41
+                    ]
+                ],
+                [
+                    [
+                        19,
+                        22
+                    ],
+                    [
+                        38,
+                        41
+                    ]
+                ],
+                [
+                    [
+                        19,
+                        22
+                    ],
+                    [
+                        38,
+                        41
+                    ]
+                ],
+                [
+                    [
+                        19,
+                        22
+                    ],
+                    [
+                        38,
+                        41
+                    ]
+                ],
+                [
+                    [
+                        19,
+                        22
+                    ],
+                    [
+                        38,
+                        41
+                    ]
+                ],
+                [
+                    [
+                        20,
+                        24
+                    ],
+                    [
+                        34,
+                        44
+                    ]
+                ],
+                [
+                    [
+                        20,
+                        24
+                    ],
+                    [
+                        32,
+                        40
+                    ]
+                ]
+            ],
+            "seasons": [
+                {
+                    "from": "07-01",
+                    "to": "09-30"
+                },
+                {
+                    "from": "10-21",
+                    "to": "12-24"
+                },
+                {
+                    "from": "01-14",
+                    "to": "02-31"
+                }
+            ]
+        },
+        {
+            "id": "school-remote",
+            "name": {
+                "en": "Online school",
+                "fa": "مدرسه غیرحضوری"
+            },
+            "section": "school_year",
+            "week": [
+                [
+                    [
+                        15,
+                        25
+                    ],
+                    [
+                        34,
+                        41
+                    ]
+                ],
+                [
+                    [
+                        15,
+                        25
+                    ],
+                    [
+                        34,
+                        41
+                    ]
+                ],
+                [
+                    [
+                        15,
+                        25
+                    ],
+                    [
+                        34,
+                        41
+                    ]
+                ],
+                [
+                    [
+                        15,
+                        25
+                    ],
+                    [
+                        34,
+                        41
+                    ]
+                ],
+                [
+                    [
+                        15,
+                        25
+                    ],
+                    [
+                        34,
+                        41
+                    ]
+                ],
+                [
+                    [
+                        20,
+                        24
+                    ],
+                    [
+                        34,
+                        44
+                    ]
+                ],
+                [
+                    [
+                        20,
+                        24
+                    ],
+                    [
+                        32,
+                        40
+                    ]
+                ]
+            ],
+            "seasons": []
+        },
+        {
+            "id": "exams",
+            "name": {
+                "en": "Exam season",
+                "fa": "فصل امتحانات"
+            },
+            "section": "school_year",
+            "week": [
+                [
+                    [
+                        26,
+                        27
+                    ],
+                    [
+                        40,
+                        42
+                    ]
+                ],
+                [
+                    [
+                        26,
+                        27
+                    ],
+                    [
+                        40,
+                        42
+                    ]
+                ],
+                [
+                    [
+                        26,
+                        27
+                    ],
+                    [
+                        40,
+                        42
+                    ]
+                ],
+                [
+                    [
+                        26,
+                        27
+                    ],
+                    [
+                        40,
+                        42
+                    ]
+                ],
+                [
+                    [
+                        26,
+                        27
+                    ],
+                    [
+                        40,
+                        42
+                    ]
+                ],
+                [
+                    [
+                        26,
+                        28
+                    ],
+                    [
+                        38,
+                        42
+                    ]
+                ],
+                [
+                    [
+                        26,
+                        28
+                    ],
+                    [
+                        38,
+                        42
+                    ]
+                ]
+            ],
+            "seasons": [
+                {
+                    "from": "10-01",
+                    "to": "10-20"
+                },
+                {
+                    "from": "03-01",
+                    "to": "03-25"
+                }
+            ]
+        },
+        {
+            "id": "ramadan",
+            "name": {
+                "en": "Ramadan",
+                "fa": "ماه رمضان"
+            },
+            "section": "school_year",
+            "week": [
+                [
+                    [
+                        30,
+                        34
+                    ],
+                    [
+                        39,
+                        43
+                    ]
+                ],
+                [
+                    [
+                        30,
+                        34
+                    ],
+                    [
+                        39,
+                        43
+                    ]
+                ],
+                [
+                    [
+                        30,
+                        34
+                    ],
+                    [
+                        39,
+                        43
+                    ]
+                ],
+                [
+                    [
+                        30,
+                        34
+                    ],
+                    [
+                        39,
+                        43
+                    ]
+                ],
+                [
+                    [
+                        30,
+                        34
+                    ],
+                    [
+                        39,
+                        43
+                    ]
+                ],
+                [
+                    [
+                        22,
+                        26
+                    ],
+                    [
+                        30,
+                        34
+                    ],
+                    [
+                        39,
+                        46
+                    ]
+                ],
+                [
+                    [
+                        22,
+                        26
+                    ],
+                    [
+                        30,
+                        34
+                    ],
+                    [
+                        39,
+                        43
+                    ]
+                ]
+            ],
+            "seasons": []
+        },
+        {
+            "id": "summer",
+            "name": {
+                "en": "Summer",
+                "fa": "تابستان"
+            },
+            "section": "holidays",
+            "week": [
+                [
+                    [
+                        21,
+                        25
+                    ],
+                    [
+                        36,
+                        44
+                    ]
+                ],
+                [
+                    [
+                        21,
+                        25
+                    ],
+                    [
+                        36,
+                        44
+                    ]
+                ],
+                [
+                    [
+                        21,
+                        25
+                    ],
+                    [
+                        36,
+                        44
+                    ]
+                ],
+                [
+                    [
+                        21,
+                        25
+                    ],
+                    [
+                        36,
+                        44
+                    ]
+                ],
+                [
+                    [
+                        21,
+                        25
+                    ],
+                    [
+                        36,
+                        44
+                    ]
+                ],
+                [
+                    [
+                        21,
+                        25
+                    ],
+                    [
+                        34,
+                        46
+                    ]
+                ],
+                [
+                    [
+                        21,
+                        25
+                    ],
+                    [
+                        34,
+                        46
+                    ]
+                ]
+            ],
+            "seasons": [
+                {
+                    "from": "03-26",
+                    "to": "06-31"
+                }
+            ]
+        },
+        {
+            "id": "holidays",
+            "name": {
+                "en": "Holidays",
+                "fa": "نوروز و تعطیلات"
+            },
+            "section": "holidays",
+            "week": [
+                [
+                    [
+                        20,
+                        46
+                    ]
+                ],
+                [
+                    [
+                        20,
+                        46
+                    ]
+                ],
+                [
+                    [
+                        20,
+                        46
+                    ]
+                ],
+                [
+                    [
+                        20,
+                        46
+                    ]
+                ],
+                [
+                    [
+                        20,
+                        46
+                    ]
+                ],
+                [
+                    [
+                        20,
+                        46
+                    ]
+                ],
+                [
+                    [
+                        20,
+                        46
+                    ]
+                ]
+            ],
+            "seasons": [
+                {
+                    "from": "12-25",
+                    "to": "01-13"
+                }
+            ]
+        },
+        {
+            "id": "one-hour",
+            "name": {
+                "en": "One hour a day",
+                "fa": "روزی یک ساعت"
+            },
+            "section": "simple_rules",
+            "week": [
+                [
+                    [
+                        36,
+                        38
+                    ]
+                ],
+                [
+                    [
+                        36,
+                        38
+                    ]
+                ],
+                [
+                    [
+                        36,
+                        38
+                    ]
+                ],
+                [
+                    [
+                        36,
+                        38
+                    ]
+                ],
+                [
+                    [
+                        36,
+                        38
+                    ]
+                ],
+                [
+                    [
+                        22,
+                        24
+                    ],
+                    [
+                        36,
+                        38
+                    ]
+                ],
+                [
+                    [
+                        22,
+                        24
+                    ],
+                    [
+                        36,
+                        38
+                    ]
+                ]
+            ],
+            "seasons": []
+        },
+        {
+            "id": "weekends-only",
+            "name": {
+                "en": "Weekends only",
+                "fa": "فقط آخر هفته"
+            },
+            "section": "simple_rules",
+            "week": [
+                [],
+                [],
+                [],
+                [],
+                [],
+                [
+                    [
+                        32,
+                        42
+                    ]
+                ],
+                [
+                    [
+                        20,
+                        24
+                    ],
+                    [
+                        32,
+                        38
+                    ]
+                ]
+            ],
+            "seasons": []
+        },
+        {
+            "id": "nights-off",
+            "name": {
+                "en": "Nights off",
+                "fa": "شب‌ها خاموش"
+            },
+            "section": "simple_rules",
+            "week": [
+                [
+                    [
+                        14,
+                        44
+                    ]
+                ],
+                [
+                    [
+                        14,
+                        44
+                    ]
+                ],
+                [
+                    [
+                        14,
+                        44
+                    ]
+                ],
+                [
+                    [
+                        14,
+                        44
+                    ]
+                ],
+                [
+                    [
+                        14,
+                        44
+                    ]
+                ],
+                [
+                    [
+                        14,
+                        47
+                    ]
+                ],
+                [
+                    [
+                        14,
+                        44
+                    ]
+                ]
+            ],
+            "seasons": []
+        },
+        {
+            "id": "watch-only",
+            "name": {
+                "en": "Watch only",
+                "fa": "فقط نظارت"
+            },
+            "section": "simple_rules",
+            "week": [
+                [
+                    [
+                        0,
+                        48
+                    ]
+                ],
+                [
+                    [
+                        0,
+                        48
+                    ]
+                ],
+                [
+                    [
+                        0,
+                        48
+                    ]
+                ],
+                [
+                    [
+                        0,
+                        48
+                    ]
+                ],
+                [
+                    [
+                        0,
+                        48
+                    ]
+                ],
+                [
+                    [
+                        0,
+                        48
+                    ]
+                ],
+                [
+                    [
+                        0,
+                        48
+                    ]
+                ]
+            ],
+            "seasons": []
+        }
+    ],
+    "appsLists": [
+        {
+            "id": "kids",
+            "name": {
+                "en": "Kids",
+                "fa": "کودک"
+            },
+            "section": "by_age",
+            "ages": [
+                8,
+                9
+            ],
+            "groups": [
+                "system",
+                "school",
+                "learning",
+                "kids"
+            ]
+        },
+        {
+            "id": "everyday",
+            "name": {
+                "en": "Everyday",
+                "fa": "روزمره"
+            },
+            "section": "by_age",
+            "ages": [
+                10,
+                12
+            ],
+            "groups": [
+                "system",
+                "school",
+                "learning",
+                "kids",
+                "messaging",
+                "daily-tools",
+                "music",
+                "video",
+                "games",
+                "stores"
+            ]
+        },
+        {
+            "id": "teen",
+            "name": {
+                "en": "Teen",
+                "fa": "نوجوان"
+            },
+            "section": "by_age",
+            "ages": [
+                13,
+                16
+            ],
+            "groups": [
+                "system",
+                "school",
+                "learning",
+                "kids",
+                "messaging",
+                "daily-tools",
+                "music",
+                "video",
+                "games",
+                "stores",
+                "browser",
+                "other"
+            ]
+        },
+        {
+            "id": "school",
+            "name": {
+                "en": "School only",
+                "fa": "فقط مدرسه"
+            },
+            "section": "by_purpose",
+            "ages": [
+                6,
+                16
+            ],
+            "groups": [
+                "system",
+                "school"
+            ]
+        },
+        {
+            "id": "study",
+            "name": {
+                "en": "Study",
+                "fa": "درس"
+            },
+            "section": "by_purpose",
+            "ages": [
+                6,
+                16
+            ],
+            "groups": [
+                "system",
+                "school",
+                "learning"
+            ]
+        },
+        {
+            "id": "reachable",
+            "name": {
+                "en": "Reachable",
+                "fa": "در دسترس"
+            },
+            "section": "by_purpose",
+            "ages": [
+                6,
+                16
+            ],
+            "groups": [
+                "system",
+                "messaging",
+                "daily-tools"
+            ]
+        },
+        {
+            "id": "no-games",
+            "name": {
+                "en": "No games",
+                "fa": "بدون بازی"
+            },
+            "section": "by_purpose",
+            "ages": [
+                6,
+                16
+            ],
+            "groups": [
+                "system",
+                "school",
+                "learning",
+                "kids",
+                "messaging",
+                "daily-tools",
+                "music",
+                "video",
+                "stores",
+                "browser",
+                "social",
+                "other"
+            ]
+        },
+        {
+            "id": "everything",
+            "name": {
+                "en": "Everything",
+                "fa": "همه برنامه‌ها"
+            },
+            "section": "open",
+            "ages": null,
+            "groups": [
+                "system",
+                "school",
+                "learning",
+                "kids",
+                "messaging",
+                "daily-tools",
+                "music",
+                "video",
+                "games",
+                "stores",
+                "browser",
+                "social",
+                "other"
+            ]
+        }
+    ],
+    "groups": [
+        {
+            "id": "system",
+            "name": {
+                "en": "System",
+                "fa": "سیستم"
+            },
+            "apps": [
+                {
+                    "package": "com.google.android.apps.messaging",
+                    "name": {
+                        "en": "Google Messages",
+                        "fa": "Google Messages"
+                    }
+                },
+                {
+                    "package": "com.google.android.gms",
+                    "name": {
+                        "en": "Google Play services",
+                        "fa": "Google Play services"
+                    }
+                },
+                {
+                    "package": "com.google.android.inputmethod.latin",
+                    "name": {
+                        "en": "Gboard",
+                        "fa": "Gboard"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "school",
+            "name": {
+                "en": "School",
+                "fa": "مدرسه"
+            },
+            "apps": [
+                {
+                    "package": "ir.medu.shad",
+                    "name": {
+                        "en": "Shad",
+                        "fa": "شاد"
+                    }
+                },
+                {
+                    "package": "com.google.android.apps.tachyon",
+                    "name": {
+                        "en": "Google Meet",
+                        "fa": "گوگل میت"
+                    }
+                },
+                {
+                    "package": "com.adobe.connect.android.mobile",
+                    "name": {
+                        "en": "Adobe Connect",
+                        "fa": "ادوبی کانکت"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "learning",
+            "name": {
+                "en": "Learning",
+                "fa": "آموزش"
+            },
+            "apps": [
+                {
+                    "package": "apphamyar.com",
+                    "name": {
+                        "en": "Hamyar",
+                        "fa": "همیار"
+                    }
+                },
+                {
+                    "package": "org.maktabkhooneh.android.maktabandroid",
+                    "name": {
+                        "en": "Maktabkhooneh",
+                        "fa": "مکتب‌خونه"
+                    }
+                },
+                {
+                    "package": "school.jaheshkol.online",
+                    "name": {
+                        "en": "Jahesh",
+                        "fa": "جهش"
+                    }
+                },
+                {
+                    "package": "com.paadars.practicehelpN",
+                    "name": {
+                        "en": "Paadars",
+                        "fa": "پادرس"
+                    }
+                },
+                {
+                    "package": "asr.group.idars",
+                    "name": {
+                        "en": "myDars",
+                        "fa": "مای‌درس"
+                    }
+                },
+                {
+                    "package": "ir.gajino.android",
+                    "name": {
+                        "en": "Gajino",
+                        "fa": "گاجینو"
+                    }
+                },
+                {
+                    "package": "com.sabaidea.filimo.school",
+                    "name": {
+                        "en": "FilimoSchool",
+                        "fa": "فیلیمو مدرسه"
+                    }
+                },
+                {
+                    "package": "ir.kanoon.kanooniha.android",
+                    "name": {
+                        "en": "Kanooniha",
+                        "fa": "کانونی‌ها"
+                    }
+                },
+                {
+                    "package": "ir.learnit",
+                    "name": {
+                        "en": "Learnit",
+                        "fa": "لرنیت"
+                    }
+                },
+                {
+                    "package": "com.duolingo",
+                    "name": {
+                        "en": "Duolingo",
+                        "fa": "دولینگو"
+                    }
+                },
+                {
+                    "package": "com.expert_apps.expert",
+                    "name": {
+                        "en": "Expert",
+                        "fa": "اکسپرت"
+                    }
+                },
+                {
+                    "package": "ir.english_pocket.hvm.english_pocket",
+                    "name": {
+                        "en": "Pocketly",
+                        "fa": "پاکتلی"
+                    }
+                },
+                {
+                    "package": "com.google.android.apps.translate",
+                    "name": {
+                        "en": "Google Translate",
+                        "fa": "گوگل ترنسلیت"
+                    }
+                },
+                {
+                    "package": "fast.dic.dict",
+                    "name": {
+                        "en": "Fastdic",
+                        "fa": "فست دیکشنری"
+                    }
+                },
+                {
+                    "package": "org.tahlilgaran.tdictionary",
+                    "name": {
+                        "en": "TahlilGaran",
+                        "fa": "تحلیلگران"
+                    }
+                },
+                {
+                    "package": "com.farhang.loghat.bismuth",
+                    "name": {
+                        "en": "Dehkhoda",
+                        "fa": "لغت‌نامه دهخدا"
+                    }
+                },
+                {
+                    "package": "ir.mservices.mybook",
+                    "name": {
+                        "en": "Taaghche",
+                        "fa": "طاقچه"
+                    }
+                },
+                {
+                    "package": "ir.faraketab.player",
+                    "name": {
+                        "en": "Faraketab",
+                        "fa": "فراکتاب"
+                    }
+                },
+                {
+                    "package": "com.fidibo.app",
+                    "name": {
+                        "en": "Fidibo",
+                        "fa": "فیدیبو"
+                    }
+                },
+                {
+                    "package": "ir.navaar.android",
+                    "name": {
+                        "en": "Navaar",
+                        "fa": "نوار"
+                    }
+                },
+                {
+                    "package": "com.mobiliha.hablolmatin",
+                    "name": {
+                        "en": "Quran HablolMatin",
+                        "fa": "حبل‌المتین"
+                    }
+                },
+                {
+                    "package": "org.crcis.quran",
+                    "name": {
+                        "en": "Quran Noor",
+                        "fa": "قرآن نور"
+                    }
+                },
+                {
+                    "package": "net.firstcause.quran_persian",
+                    "name": {
+                        "en": "Quran Hadi",
+                        "fa": "قرآن هادی"
+                    }
+                },
+                {
+                    "package": "org.scratchjr.androidfree",
+                    "name": {
+                        "en": "ScratchJr Farsi",
+                        "fa": "اسکرچ جونیور"
+                    }
+                },
+                {
+                    "package": "com.sololearn",
+                    "name": {
+                        "en": "Sololearn",
+                        "fa": "سولولرن"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "kids",
+            "name": {
+                "en": "Kids",
+                "fa": "کودک"
+            },
+            "apps": [
+                {
+                    "package": "com.yaramobile.digitoon",
+                    "name": {
+                        "en": "Digitoon",
+                        "fa": "دیجیتون"
+                    }
+                },
+                {
+                    "package": "com.peykasa.afarinak.afarinakapp",
+                    "name": {
+                        "en": "Afarinak",
+                        "fa": "آفرینک"
+                    }
+                },
+                {
+                    "package": "com.aparat.kids",
+                    "name": {
+                        "en": "Aparat Kids",
+                        "fa": "آپارات کودک"
+                    }
+                },
+                {
+                    "package": "ir.app.instaji",
+                    "name": {
+                        "en": "Instaji",
+                        "fa": "اینستاجی"
+                    }
+                },
+                {
+                    "package": "com.dorsa.sanjab",
+                    "name": {
+                        "en": "Bin Bin",
+                        "fa": "بین‌بین"
+                    }
+                },
+                {
+                    "package": "ir.vidzy.app",
+                    "name": {
+                        "en": "Vidzy",
+                        "fa": "ویدزی"
+                    }
+                },
+                {
+                    "package": "com.picdastan.ini",
+                    "name": {
+                        "en": "Story and song book",
+                        "fa": "کتاب داستان و ترانه"
+                    }
+                },
+                {
+                    "package": "com.mehad.quran_stories",
+                    "name": {
+                        "en": "Quran Stories for kids",
+                        "fa": "قصه‌های قرآنی"
+                    }
+                },
+                {
+                    "package": "com.dabestaniha.mahak",
+                    "name": {
+                        "en": "Mahak",
+                        "fa": "محک"
+                    }
+                },
+                {
+                    "package": "com.happygalaxy.storyland",
+                    "name": {
+                        "en": "Storyland",
+                        "fa": "استوری‌لند"
+                    }
+                },
+                {
+                    "package": "com.royagaran.happinesstrain",
+                    "name": {
+                        "en": "Happiness Train",
+                        "fa": "قطار شادی"
+                    }
+                },
+                {
+                    "package": "com.EarthlyHeavens.QuranicTrain",
+                    "name": {
+                        "en": "Quranic Train",
+                        "fa": "قطار قرآنی"
+                    }
+                },
+                {
+                    "package": "com.mrghooghooli.entertainment.alefbahush",
+                    "name": {
+                        "en": "Learning Persian Alphabet",
+                        "fa": "آموزش الفبا"
+                    }
+                },
+                {
+                    "package": "me.papitakids.android",
+                    "name": {
+                        "en": "Papita",
+                        "fa": "پاپیتا"
+                    }
+                },
+                {
+                    "package": "ir.allbaloo.kids.learn.myfirstclass",
+                    "name": {
+                        "en": "First Class",
+                        "fa": "کلاس اولی"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "messaging",
+            "name": {
+                "en": "Messaging",
+                "fa": "پیام‌رسان"
+            },
+            "apps": [
+                {
+                    "package": "com.whatsapp",
+                    "name": {
+                        "en": "WhatsApp",
+                        "fa": "واتساپ"
+                    }
+                },
+                {
+                    "package": "net.iGap",
+                    "name": {
+                        "en": "iGap",
+                        "fa": "آی‌گپ"
+                    }
+                },
+                {
+                    "package": "ir.eitaa.messenger",
+                    "name": {
+                        "en": "Eitaa",
+                        "fa": "ایتا"
+                    }
+                },
+                {
+                    "package": "com.gapafzar.messenger",
+                    "name": {
+                        "en": "Gap",
+                        "fa": "گپ"
+                    }
+                },
+                {
+                    "package": "ir.nasim",
+                    "name": {
+                        "en": "Bale",
+                        "fa": "بله"
+                    }
+                },
+                {
+                    "package": "mobi.mmdt.ottplus",
+                    "name": {
+                        "en": "Soroush Plus",
+                        "fa": "سروش پلاس"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "daily-tools",
+            "name": {
+                "en": "Daily tools",
+                "fa": "ابزار روزمره"
+            },
+            "apps": [
+                {
+                    "package": "ir.balad",
+                    "name": {
+                        "en": "Balad",
+                        "fa": "بلد"
+                    }
+                },
+                {
+                    "package": "com.google.android.apps.maps",
+                    "name": {
+                        "en": "Google Maps",
+                        "fa": "گوگل مپ"
+                    }
+                },
+                {
+                    "package": "org.rajman.neshan.traffic.tehran.navigator",
+                    "name": {
+                        "en": "Neshan",
+                        "fa": "نشان"
+                    }
+                },
+                {
+                    "package": "cab.snapp.passenger",
+                    "name": {
+                        "en": "Snapp",
+                        "fa": "اسنپ"
+                    }
+                },
+                {
+                    "package": "taxi.tap30.passenger",
+                    "name": {
+                        "en": "Tapsi",
+                        "fa": "تپسی"
+                    }
+                },
+                {
+                    "package": "com.mobiliha.badesaba",
+                    "name": {
+                        "en": "BadeSaba",
+                        "fa": "باد صبا"
+                    }
+                },
+                {
+                    "package": "mobi.raimon.SayAzan",
+                    "name": {
+                        "en": "Azangoo",
+                        "fa": "اذان‌گو"
+                    }
+                },
+                {
+                    "package": "shamimsoft.shamimyass",
+                    "name": {
+                        "en": "ShamimYas",
+                        "fa": "شمیم یاس"
+                    }
+                },
+                {
+                    "package": "com.app.weatherclock",
+                    "name": {
+                        "en": "Havashenas",
+                        "fa": "هواشناس"
+                    }
+                },
+                {
+                    "package": "com.google.android.gm",
+                    "name": {
+                        "en": "Gmail",
+                        "fa": "جیمیل"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "music",
+            "name": {
+                "en": "Music",
+                "fa": "موسیقی"
+            },
+            "apps": [
+                {
+                    "package": "ir.iribradio.iranseda3",
+                    "name": {
+                        "en": "IranSeda",
+                        "fa": "ایران‌صدا"
+                    }
+                },
+                {
+                    "package": "com.beep.tunes",
+                    "name": {
+                        "en": "Beeptunes",
+                        "fa": "بیپ‌تونز"
+                    }
+                },
+                {
+                    "package": "fm.castbox.audiobook.radio.podcast",
+                    "name": {
+                        "en": "Castbox",
+                        "fa": "کست‌باکس"
+                    }
+                },
+                {
+                    "package": "com.aparat.music",
+                    "name": {
+                        "en": "Aparat Music",
+                        "fa": "آپارات موزیک"
+                    }
+                },
+                {
+                    "package": "com.shenoto.app",
+                    "name": {
+                        "en": "Shenoto",
+                        "fa": "شنوتو"
+                    }
+                },
+                {
+                    "package": "com.miui.player",
+                    "name": {
+                        "en": "Mi Music",
+                        "fa": "Mi Music"
+                    }
+                },
+                {
+                    "package": "com.sec.android.app.music",
+                    "name": {
+                        "en": "Samsung Music",
+                        "fa": "Samsung Music"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "video",
+            "name": {
+                "en": "Video",
+                "fa": "ویدیو"
+            },
+            "apps": [
+                {
+                    "package": "net.telewebion",
+                    "name": {
+                        "en": "Telewebion",
+                        "fa": "تلوبیون"
+                    }
+                },
+                {
+                    "package": "com.farakav.anten",
+                    "name": {
+                        "en": "Anten",
+                        "fa": "آنتن"
+                    }
+                },
+                {
+                    "package": "com.aparat",
+                    "name": {
+                        "en": "Aparat",
+                        "fa": "آپارات"
+                    }
+                },
+                {
+                    "package": "tv.perception.android.aio",
+                    "name": {
+                        "en": "Aio",
+                        "fa": "آیو"
+                    }
+                },
+                {
+                    "package": "com.aparat.filimo",
+                    "name": {
+                        "en": "Filimo",
+                        "fa": "فیلیمو"
+                    }
+                },
+                {
+                    "package": "com.gapfilm.app",
+                    "name": {
+                        "en": "GapFilm",
+                        "fa": "گپ‌فیلم"
+                    }
+                },
+                {
+                    "package": "com.shatelland.namava.mobile",
+                    "name": {
+                        "en": "Namava",
+                        "fa": "نماوا"
+                    }
+                },
+                {
+                    "package": "com.didimoon.android.vod",
+                    "name": {
+                        "en": "Didimoon",
+                        "fa": "دیدیمون"
+                    }
+                },
+                {
+                    "package": "ir.filmnet.android",
+                    "name": {
+                        "en": "Filmnet",
+                        "fa": "فیلم‌نت"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "games",
+            "name": {
+                "en": "Games",
+                "fa": "بازی"
+            },
+            "apps": [
+                {
+                    "package": "com.BrainLadder.Amirza",
+                    "name": {
+                        "en": "Amirza",
+                        "fa": "آمیرزا"
+                    }
+                },
+                {
+                    "package": "co.palang.QuizOfKings",
+                    "name": {
+                        "en": "Quiz of Kings",
+                        "fa": "کوییز آو کینگز"
+                    }
+                },
+                {
+                    "package": "com.plus9.fandogh",
+                    "name": {
+                        "en": "Fandogh",
+                        "fa": "فندق"
+                    }
+                },
+                {
+                    "package": "com.iust.jadval",
+                    "name": {
+                        "en": "Jadval Plus",
+                        "fa": "جدول پلاس"
+                    }
+                },
+                {
+                    "package": "ir.unides.khastegari",
+                    "name": {
+                        "en": "Khastegari",
+                        "fa": "خواستگاری"
+                    }
+                },
+                {
+                    "package": "mbm.esmfamilbagooshi.free",
+                    "name": {
+                        "en": "Esm Famil",
+                        "fa": "اسم فامیل"
+                    }
+                },
+                {
+                    "package": "ir.yadsaz.game.jadval",
+                    "name": {
+                        "en": "Jadvalaneh",
+                        "fa": "جدولانه"
+                    }
+                },
+                {
+                    "package": "com.plus9.shahrbanoo",
+                    "name": {
+                        "en": "Shahrbanoo",
+                        "fa": "شهربانو"
+                    }
+                },
+                {
+                    "package": "Hadiware.Mench",
+                    "name": {
+                        "en": "Mench",
+                        "fa": "منچ"
+                    }
+                },
+                {
+                    "package": "com.incytel.mencherz",
+                    "name": {
+                        "en": "Mencherz",
+                        "fa": "منچرز"
+                    }
+                },
+                {
+                    "package": "com.xalopex.hokm",
+                    "name": {
+                        "en": "Hokm",
+                        "fa": "حکم"
+                    }
+                },
+                {
+                    "package": "Hadiware.Dots_Boxes",
+                    "name": {
+                        "en": "Dots and Boxes",
+                        "fa": "نقطه‌بازی"
+                    }
+                },
+                {
+                    "package": "com.bazambazi",
+                    "name": {
+                        "en": "BazamBazi",
+                        "fa": "بازم بازی"
+                    }
+                },
+                {
+                    "package": "com.tod.xameen",
+                    "name": {
+                        "en": "PerCity",
+                        "fa": "پرسیتی"
+                    }
+                },
+                {
+                    "package": "com.mojang.minecraftpe",
+                    "name": {
+                        "en": "Minecraft",
+                        "fa": "ماینکرفت"
+                    }
+                },
+                {
+                    "package": "com.supercell.clashofclans",
+                    "name": {
+                        "en": "Clash of Clans",
+                        "fa": "کلش آف کلنز"
+                    }
+                },
+                {
+                    "package": "com.supercell.clashroyale",
+                    "name": {
+                        "en": "Clash Royale",
+                        "fa": "کلش رویال"
+                    }
+                },
+                {
+                    "package": "com.paeezanstudio.pesarkhande",
+                    "name": {
+                        "en": "Pesarkhande",
+                        "fa": "پسرخوانده"
+                    }
+                },
+                {
+                    "package": "com.filimo.mafia",
+                    "name": {
+                        "en": "Mafia Nights",
+                        "fa": "شب‌های مافیا"
+                    }
+                },
+                {
+                    "package": "com.tetrapuzzle.bezanbahador",
+                    "name": {
+                        "en": "Bezan Bahador",
+                        "fa": "بزن بهادر"
+                    }
+                },
+                {
+                    "package": "com.avid.hashtkhan",
+                    "name": {
+                        "en": "8 Khan",
+                        "fa": "هشت‌خان"
+                    }
+                },
+                {
+                    "package": "com.supercell.brawlstars",
+                    "name": {
+                        "en": "Brawl Stars",
+                        "fa": "براول استارز"
+                    }
+                },
+                {
+                    "package": "ir.nomogame.ClutchGame",
+                    "name": {
+                        "en": "Clutch",
+                        "fa": "کلاچ"
+                    }
+                },
+                {
+                    "package": "com.glimgames.taxido",
+                    "name": {
+                        "en": "Taxido",
+                        "fa": "تاکسیدو"
+                    }
+                },
+                {
+                    "package": "com.miniclip.soccerstars",
+                    "name": {
+                        "en": "Soccer Stars",
+                        "fa": "ساکر استارز"
+                    }
+                },
+                {
+                    "package": "com.hascreen.HascreenGarage",
+                    "name": {
+                        "en": "Sport Rider",
+                        "fa": "اسپرت رایدر"
+                    }
+                },
+                {
+                    "package": "com.firsttouchgames.dls3",
+                    "name": {
+                        "en": "Dream League Soccer",
+                        "fa": "دریم لیگ"
+                    }
+                },
+                {
+                    "package": "com.miniclip.eightballpool",
+                    "name": {
+                        "en": "8 Ball Pool",
+                        "fa": "بیلیارد"
+                    }
+                },
+                {
+                    "package": "com.kiloo.subwaysurf",
+                    "name": {
+                        "en": "Subway Surfers",
+                        "fa": "ساب‌وی سرفرز"
+                    }
+                },
+                {
+                    "package": "com.imangi.templerun2",
+                    "name": {
+                        "en": "Temple Run 2",
+                        "fa": "تمپل ران"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "stores",
+            "name": {
+                "en": "Stores",
+                "fa": "فروشگاه برنامه"
+            },
+            "apps": [
+                {
+                    "package": "com.farsitel.bazaar",
+                    "name": {
+                        "en": "Bazaar",
+                        "fa": "بازار"
+                    }
+                },
+                {
+                    "package": "ir.mservices.market",
+                    "name": {
+                        "en": "Myket",
+                        "fa": "مایکت"
+                    }
+                },
+                {
+                    "package": "com.android.vending",
+                    "name": {
+                        "en": "Google Play",
+                        "fa": "گوگل پلی"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "browser",
+            "name": {
+                "en": "Browser",
+                "fa": "مرورگر"
+            },
+            "apps": [
+                {
+                    "package": "com.android.chrome",
+                    "name": {
+                        "en": "Chrome",
+                        "fa": "کروم"
+                    }
+                },
+                {
+                    "package": "org.mozilla.firefox",
+                    "name": {
+                        "en": "Firefox",
+                        "fa": "فایرفاکس"
+                    }
+                },
+                {
+                    "package": "com.sec.android.app.sbrowser",
+                    "name": {
+                        "en": "Samsung Internet",
+                        "fa": "Samsung Internet"
+                    }
+                },
+                {
+                    "package": "com.mi.globalbrowser",
+                    "name": {
+                        "en": "Mi Browser",
+                        "fa": "Mi Browser"
+                    }
+                },
+                {
+                    "package": "com.microsoft.emmx",
+                    "name": {
+                        "en": "Edge",
+                        "fa": "اج"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "social",
+            "name": {
+                "en": "Social",
+                "fa": "شبکه اجتماعی"
+            },
+            "apps": [
+                {
+                    "package": "app.rbmain.a",
+                    "name": {
+                        "en": "Rubika",
+                        "fa": "روبیکا"
+                    }
+                },
+                {
+                    "package": "ir.rubx.bapp",
+                    "name": {
+                        "en": "Rubika X",
+                        "fa": "روبیکا ایکس"
+                    }
+                },
+                {
+                    "package": "ir.chatzy.messenger",
+                    "name": {
+                        "en": "Chatzy",
+                        "fa": "چتزی"
+                    }
+                },
+                {
+                    "package": "com.wisgoon.android",
+                    "name": {
+                        "en": "Wisgoon",
+                        "fa": "ویسگون"
+                    }
+                },
+                {
+                    "package": "com.virasty.app",
+                    "name": {
+                        "en": "Virasty",
+                        "fa": "ویراستی"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "other",
+            "name": {
+                "en": "Other",
+                "fa": "سایر"
+            },
+            "apps": [
+                {
+                    "package": "ir.divar",
+                    "name": {
+                        "en": "Divar",
+                        "fa": "دیوار"
+                    }
+                },
+                {
+                    "package": "com.sheypoor.mobile",
+                    "name": {
+                        "en": "Sheypoor",
+                        "fa": "شیپور"
+                    }
+                },
+                {
+                    "package": "com.digikala",
+                    "name": {
+                        "en": "Digikala",
+                        "fa": "دیجی‌کالا"
+                    }
+                },
+                {
+                    "package": "ir.basalam.app",
+                    "name": {
+                        "en": "Basalam",
+                        "fa": "باسلام"
+                    }
+                },
+                {
+                    "package": "ir.torob",
+                    "name": {
+                        "en": "Torob",
+                        "fa": "ترب"
+                    }
+                },
+                {
+                    "package": "com.zoodfood.android",
+                    "name": {
+                        "en": "SnappFood",
+                        "fa": "اسنپ‌فود"
+                    }
+                },
+                {
+                    "package": "ir.bmi.bam.nativeweb",
+                    "name": {
+                        "en": "Baam",
+                        "fa": "بام"
+                    }
+                },
+                {
+                    "package": "com.samanpr.blu",
+                    "name": {
+                        "en": "blu",
+                        "fa": "بلو"
+                    }
+                },
+                {
+                    "package": "com.myirancell",
+                    "name": {
+                        "en": "MyIrancell",
+                        "fa": "ایرانسل من"
+                    }
+                },
+                {
+                    "package": "com.piccolo.footballi.server",
+                    "name": {
+                        "en": "Footballi",
+                        "fa": "فوتبالی"
+                    }
+                },
+                {
+                    "package": "ir.football360.android",
+                    "name": {
+                        "en": "Football 360",
+                        "fa": "فوتبال ۳۶۰"
+                    }
+                },
+                {
+                    "package": "com.camerasideas.instashot",
+                    "name": {
+                        "en": "InShot",
+                        "fa": "اینشات"
+                    }
+                },
+                {
+                    "package": "ai.ivira.app",
+                    "name": {
+                        "en": "Vira",
+                        "fa": "ویرا"
+                    }
+                }
+            ]
+        }
+    ],
+    "quotas": [
+        {
+            "id": "light",
+            "name": {
+                "en": "Light",
+                "fa": "کم"
+            },
+            "megabytesPerMark": 25
+        },
+        {
+            "id": "medium",
+            "name": {
+                "en": "Medium",
+                "fa": "متوسط"
+            },
+            "megabytesPerMark": 100
+        },
+        {
+            "id": "high",
+            "name": {
+                "en": "High",
+                "fa": "زیاد"
+            },
+            "megabytesPerMark": 250
+        },
+        {
+            "id": "no-limit",
+            "name": {
+                "en": "No limit",
+                "fa": "بدون سقف"
+            },
+            "megabytesPerMark": null
+        }
+    ],
+    "holidays": [
+        {
+            "date": "1405-01-01",
+            "name": {
+                "en": "Nowruz; Eid al-Fitr",
+                "fa": "نوروز؛ عید فطر"
+            }
+        },
+        {
+            "date": "1405-01-02",
+            "name": {
+                "en": "Nowruz; Eid al-Fitr, second day",
+                "fa": "نوروز؛ عید فطر، روز دوم"
+            }
+        },
+        {
+            "date": "1405-01-03",
+            "name": {
+                "en": "Nowruz",
+                "fa": "نوروز"
+            }
+        },
+        {
+            "date": "1405-01-04",
+            "name": {
+                "en": "Nowruz",
+                "fa": "نوروز"
+            }
+        },
+        {
+            "date": "1405-01-12",
+            "name": {
+                "en": "Islamic Republic Day",
+                "fa": "روز جمهوری اسلامی"
+            }
+        },
+        {
+            "date": "1405-01-13",
+            "name": {
+                "en": "Nature Day",
+                "fa": "روز طبیعت"
+            }
+        },
+        {
+            "date": "1405-01-25",
+            "name": {
+                "en": "Martyrdom of Imam Sadiq",
+                "fa": "شهادت امام صادق"
+            }
+        },
+        {
+            "date": "1405-03-06",
+            "name": {
+                "en": "Eid al-Adha",
+                "fa": "عید قربان"
+            }
+        },
+        {
+            "date": "1405-03-14",
+            "name": {
+                "en": "Passing of Imam Khomeini; Eid al-Ghadir",
+                "fa": "رحلت امام خمینی؛ عید غدیر"
+            }
+        },
+        {
+            "date": "1405-03-15",
+            "name": {
+                "en": "15 Khordad Uprising",
+                "fa": "قیام ۱۵ خرداد"
+            }
+        },
+        {
+            "date": "1405-04-03",
+            "name": {
+                "en": "Tasua",
+                "fa": "تاسوعا"
+            }
+        },
+        {
+            "date": "1405-04-04",
+            "name": {
+                "en": "Ashura",
+                "fa": "عاشورا"
+            }
+        },
+        {
+            "date": "1405-05-13",
+            "name": {
+                "en": "Arbaeen",
+                "fa": "اربعین"
+            }
+        },
+        {
+            "date": "1405-05-21",
+            "name": {
+                "en": "Passing of the Prophet, martyrdom of Imam Hasan",
+                "fa": "رحلت پیامبر و شهادت امام حسن"
+            }
+        },
+        {
+            "date": "1405-05-22",
+            "name": {
+                "en": "Martyrdom of Imam Reza",
+                "fa": "شهادت امام رضا"
+            }
+        },
+        {
+            "date": "1405-05-30",
+            "name": {
+                "en": "Martyrdom of Imam Hasan Askari",
+                "fa": "شهادت امام حسن عسکری"
+            }
+        },
+        {
+            "date": "1405-06-08",
+            "name": {
+                "en": "Birthday of the Prophet and Imam Sadiq",
+                "fa": "میلاد پیامبر و امام صادق"
+            }
+        },
+        {
+            "date": "1405-08-22",
+            "name": {
+                "en": "Martyrdom of Fatimah",
+                "fa": "شهادت حضرت فاطمه"
+            }
+        },
+        {
+            "date": "1405-10-02",
+            "name": {
+                "en": "Birthday of Imam Ali",
+                "fa": "ولادت امام علی"
+            }
+        },
+        {
+            "date": "1405-10-16",
+            "name": {
+                "en": "Mabath",
+                "fa": "مبعث"
+            }
+        },
+        {
+            "date": "1405-11-04",
+            "name": {
+                "en": "Mid-Shaban",
+                "fa": "نیمه شعبان"
+            }
+        },
+        {
+            "date": "1405-11-22",
+            "name": {
+                "en": "Victory of the Revolution",
+                "fa": "پیروزی انقلاب اسلامی"
+            }
+        },
+        {
+            "date": "1405-12-09",
+            "name": {
+                "en": "Martyrdom of Imam Ali",
+                "fa": "شهادت امام علی"
+            }
+        },
+        {
+            "date": "1405-12-19",
+            "name": {
+                "en": "Eid al-Fitr",
+                "fa": "عید فطر"
+            }
+        },
+        {
+            "date": "1405-12-20",
+            "name": {
+                "en": "Eid al-Fitr, second day",
+                "fa": "عید فطر، روز دوم"
+            }
+        },
+        {
+            "date": "1405-12-29",
+            "name": {
+                "en": "Oil Nationalisation Day",
+                "fa": "ملی شدن صنعت نفت"
+            }
+        },
+        {
+            "date": "1406-01-01",
+            "name": {
+                "en": "Nowruz",
+                "fa": "نوروز"
+            }
+        },
+        {
+            "date": "1406-01-02",
+            "name": {
+                "en": "Nowruz",
+                "fa": "نوروز"
+            }
+        },
+        {
+            "date": "1406-01-03",
+            "name": {
+                "en": "Nowruz",
+                "fa": "نوروز"
+            }
+        },
+        {
+            "date": "1406-01-04",
+            "name": {
+                "en": "Nowruz",
+                "fa": "نوروز"
+            }
+        },
+        {
+            "date": "1406-01-12",
+            "name": {
+                "en": "Islamic Republic Day",
+                "fa": "روز جمهوری اسلامی"
+            }
+        },
+        {
+            "date": "1406-01-13",
+            "name": {
+                "en": "Nature Day",
+                "fa": "روز طبیعت"
+            }
+        },
+        {
+            "date": "1406-01-14",
+            "name": {
+                "en": "Martyrdom of Imam Sadiq",
+                "fa": "شهادت امام صادق"
+            }
+        },
+        {
+            "date": "1406-02-27",
+            "name": {
+                "en": "Eid al-Adha",
+                "fa": "عید قربان"
+            }
+        },
+        {
+            "date": "1406-03-04",
+            "name": {
+                "en": "Eid al-Ghadir",
+                "fa": "عید غدیر"
+            }
+        },
+        {
+            "date": "1406-03-14",
+            "name": {
+                "en": "Passing of Imam Khomeini",
+                "fa": "رحلت امام خمینی"
+            }
+        },
+        {
+            "date": "1406-03-15",
+            "name": {
+                "en": "15 Khordad Uprising",
+                "fa": "قیام ۱۵ خرداد"
+            }
+        },
+        {
+            "date": "1406-03-25",
+            "name": {
+                "en": "Tasua",
+                "fa": "تاسوعا"
+            }
+        },
+        {
+            "date": "1406-03-26",
+            "name": {
+                "en": "Ashura",
+                "fa": "عاشورا"
+            }
+        },
+        {
+            "date": "1406-05-03",
+            "name": {
+                "en": "Arbaeen",
+                "fa": "اربعین"
+            }
+        },
+        {
+            "date": "1406-05-11",
+            "name": {
+                "en": "Passing of the Prophet, martyrdom of Imam Hasan",
+                "fa": "رحلت پیامبر و شهادت امام حسن"
+            }
+        },
+        {
+            "date": "1406-05-12",
+            "name": {
+                "en": "Martyrdom of Imam Reza",
+                "fa": "شهادت امام رضا"
+            }
+        },
+        {
+            "date": "1406-05-20",
+            "name": {
+                "en": "Martyrdom of Imam Hasan Askari",
+                "fa": "شهادت امام حسن عسکری"
+            }
+        },
+        {
+            "date": "1406-05-29",
+            "name": {
+                "en": "Birthday of the Prophet and Imam Sadiq",
+                "fa": "میلاد پیامبر و امام صادق"
+            }
+        },
+        {
+            "date": "1406-08-12",
+            "name": {
+                "en": "Martyrdom of Fatimah",
+                "fa": "شهادت حضرت فاطمه"
+            }
+        },
+        {
+            "date": "1406-09-21",
+            "name": {
+                "en": "Birthday of Imam Ali",
+                "fa": "ولادت امام علی"
+            }
+        },
+        {
+            "date": "1406-10-05",
+            "name": {
+                "en": "Mabath",
+                "fa": "مبعث"
+            }
+        },
+        {
+            "date": "1406-10-23",
+            "name": {
+                "en": "Mid-Shaban",
+                "fa": "نیمه شعبان"
+            }
+        },
+        {
+            "date": "1406-11-22",
+            "name": {
+                "en": "Victory of the Revolution",
+                "fa": "پیروزی انقلاب اسلامی"
+            }
+        },
+        {
+            "date": "1406-11-29",
+            "name": {
+                "en": "Martyrdom of Imam Ali",
+                "fa": "شهادت امام علی"
+            }
+        },
+        {
+            "date": "1406-12-08",
+            "name": {
+                "en": "Eid al-Fitr",
+                "fa": "عید فطر"
+            }
+        },
+        {
+            "date": "1406-12-09",
+            "name": {
+                "en": "Eid al-Fitr, second day",
+                "fa": "عید فطر، روز دوم"
+            }
+        },
+        {
+            "date": "1406-12-29",
+            "name": {
+                "en": "Oil Nationalisation Day",
+                "fa": "ملی شدن صنعت نفت"
+            }
+        },
+        {
+            "date": "1407-01-01",
+            "name": {
+                "en": "Nowruz",
+                "fa": "نوروز"
+            }
+        },
+        {
+            "date": "1407-01-02",
+            "name": {
+                "en": "Nowruz",
+                "fa": "نوروز"
+            }
+        },
+        {
+            "date": "1407-01-03",
+            "name": {
+                "en": "Nowruz; Martyrdom of Imam Sadiq",
+                "fa": "نوروز؛ شهادت امام صادق"
+            }
+        },
+        {
+            "date": "1407-01-04",
+            "name": {
+                "en": "Nowruz",
+                "fa": "نوروز"
+            }
+        },
+        {
+            "date": "1407-01-12",
+            "name": {
+                "en": "Islamic Republic Day",
+                "fa": "روز جمهوری اسلامی"
+            }
+        },
+        {
+            "date": "1407-01-13",
+            "name": {
+                "en": "Nature Day",
+                "fa": "روز طبیعت"
+            }
+        },
+        {
+            "date": "1407-02-17",
+            "name": {
+                "en": "Eid al-Adha",
+                "fa": "عید قربان"
+            }
+        },
+        {
+            "date": "1407-02-25",
+            "name": {
+                "en": "Eid al-Ghadir",
+                "fa": "عید غدیر"
+            }
+        },
+        {
+            "date": "1407-03-14",
+            "name": {
+                "en": "Passing of Imam Khomeini; Tasua",
+                "fa": "رحلت امام خمینی؛ تاسوعا"
+            }
+        },
+        {
+            "date": "1407-03-15",
+            "name": {
+                "en": "15 Khordad Uprising; Ashura",
+                "fa": "قیام ۱۵ خرداد؛ عاشورا"
+            }
+        },
+        {
+            "date": "1407-04-24",
+            "name": {
+                "en": "Arbaeen",
+                "fa": "اربعین"
+            }
+        },
+        {
+            "date": "1407-05-01",
+            "name": {
+                "en": "Passing of the Prophet, martyrdom of Imam Hasan",
+                "fa": "رحلت پیامبر و شهادت امام حسن"
+            }
+        },
+        {
+            "date": "1407-05-02",
+            "name": {
+                "en": "Martyrdom of Imam Reza",
+                "fa": "شهادت امام رضا"
+            }
+        },
+        {
+            "date": "1407-05-10",
+            "name": {
+                "en": "Martyrdom of Imam Hasan Askari",
+                "fa": "شهادت امام حسن عسکری"
+            }
+        },
+        {
+            "date": "1407-05-19",
+            "name": {
+                "en": "Birthday of the Prophet and Imam Sadiq",
+                "fa": "میلاد پیامبر و امام صادق"
+            }
+        },
+        {
+            "date": "1407-08-01",
+            "name": {
+                "en": "Martyrdom of Fatimah",
+                "fa": "شهادت حضرت فاطمه"
+            }
+        },
+        {
+            "date": "1407-09-11",
+            "name": {
+                "en": "Birthday of Imam Ali",
+                "fa": "ولادت امام علی"
+            }
+        },
+        {
+            "date": "1407-09-25",
+            "name": {
+                "en": "Mabath",
+                "fa": "مبعث"
+            }
+        },
+        {
+            "date": "1407-10-12",
+            "name": {
+                "en": "Mid-Shaban",
+                "fa": "نیمه شعبان"
+            }
+        },
+        {
+            "date": "1407-11-18",
+            "name": {
+                "en": "Martyrdom of Imam Ali",
+                "fa": "شهادت امام علی"
+            }
+        },
+        {
+            "date": "1407-11-22",
+            "name": {
+                "en": "Victory of the Revolution",
+                "fa": "پیروزی انقلاب اسلامی"
+            }
+        },
+        {
+            "date": "1407-11-27",
+            "name": {
+                "en": "Eid al-Fitr",
+                "fa": "عید فطر"
+            }
+        },
+        {
+            "date": "1407-11-28",
+            "name": {
+                "en": "Eid al-Fitr, second day",
+                "fa": "عید فطر، روز دوم"
+            }
+        },
+        {
+            "date": "1407-12-21",
+            "name": {
+                "en": "Martyrdom of Imam Sadiq",
+                "fa": "شهادت امام صادق"
+            }
+        },
+        {
+            "date": "1407-12-29",
+            "name": {
+                "en": "Oil Nationalisation Day",
+                "fa": "ملی شدن صنعت نفت"
+            }
+        },
+        {
+            "date": "1408-01-01",
+            "name": {
+                "en": "Nowruz",
+                "fa": "نوروز"
+            }
+        },
+        {
+            "date": "1408-01-02",
+            "name": {
+                "en": "Nowruz",
+                "fa": "نوروز"
+            }
+        },
+        {
+            "date": "1408-01-03",
+            "name": {
+                "en": "Nowruz",
+                "fa": "نوروز"
+            }
+        },
+        {
+            "date": "1408-01-04",
+            "name": {
+                "en": "Nowruz",
+                "fa": "نوروز"
+            }
+        },
+        {
+            "date": "1408-01-12",
+            "name": {
+                "en": "Islamic Republic Day",
+                "fa": "روز جمهوری اسلامی"
+            }
+        },
+        {
+            "date": "1408-01-13",
+            "name": {
+                "en": "Nature Day",
+                "fa": "روز طبیعت"
+            }
+        },
+        {
+            "date": "1408-02-06",
+            "name": {
+                "en": "Eid al-Adha",
+                "fa": "عید قربان"
+            }
+        },
+        {
+            "date": "1408-02-14",
+            "name": {
+                "en": "Eid al-Ghadir",
+                "fa": "عید غدیر"
+            }
+        },
+        {
+            "date": "1408-03-03",
+            "name": {
+                "en": "Tasua",
+                "fa": "تاسوعا"
+            }
+        },
+        {
+            "date": "1408-03-04",
+            "name": {
+                "en": "Ashura",
+                "fa": "عاشورا"
+            }
+        },
+        {
+            "date": "1408-03-14",
+            "name": {
+                "en": "Passing of Imam Khomeini",
+                "fa": "رحلت امام خمینی"
+            }
+        },
+        {
+            "date": "1408-03-15",
+            "name": {
+                "en": "15 Khordad Uprising",
+                "fa": "قیام ۱۵ خرداد"
+            }
+        },
+        {
+            "date": "1408-04-13",
+            "name": {
+                "en": "Arbaeen",
+                "fa": "اربعین"
+            }
+        },
+        {
+            "date": "1408-04-21",
+            "name": {
+                "en": "Passing of the Prophet, martyrdom of Imam Hasan",
+                "fa": "رحلت پیامبر و شهادت امام حسن"
+            }
+        },
+        {
+            "date": "1408-04-22",
+            "name": {
+                "en": "Martyrdom of Imam Reza",
+                "fa": "شهادت امام رضا"
+            }
+        },
+        {
+            "date": "1408-04-31",
+            "name": {
+                "en": "Martyrdom of Imam Hasan Askari",
+                "fa": "شهادت امام حسن عسکری"
+            }
+        },
+        {
+            "date": "1408-05-09",
+            "name": {
+                "en": "Birthday of the Prophet and Imam Sadiq",
+                "fa": "میلاد پیامبر و امام صادق"
+            }
+        },
+        {
+            "date": "1408-07-21",
+            "name": {
+                "en": "Martyrdom of Fatimah",
+                "fa": "شهادت حضرت فاطمه"
+            }
+        },
+        {
+            "date": "1408-08-30",
+            "name": {
+                "en": "Birthday of Imam Ali",
+                "fa": "ولادت امام علی"
+            }
+        },
+        {
+            "date": "1408-09-14",
+            "name": {
+                "en": "Mabath",
+                "fa": "مبعث"
+            }
+        },
+        {
+            "date": "1408-10-02",
+            "name": {
+                "en": "Mid-Shaban",
+                "fa": "نیمه شعبان"
+            }
+        },
+        {
+            "date": "1408-11-07",
+            "name": {
+                "en": "Martyrdom of Imam Ali",
+                "fa": "شهادت امام علی"
+            }
+        },
+        {
+            "date": "1408-11-17",
+            "name": {
+                "en": "Eid al-Fitr",
+                "fa": "عید فطر"
+            }
+        },
+        {
+            "date": "1408-11-18",
+            "name": {
+                "en": "Eid al-Fitr, second day",
+                "fa": "عید فطر، روز دوم"
+            }
+        },
+        {
+            "date": "1408-11-22",
+            "name": {
+                "en": "Victory of the Revolution",
+                "fa": "پیروزی انقلاب اسلامی"
+            }
+        },
+        {
+            "date": "1408-12-11",
+            "name": {
+                "en": "Martyrdom of Imam Sadiq",
+                "fa": "شهادت امام صادق"
+            }
+        },
+        {
+            "date": "1408-12-29",
+            "name": {
+                "en": "Oil Nationalisation Day",
+                "fa": "ملی شدن صنعت نفت"
+            }
+        },
+        {
+            "date": "1408-12-30",
+            "name": {
+                "en": "Last day of the year",
+                "fa": "آخرین روز سال"
+            }
+        },
+        {
+            "date": "1409-01-01",
+            "name": {
+                "en": "Nowruz",
+                "fa": "نوروز"
+            }
+        },
+        {
+            "date": "1409-01-02",
+            "name": {
+                "en": "Nowruz",
+                "fa": "نوروز"
+            }
+        },
+        {
+            "date": "1409-01-03",
+            "name": {
+                "en": "Nowruz",
+                "fa": "نوروز"
+            }
+        },
+        {
+            "date": "1409-01-04",
+            "name": {
+                "en": "Nowruz",
+                "fa": "نوروز"
+            }
+        },
+        {
+            "date": "1409-01-12",
+            "name": {
+                "en": "Islamic Republic Day",
+                "fa": "روز جمهوری اسلامی"
+            }
+        },
+        {
+            "date": "1409-01-13",
+            "name": {
+                "en": "Nature Day",
+                "fa": "روز طبیعت"
+            }
+        },
+        {
+            "date": "1409-01-25",
+            "name": {
+                "en": "Eid al-Adha",
+                "fa": "عید قربان"
+            }
+        },
+        {
+            "date": "1409-02-02",
+            "name": {
+                "en": "Eid al-Ghadir",
+                "fa": "عید غدیر"
+            }
+        },
+        {
+            "date": "1409-02-22",
+            "name": {
+                "en": "Tasua",
+                "fa": "تاسوعا"
+            }
+        },
+        {
+            "date": "1409-02-23",
+            "name": {
+                "en": "Ashura",
+                "fa": "عاشورا"
+            }
+        },
+        {
+            "date": "1409-03-14",
+            "name": {
+                "en": "Passing of Imam Khomeini",
+                "fa": "رحلت امام خمینی"
+            }
+        },
+        {
+            "date": "1409-03-15",
+            "name": {
+                "en": "15 Khordad Uprising",
+                "fa": "قیام ۱۵ خرداد"
+            }
+        },
+        {
+            "date": "1409-04-01",
+            "name": {
+                "en": "Arbaeen",
+                "fa": "اربعین"
+            }
+        },
+        {
+            "date": "1409-04-09",
+            "name": {
+                "en": "Passing of the Prophet, martyrdom of Imam Hasan",
+                "fa": "رحلت پیامبر و شهادت امام حسن"
+            }
+        },
+        {
+            "date": "1409-04-10",
+            "name": {
+                "en": "Martyrdom of Imam Reza",
+                "fa": "شهادت امام رضا"
+            }
+        },
+        {
+            "date": "1409-04-19",
+            "name": {
+                "en": "Martyrdom of Imam Hasan Askari",
+                "fa": "شهادت امام حسن عسکری"
+            }
+        },
+        {
+            "date": "1409-04-28",
+            "name": {
+                "en": "Birthday of the Prophet and Imam Sadiq",
+                "fa": "میلاد پیامبر و امام صادق"
+            }
+        },
+        {
+            "date": "1409-07-10",
+            "name": {
+                "en": "Martyrdom of Fatimah",
+                "fa": "شهادت حضرت فاطمه"
+            }
+        },
+        {
+            "date": "1409-08-19",
+            "name": {
+                "en": "Birthday of Imam Ali",
+                "fa": "ولادت امام علی"
+            }
+        },
+        {
+            "date": "1409-09-03",
+            "name": {
+                "en": "Mabath",
+                "fa": "مبعث"
+            }
+        },
+        {
+            "date": "1409-09-20",
+            "name": {
+                "en": "Mid-Shaban",
+                "fa": "نیمه شعبان"
+            }
+        },
+        {
+            "date": "1409-10-26",
+            "name": {
+                "en": "Martyrdom of Imam Ali",
+                "fa": "شهادت امام علی"
+            }
+        },
+        {
+            "date": "1409-11-05",
+            "name": {
+                "en": "Eid al-Fitr",
+                "fa": "عید فطر"
+            }
+        },
+        {
+            "date": "1409-11-06",
+            "name": {
+                "en": "Eid al-Fitr, second day",
+                "fa": "عید فطر، روز دوم"
+            }
+        },
+        {
+            "date": "1409-11-22",
+            "name": {
+                "en": "Victory of the Revolution",
+                "fa": "پیروزی انقلاب اسلامی"
+            }
+        },
+        {
+            "date": "1409-11-29",
+            "name": {
+                "en": "Martyrdom of Imam Sadiq",
+                "fa": "شهادت امام صادق"
+            }
+        },
+        {
+            "date": "1409-12-29",
+            "name": {
+                "en": "Oil Nationalisation Day",
+                "fa": "ملی شدن صنعت نفت"
+            }
+        }
+    ],
+    "ramadan": [
+        {
+            "from": "1405-11-19",
+            "to": "1405-12-18"
+        },
+        {
+            "from": "1406-11-09",
+            "to": "1406-12-07"
+        },
+        {
+            "from": "1407-10-28",
+            "to": "1407-11-26"
+        },
+        {
+            "from": "1408-10-17",
+            "to": "1408-11-16"
+        },
+        {
+            "from": "1409-10-06",
+            "to": "1409-11-04"
+        }
+    ]
+}
