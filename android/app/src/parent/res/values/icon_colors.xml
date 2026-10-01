@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Pocora Parent's icon and notification colour: violet, the brand. -->
+<resources>
+    <color name="icon_start">#FF9B7BFF</color>
+    <color name="icon_end">#FF6A4CF0</color>
+</resources>
