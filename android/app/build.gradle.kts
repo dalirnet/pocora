@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.plugin.compose")
@@ -11,9 +13,10 @@ android {
     defaultConfig {
         minSdk = 28
         targetSdk = 35
-        // A release build takes these from the tag: -PversionName=1.2.0 -PversionCode=42.
-        versionCode = (findProperty("versionCode") as String?)?.toInt() ?: 1
-        versionName = (findProperty("versionName") as String?) ?: "0.1.0"
+        // From android/version.properties, which publish.sh writes for each release.
+        val release = Properties().apply { rootProject.file("version.properties").inputStream().use { load(it) } }
+        versionCode = release.getProperty("versionCode").toInt()
+        versionName = release.getProperty("versionName")
     }
 
     // The release key comes from the environment, so it never sits in the repo. Without it the release build is

@@ -1,4 +1,5 @@
 # A version tag, such as v1.2.0, builds both apps signed and minified and publishes them as a GitHub Release.
+# publish.sh makes the tag, after writing the same version into android/version.properties.
 #
 # Needs four repository secrets:
 #   POCORA_KEYSTORE_BASE64    the release keystore, base64-encoded
@@ -30,6 +31,14 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
+      # The apps carry the version from android/version.properties. The tag must name the same one.
+      - name: Tag matches the version
+        run: |
+          version="$(sed -n 's/^versionName=//p' version.properties)"
+          [ "v$version" = "$GITHUB_REF_NAME" ] \
+            || { echo "Tag $GITHUB_REF_NAME does not match versionName $version in version.properties."; exit 1; }
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+
       - name: Test
         run: make test
 
@@ -48,12 +57,10 @@ jobs:
           POCORA_KEY_ALIAS: ${{ secrets.POCORA_KEY_ALIAS }}
           POCORA_KEY_PASSWORD: ${{ secrets.POCORA_KEY_PASSWORD }}
         run: |
-          version="${GITHUB_REF_NAME#v}"
-          ./gradlew --no-configuration-cache assembleRelease \
-            -PversionName="$version" -PversionCode="${{ github.run_number }}"
+          ./gradlew --no-configuration-cache assembleRelease
           mkdir -p "$RUNNER_TEMP/out"
           for role in child parent; do
-            cp app/build/outputs/apk/$role/release/*.apk "$RUNNER_TEMP/out/pocora-$role-$version.apk"
+            cp app/build/outputs/apk/$role/release/*.apk "$RUNNER_TEMP/out/pocora-$role-$VERSION.apk"
           done
           (cd "$RUNNER_TEMP/out" && sha256sum *.apk > SHA256SUMS.txt)
           ls -l "$RUNNER_TEMP/out"
@@ -64,7 +71,7 @@ jobs:
         run: |
           gh release create "$GITHUB_REF_NAME" "$RUNNER_TEMP"/out/* \
             --repo "$GITHUB_REPOSITORY" \
-            --title "Pocora ${GITHUB_REF_NAME#v}" \
+            --title "Pocora $VERSION" \
             --generate-notes
 
       - name: Remove the key
