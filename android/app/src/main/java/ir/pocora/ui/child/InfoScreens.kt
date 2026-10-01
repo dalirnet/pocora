@@ -1,0 +1,214 @@
+package ir.pocora.ui.child
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.MarkEmailRead
+import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import ir.pocora.PocoraApp
+import ir.pocora.R
+import ir.pocora.config.Look
+import ir.pocora.model.RequestKind
+import ir.pocora.model.Snapshot
+import ir.pocora.ui.AppColors
+import ir.pocora.ui.Dimens
+import ir.pocora.ui.LocalPalette
+import ir.pocora.ui.common.LanguageAndLook
+import ir.pocora.ui.common.TemplateCard
+import ir.pocora.ui.common.UsageContent
+import ir.pocora.ui.common.WeekCard
+import ir.pocora.ui.common.rememberPresets
+import ir.pocora.ui.component.ButtonPair
+import ir.pocora.ui.component.Card
+import ir.pocora.ui.component.EmptyState
+import ir.pocora.ui.component.IconTile
+import ir.pocora.ui.component.LinkRow
+import ir.pocora.ui.component.LoadingCards
+import ir.pocora.ui.component.Screen
+import ir.pocora.ui.component.SectionTitle
+import ir.pocora.ui.rememberFormat
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+// The child's read-only screens: internet times, usage, requests, what the parent sees, and settings.
+
+// The same week the parent sees, to read only.
+@Composable
+fun TimesScreen(onBack: () -> Unit) {
+    val context = LocalContext.current
+    val agent = (context.applicationContext as PocoraApp).agent
+    val presets = rememberPresets()
+    val updates by agent.updates.collectAsState()
+    val rules = remember(updates) { agent.status.rules }
+    Screen(title = stringResource(R.string.tile_times), onBack = onBack) {
+        if (rules == null) {
+            LoadingCards(2)
+            return@Screen
+        }
+        TemplateCard(presets, rules)
+        WeekCard(presets, rules, stringResource(R.string.only_parent_changes), byParent = true)
+    }
+}
+
+// The child's own usage: exactly what the parent sees, so nothing is hidden.
+@Composable
+fun UsageScreen(onBack: () -> Unit) {
+    val context = LocalContext.current
+    val agent = (context.applicationContext as PocoraApp).agent
+    val presets = rememberPresets()
+    val updates by agent.updates.collectAsState()
+    val snapshot by produceState<Snapshot?>(null, updates) { value = withContext(Dispatchers.IO) { agent.snapshot() } }
+    Screen(title = stringResource(R.string.tile_usage), onBack = onBack) {
+        snapshot?.let { UsageContent(it, presets) } ?: LoadingCards(3)
+    }
+}
+
+// The second tab: the parent's install suggestions and removal requests, each with its two answers.
+@Composable
+fun RequestsScreen(bottom: @Composable () -> Unit) {
+    val context = LocalContext.current
+    val agent = (context.applicationContext as PocoraApp).agent
+    val palette = LocalPalette.current
+    val updates by agent.updates.collectAsState()
+    val requests = remember(updates) { agent.status.requests }
+    Screen(title = stringResource(R.string.requests_title), bottom = bottom, centered = requests.isEmpty()) {
+        if (requests.isEmpty()) {
+            EmptyState(
+                Icons.Filled.MarkEmailRead,
+                AppColors.pink,
+                stringResource(R.string.no_requests_title),
+                stringResource(R.string.no_requests),
+            )
+        }
+        for (request in requests) {
+            val remove = request.kind == RequestKind.REMOVE
+            Card {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(Dimens.row),
+                ) {
+                    IconTile(
+                        if (remove) Icons.Filled.Delete else Icons.Filled.Download,
+                        if (remove) AppColors.orange else AppColors.green,
+                        44.dp,
+                    )
+                    Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Text(
+                            text = request.appName,
+                            color = palette.text,
+                            fontSize = Dimens.heading,
+                            fontWeight = FontWeight.Bold,
+                        )
+                        Text(
+                            text =
+                                stringResource(
+                                    if (remove) R.string.request_remove_line else R.string.request_install_line,
+                                ),
+                            color = palette.muted,
+                            fontSize = Dimens.caption,
+                        )
+                    }
+                }
+                ButtonPair(
+                    quiet = stringResource(R.string.not_now),
+                    onQuiet = { agent.answer(context, request, false) },
+                    main = stringResource(if (remove) R.string.remove else R.string.install),
+                    onMain = { agent.answer(context, request, true) },
+                )
+            }
+        }
+    }
+}
+
+private val SEEN =
+    listOf(
+        R.string.seen_apps_time,
+        R.string.seen_apps_data,
+        R.string.seen_installed,
+        R.string.seen_off,
+        R.string.seen_restart,
+    )
+private val NOT_SEEN = listOf(R.string.not_seen_messages, R.string.not_seen_typing, R.string.not_seen_sites)
+
+// What is seen and what is not, so nothing is hidden from the child.
+@Composable
+fun SeesScreen(onBack: () -> Unit) {
+    val palette = LocalPalette.current
+    val format = rememberFormat()
+    val app = LocalContext.current.applicationContext as PocoraApp
+    val parents = remember { app.peerStore.all().size }
+    Screen(title = stringResource(R.string.what_my_parent_sees), onBack = onBack) {
+        SectionTitle(stringResource(R.string.parent_sees))
+        Card { for (line in SEEN) Line(Icons.Filled.Visibility, AppColors.violet, stringResource(line)) }
+        SectionTitle(stringResource(R.string.parent_never_sees))
+        Card { for (line in NOT_SEEN) Line(Icons.Filled.VisibilityOff, AppColors.green, stringResource(line)) }
+        Text(
+            text =
+                if (parents > 1) {
+                    stringResource(R.string.connected_parents, format.number(parents))
+                } else {
+                    stringResource(R.string.connected_one_parent)
+                },
+            color = palette.muted,
+            fontSize = 14.sp,
+        )
+    }
+}
+
+@Composable
+private fun Line(
+    icon: ImageVector,
+    color: Color,
+    text: String,
+) {
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Dimens.row)) {
+        IconTile(icon, color, 32.dp)
+        Text(text = text, color = LocalPalette.current.text, fontSize = Dimens.body)
+    }
+}
+
+// Language and theme for everyone, and setting up the phone once paired.
+// There is no button to turn Pocora off: a child can still stop the VPN in Android's settings, and the parent sees that.
+@Composable
+fun SettingsScreen(
+    paired: Boolean,
+    onBack: (() -> Unit)?,
+    onSetup: () -> Unit,
+    onLanguage: (String) -> Unit,
+    onLook: (Look) -> Unit,
+    bottom: (@Composable () -> Unit)? = null,
+) {
+    Screen(title = stringResource(R.string.settings), onBack = onBack, bottom = bottom) {
+        if (paired) {
+            Card {
+                LinkRow(
+                    title = stringResource(R.string.set_up_this_phone),
+                    icon = Icons.Filled.Tune,
+                    iconColor = AppColors.blue,
+                    onClick = onSetup,
+                )
+            }
+        }
+        LanguageAndLook(onLanguage, onLook)
+    }
+}
