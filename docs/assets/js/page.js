@@ -72,7 +72,7 @@ showSeason();
 
 // --- Setup: the phone shows the chosen step; the steps play through by themselves until one is clicked ---
 
-// The same length as the progress line's animation in style.css.
+// The same length as the ring's animation in style.css.
 const STEP_MILLISECONDS = 4000;
 const stepList = document.getElementById("steps");
 const steps = [...stepList.querySelectorAll(".step")];
@@ -90,7 +90,7 @@ function showStep(index) {
     const child = step.dataset.who === "child";
     stepPhone.classList.toggle("child", child);
     stepPhone.classList.toggle("parent", !child);
-    stepPhone.querySelector("figcaption").textContent = child ? "موبایل فرزند" : "موبایل والدین";
+    stepPhone.querySelector("figcaption").textContent = child ? "پوکورا فرزند" : "پوکورا والدین";
 }
 
 steps.forEach((step, index) =>
@@ -115,13 +115,16 @@ questions.forEach((question) =>
     }),
 );
 
-// --- Download: the newest version's number, from GitHub ---
+// --- Download: each file's size, from the newest release on GitHub ---
 
-// If GitHub cannot be reached, the line keeps its general wording.
+// If GitHub cannot be reached, the lines keep their general wording.
 fetch("https://api.github.com/repos/dalirnet/pocora/releases/latest")
     .then((response) => (response.ok ? response.json() : null))
     .then((release) => {
-        if (!release?.tag_name) return;
-        document.getElementById("version").textContent = `نسخهٔ ${persian(release.tag_name.replace(/^v/, ""))}`;
+        if (!release) return;
+        for (const line of document.querySelectorAll("[data-asset]")) {
+            const asset = release.assets?.find((file) => file.name === line.dataset.asset);
+            if (asset) line.textContent = `${persian((asset.size / 1048576).toFixed(1))} مگ`;
+        }
     })
     .catch(() => {});

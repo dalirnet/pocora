@@ -17,11 +17,11 @@ done
 
 ICONS="
 alarm-add
+cloud
 danger-triangle
-download-minimalistic
 eye
-eye-closed
 home-2
+incognito
 lock-keyhole
 pie-chart-2
 qr-code
@@ -32,7 +32,7 @@ square-academic-cap
 sun
 users-group-rounded
 wallet-money
-wi-fi
+wi-fi-router-minimalistic
 widget
 "
 

@@ -4,7 +4,7 @@
    Every size comes from the tokens below: a type scale, a 4px spacing grid, radii and component sizes.
    Small screens change the tokens and stack the columns; the rules stay the same.
    Icons: the Solar set, Bold style, by 480 Design, CC BY 4.0 (sprite.svg, written by tools/icons.sh).
-   Sections, in page order: base, top bar, shared parts, hero, family, presets, apps, setup, questions,
+   Sections, in page order: base, top bar, shared parts, hero, family, apps, presets, setup, questions,
    download, footer, motion, small screens. */
 
 /* --- Fonts --- */
@@ -47,10 +47,7 @@
     --child-deep: #0e9fcc;
     --allowed: #22b8f0;
     --limited: #e6e2f3;
-    --teal: #14b8a6;
     --green: #22c55e;
-    --orange: #f59e0b;
-    --red: #ef4444;
     --blue: #3b82f6;
 
     /* Fills: the coral and each app's colour, light to deep, for tiles, tags and buttons */
@@ -92,13 +89,11 @@
     --gutter: 24px;
     --nav: 64px;
     --control: 48px;
-    --app-icon: 32px;
     --tile: 36px;
     --badge: 34px;
     --tick: 20px;
     --phone: 240px;
     --phone-pair: 200px;
-    --phone-side: 176px;
     --stage: 520px;
 }
 
@@ -218,6 +213,7 @@ summary {
 .nav-cta {
     display: inline-flex;
     align-items: center;
+    gap: 6px;
     height: 36px;
     padding: 0 var(--s4);
     border-radius: var(--r-pill);
@@ -226,6 +222,10 @@ summary {
     color: #fff;
     background: var(--text);
     box-shadow: 0 6px 18px rgba(30, 27, 46, 0.2);
+}
+
+.nav-cta svg {
+    font-size: 18px;
 }
 
 /* --- Shared: sections --- */
@@ -251,6 +251,11 @@ summary {
 
 #apps.tint {
     background: linear-gradient(160deg, #fff3ec, #fdfaf6 60%, var(--paper));
+}
+
+/* Setup is where the two apps meet: a wash from the parent's violet to the child's cyan. */
+#start.tint {
+    background: linear-gradient(150deg, #e9e3ff, #f3f1fd 45%, #def4fd);
 }
 
 #download.tint {
@@ -495,26 +500,25 @@ h3 {
     background: #26242f;
 }
 
-/* Under each phone, whose phone it is, in that app's colour. */
+/* Under each phone, which app it shows: a caption rather than a control, the app's name in its colour on a
+   faint tint of it, with no shadow. */
 .phone figcaption {
     position: absolute;
     left: 50%;
     bottom: calc(-1 * var(--s10));
     transform: translateX(-50%);
     padding: 2px var(--s3);
-    border-radius: var(--r-pill);
+    border-radius: var(--r-sm);
     font-size: var(--text-xs);
     font-weight: 700;
     white-space: nowrap;
-    color: #fff;
-}
-
-.phone.parent figcaption {
-    background: var(--parent-fill);
+    color: var(--parent-deep);
+    background: rgba(123, 97, 255, 0.1);
 }
 
 .phone.child figcaption {
-    background: var(--child-fill);
+    color: var(--child-deep);
+    background: rgba(34, 184, 240, 0.12);
 }
 
 /* Two phones side by side, the second a little lower. */
@@ -561,45 +565,37 @@ h3 {
     background: linear-gradient(135deg, #34d399, var(--green));
 }
 
-/* Two download buttons of the same width: each app's own icon in its colour, and its name. */
-.buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--s3);
-    max-width: 360px;
-}
-
-.app-button {
-    display: flex;
+/* One way forward: down to the download section. */
+.cta {
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    gap: var(--s3);
+    gap: var(--s2);
     height: var(--control);
-    padding-inline: var(--s2) var(--s5);
+    padding: 0 var(--s6);
     border-radius: var(--r-md);
     font-weight: 700;
-    white-space: nowrap;
-    background: var(--card);
-    border: 1px solid var(--line);
-    box-shadow: var(--shadow-md);
-    transition: transform 0.15s, box-shadow 0.15s;
+    color: #fff;
+    /* The coral drifts slowly through the page's orange and back, so the one button draws the eye. */
+    background: linear-gradient(
+        110deg,
+        var(--accent-deep),
+        var(--accent-light),
+        #f5a524,
+        var(--accent-light),
+        var(--accent-deep)
+    );
+    background-size: 300% 100%;
+    box-shadow: 0 12px 28px rgba(255, 107, 61, 0.3);
+    transition: transform 0.15s;
+    animation: drift 6s ease-in-out infinite alternate;
 }
 
-.app-button:hover {
+.cta:hover {
     transform: translateY(-2px);
 }
 
-.app-button.parent:hover {
-    box-shadow: 0 14px 34px rgba(106, 79, 240, 0.2);
-}
-
-.app-button.child:hover {
-    box-shadow: 0 14px 34px rgba(14, 159, 204, 0.2);
-}
-
-.app-button img {
-    width: var(--app-icon);
-    height: var(--app-icon);
+.cta svg {
+    font-size: 20px;
 }
 
 .hero .phone.front {
@@ -672,7 +668,7 @@ h3 {
     animation: wheel 1.6s ease-in-out infinite;
 }
 
-/* --- 2. Family: two panels, the parent's phone and the child's, each with a line in its app's colour --- */
+/* --- 2. Family: two matching cards, the parent's and the child's, each edged and washed in its app's colour --- */
 .sides {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -680,80 +676,61 @@ h3 {
 }
 
 .side {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    gap: var(--s5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s4);
     padding: var(--s5);
     border-radius: var(--r-xl);
-    background: var(--card);
-    border-top: 3px solid var(--parent);
+    background: linear-gradient(180deg, rgba(123, 97, 255, 0.06), var(--card) 120px) var(--card);
+    border: 1px solid rgba(123, 97, 255, 0.22);
     box-shadow: var(--shadow-md);
 }
 
 .side.child {
-    border-top-color: var(--child);
+    background: linear-gradient(180deg, rgba(34, 184, 240, 0.07), var(--card) 120px) var(--card);
+    border-color: rgba(34, 184, 240, 0.28);
 }
 
-.side-copy {
-    min-width: 0;
+/* The app's icon, whose phone it is in the app's colour, and what that side is about. */
+.side-head {
+    display: flex;
+    align-items: center;
+    gap: var(--s3);
+    line-height: 1.5;
+    white-space: nowrap;
 }
 
-.side-label {
-    display: inline-block;
-    padding: 1px var(--s3);
-    border-radius: var(--r-pill);
+.side-head img {
+    width: 40px;
+    height: 40px;
+}
+
+.side-head small {
+    display: block;
     font-size: var(--text-xs);
     font-weight: 700;
-    color: #fff;
-    background: var(--parent-fill);
+    color: var(--parent-deep);
 }
 
-.side.child .side-label {
-    background: var(--child-fill);
+.side.child .side-head small {
+    color: var(--child-deep);
 }
 
-.side .phone {
-    width: var(--phone-side);
-    padding: 5px;
-    border-radius: 24px;
-    box-shadow:
-        inset 0 0 0 1px rgba(255, 255, 255, 0.16),
-        inset 0 0 0 3px #08080b,
-        0 18px 40px rgba(22, 18, 43, 0.25);
+.side-head b {
+    font-size: var(--text-lg);
 }
 
-.side .phone img {
-    border-radius: 20px;
-}
-
-.side .phone::before {
-    top: 12px;
-    width: 8px;
-    height: 8px;
-}
-
-.side .phone::after {
-    display: none;
-}
-
-.side .checks {
-    gap: var(--s2);
-    margin: 0;
-    font-size: var(--text-sm);
-}
-
-/* Each child with today's internet, as on the app's Home. */
-.kids {
+/* A short list as the app shows it: each child's day on one side, the child's alerts on the other. */
+.rows {
     display: grid;
-    gap: var(--s3);
-    margin-bottom: var(--s4);
+    gap: var(--s2);
 }
 
-.kid {
+.row {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: var(--s3);
+    min-height: 64px;
     padding: var(--s2) var(--s3);
     border-radius: var(--r-md);
     background: var(--paper);
@@ -764,8 +741,8 @@ h3 {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: var(--badge);
-    height: var(--badge);
+    width: var(--tile);
+    height: var(--tile);
     border-radius: 50%;
     font-size: 16px;
     font-weight: 700;
@@ -777,28 +754,28 @@ h3 {
 }
 
 .avatar.blue {
-    background: linear-gradient(#60a5fa, var(--blue));
+    background: linear-gradient(135deg, #60a5fa, var(--blue));
 }
 
-.kid-body {
+.row-body {
     flex: 1;
     min-width: 0;
     line-height: 1.5;
     white-space: nowrap;
 }
 
-.kid-body b {
+.row-body b {
     margin-inline-end: var(--s2);
     font-size: var(--text-sm);
 }
 
-.kid-body small {
+.row-body small {
     font-size: var(--text-xs);
     color: var(--muted);
 }
 
 .today {
-    margin-top: var(--s2);
+    margin-top: var(--s1);
     direction: ltr;
 }
 
@@ -811,12 +788,18 @@ h3 {
     color: var(--muted);
 }
 
+.side .checks {
+    gap: var(--s2);
+    margin: auto 0 0;
+    font-size: var(--text-sm);
+}
+
 /* The section's last word: Pocora starts a talk, shown as one. The parent asks, the child answers. */
 .talk {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--s6);
+    justify-content: center;
+    gap: var(--s8);
     margin-top: var(--s5);
     padding: var(--s4) var(--s6);
     border-radius: var(--r-xl);
@@ -844,7 +827,6 @@ h3 {
     display: flex;
     flex-direction: column;
     gap: var(--s1);
-    min-width: 220px;
 }
 
 .bubble {
@@ -867,16 +849,79 @@ h3 {
     background: var(--child-fill);
 }
 
-/* --- 3. Presets --- */
+/* --- 3. Apps and data: a card on each side, the parent's two screens between them --- */
+.trio {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: var(--s6);
+    align-items: center;
+}
+
+.trio .stage {
+    --phone-pair: 180px;
+    min-height: 0;
+    padding-bottom: var(--s16);
+}
+
+/* The two cards match: title, a picture of the choice, and two lines at the foot. */
+.feature-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s4);
+    padding: var(--s5) var(--s4);
+    border-radius: var(--r-xl);
+    background: var(--card);
+    box-shadow: var(--shadow-md);
+}
+
+.feature-card .group-head {
+    margin: 0;
+}
+
+.feature-card .checks {
+    gap: var(--s2);
+    margin: 0;
+    font-size: var(--text-sm);
+}
+
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.chips span {
+    padding: 2px var(--s3);
+    border-radius: var(--r-pill);
+    font-size: var(--text-sm);
+    background: var(--paper);
+}
+
+/* The eight data levels as plain badges, like the app chips beside them, from the start of the line. */
+.levels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.levels span {
+    padding: 2px 10px;
+    border-radius: var(--r-pill);
+    font-size: var(--text-xs);
+    white-space: nowrap;
+    background: var(--paper);
+}
+
+/* --- 4. Presets: today's suggestion, every preset on one timetable, then the app lists by age --- */
 /* This season's suggestion: today's date as a tear-off calendar leaf, then what Pocora suggests and for how long. */
 .now {
     display: flex;
     align-items: center;
     gap: var(--s4);
-    max-width: 560px;
+    width: fit-content;
     margin: 0 auto var(--s4);
     padding: var(--s3);
-    padding-inline-end: var(--s5);
+    padding-inline-end: var(--s8);
     border-radius: var(--r-lg);
     background: linear-gradient(120deg, #fff4ee, var(--card) 60%);
     border: 1px solid rgba(255, 107, 61, 0.22);
@@ -931,28 +976,109 @@ h3 {
     font-size: var(--text-lg);
 }
 
-.now-tag {
-    flex: none;
-    padding: 2px var(--s3);
-    border-radius: var(--r-pill);
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--accent-deep);
-    background: rgba(255, 107, 61, 0.12);
+/* The same coral dot as the suggested rows below, so the two read as one. */
+.now-text b::before,
+.preset-group li.suggested b::before {
+    content: "";
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-inline-end: 6px;
+    border-radius: 50%;
+    vertical-align: 2px;
+    background: var(--accent);
 }
 
-/* Every preset, in three groups of the same height. */
-.preset-groups {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--s4);
-}
-
-.preset-group {
-    padding: var(--s4);
+/* App lists by age: a slim strip under the timetable, its title on one side and the three ages as pills. */
+.ages {
+    display: flex;
+    align-items: center;
+    gap: var(--s2);
+    max-width: 880px;
+    margin: var(--s4) auto 0;
+    padding: var(--s3) var(--s4);
     border-radius: var(--r-lg);
     background: var(--card);
     box-shadow: var(--shadow-md);
+}
+
+.ages-head {
+    display: flex;
+    align-items: center;
+    gap: var(--s3);
+    margin-inline-end: auto;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+.ages-head b {
+    display: block;
+    font-size: var(--text-sm);
+}
+
+.ages-head small {
+    font-size: var(--text-xs);
+    color: var(--muted);
+}
+
+.age {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    padding: var(--s1) var(--s3);
+    border-radius: var(--r-pill);
+    font-size: var(--text-sm);
+    white-space: nowrap;
+    background: var(--paper);
+}
+
+.age small {
+    font-size: var(--text-xs);
+    color: var(--muted);
+}
+
+/* Every preset on one line, its group beside it: name and hours, then its day. */
+.timetable {
+    --group: 150px;
+    --timeline: 340px;
+    max-width: 880px;
+    margin: 0 auto;
+    padding: var(--s2) var(--s4) var(--s3);
+    border-radius: var(--r-xl);
+    background: var(--card);
+    box-shadow: var(--shadow-md);
+}
+
+.preset-group,
+.preset-group li {
+    display: grid;
+    align-items: center;
+    column-gap: var(--s4);
+}
+
+.preset-group {
+    grid-template-columns: var(--group) 1fr;
+    padding: var(--s2) 0;
+}
+
+.preset-group + .preset-group {
+    border-top: 1px solid var(--line);
+}
+
+.preset-group .group-head {
+    margin: 0;
+    padding-inline-start: var(--s3);
+}
+
+.preset-group .group-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.preset-group .group-head b {
+    font-size: var(--text-sm);
 }
 
 .preset-group ul {
@@ -964,161 +1090,47 @@ h3 {
 }
 
 .preset-group li {
+    grid-template-columns: 1fr var(--timeline);
     padding: var(--s2) var(--s3);
-    border-radius: var(--r-md);
-    line-height: 1.5;
-    white-space: nowrap;
+    border-radius: var(--r-sm);
+    transition: background 0.2s;
 }
 
-.preset-group li b {
-    display: block;
+.preset-group li:hover {
+    background: var(--paper);
 }
 
-.preset-group li small {
-    font-size: var(--text-sm);
-    color: var(--muted);
-}
-
-/* This season's preset, marked as the app marks it. */
-.preset-group li.suggested {
-    background: rgba(255, 107, 61, 0.07);
-    box-shadow: inset 0 0 0 1px rgba(255, 107, 61, 0.3);
-}
-
-.preset-group li.suggested b::after {
-    content: "پیشنهاد این فصل";
-    margin-inline-start: var(--s2);
-    padding: 0 var(--s2);
-    border-radius: var(--r-pill);
-    font-size: 11px;
-    font-weight: 700;
-    vertical-align: 2px;
-    color: #fff;
-    background: var(--accent);
-}
-
-/* App lists by age: a card across the width, its title on one side and the three ages beside it. */
-.ages {
-    display: grid;
-    grid-template-columns: 1.4fr repeat(3, 1fr);
-    align-items: center;
-    gap: var(--s3);
-    margin-top: var(--s4);
-    padding: var(--s3) var(--s4);
-    border-radius: var(--r-lg);
-    background: var(--card);
-    box-shadow: var(--shadow-md);
-}
-
-.ages-head {
+.preset-name {
     display: flex;
-    align-items: center;
-    gap: var(--s3);
-    line-height: 1.5;
+    align-items: baseline;
+    gap: var(--s2);
+    line-height: 1.6;
     white-space: nowrap;
 }
 
-.ages-head b,
-.age b {
-    display: block;
+.preset-name b {
+    font-size: var(--text-sm);
 }
 
-.ages-head small,
-.age small {
+.preset-name small {
     font-size: var(--text-xs);
     color: var(--muted);
 }
 
-.age {
-    padding: var(--s2) var(--s3);
-    border-radius: var(--r-md);
-    text-align: center;
-    line-height: 1.5;
-    white-space: nowrap;
-    background: var(--paper);
+/* Each bar is a whole day, marked faintly every six hours. */
+.timetable .dayline {
+    height: 8px;
+    margin: 0;
+    background:
+        linear-gradient(90deg, transparent calc(25% - 1px), #fff calc(25% - 1px) 25%, transparent 25%,
+            transparent calc(50% - 1px), #fff calc(50% - 1px) 50%, transparent 50%,
+            transparent calc(75% - 1px), #fff calc(75% - 1px) 75%, transparent 75%),
+        var(--limited);
 }
 
-/* --- 4. Apps and data: a card on each side, the two phones between them --- */
-.trio {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    gap: var(--s6);
-    align-items: center;
-}
-
-.trio .stage {
-    min-height: 0;
-    padding-bottom: var(--s16);
-}
-
-.feature-card {
-    padding: var(--s4) var(--s5) var(--s2);
-    border-radius: var(--r-lg);
-    background: var(--card);
-    box-shadow: var(--shadow-md);
-}
-
-.feature-card .group-head,
-.feature-card .chips,
-.feature-card .levels {
-    margin-bottom: var(--s4);
-}
-
-.feature-card .checks {
-    margin-bottom: var(--s3);
-}
-
-.chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--s2);
-}
-
-.chips span {
-    padding: 2px var(--s3);
-    border-radius: var(--r-pill);
-    font-size: var(--text-sm);
-    background: var(--card);
-    border: 1px solid rgba(236, 72, 153, 0.15);
-    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.06);
-}
-
-/* The eight data levels, coloured as in the app: less is cooler. */
-.levels {
-    display: grid;
-    grid-template-columns: repeat(2, auto);
-    justify-content: start;
-    gap: var(--s2);
-}
-
-.levels span {
-    padding: var(--s1) var(--s3);
-    border-radius: var(--r-sm);
-    font-size: var(--text-sm);
-    font-weight: 700;
-    text-align: center;
-    white-space: nowrap;
-    color: #fff;
-}
-
-.levels .l1 {
-    background: var(--teal);
-}
-
-.levels .l2 {
-    background: var(--green);
-}
-
-.levels .l3 {
-    background: var(--orange);
-}
-
-.levels .l4 {
-    background: var(--red);
-}
-
-.levels .l5 {
-    background: var(--parent);
+/* This season's preset, marked as the app marks it: a tinted row, and the coral dot set with .now-text above. */
+.preset-group li.suggested {
+    background: rgba(255, 107, 61, 0.08);
 }
 
 /* --- 5. Setup: the steps on one side, one phone showing the chosen step on the other --- */
@@ -1141,59 +1153,74 @@ h3 {
     object-fit: cover;
 }
 
+/* The steps on one line: numbered dots joined by a thread, the chosen step lifted onto a white card. */
 .steps {
+    position: relative;
     display: grid;
-    gap: var(--s2);
+    gap: var(--s1);
     min-width: 0;
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
+.steps::before {
+    content: "";
+    position: absolute;
+    top: var(--s8);
+    bottom: var(--s8);
+    inset-inline-start: calc(var(--s4) + var(--badge) / 2 - 1px);
+    border-inline-start: 2px dashed rgba(123, 97, 255, 0.25);
+}
+
 .step {
     position: relative;
     display: flex;
     align-items: center;
-    gap: var(--s3);
+    gap: var(--s4);
     width: 100%;
     padding: var(--s3) var(--s4);
     overflow: hidden;
-    border: 1px solid var(--line);
+    border: 1px solid transparent;
     border-radius: var(--r-lg);
     font: inherit;
     text-align: start;
     color: inherit;
-    background: var(--card);
+    background: transparent;
     cursor: pointer;
-    transition: box-shadow 0.2s, border-color 0.2s;
+    transition: background 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 
 .step:hover {
-    border-color: rgba(255, 107, 61, 0.3);
+    background: rgba(255, 255, 255, 0.6);
 }
 
 .step.active {
-    border-color: rgba(255, 107, 61, 0.4);
+    background: var(--card);
+    border-color: rgba(255, 107, 61, 0.3);
     box-shadow: var(--shadow-md);
 }
 
 .step-number {
+    position: relative;
     flex: none;
     display: flex;
     align-items: center;
     justify-content: center;
     width: var(--badge);
     height: var(--badge);
-    border-radius: var(--r-sm);
+    border-radius: 50%;
     font-weight: 700;
     color: var(--muted);
-    background: var(--paper);
+    background: var(--card);
+    box-shadow: 0 0 0 1px var(--line), var(--shadow-sm);
     transition: background 0.2s, color 0.2s;
 }
 
 .step.active .step-number {
     color: #fff;
     background: var(--accent-fill);
+    box-shadow: 0 6px 14px rgba(255, 107, 61, 0.3);
 }
 
 .step-text {
@@ -1210,77 +1237,67 @@ h3 {
     color: var(--muted);
 }
 
-/* While the steps play by themselves, a line under the chosen one fills up until the next. */
-.step-progress {
-    position: absolute;
-    inset-inline: 0;
-    bottom: 0;
-    height: 3px;
-    background: var(--accent);
-    transform: scaleX(0);
-    transform-origin: right;
+/* Which app the step happens in, in that app's colour. */
+.step-text .step-app {
+    display: block;
+    font-size: var(--text-xs);
+    font-weight: 700;
+    color: var(--parent-deep);
 }
 
-.step.active .step-progress {
-    animation: progress 4s linear;
+.step-text .step-app.child {
+    color: var(--child-deep);
 }
 
-.steps.paused .step-progress {
+/* While the steps play by themselves, a thin ring around the chosen step's number fills up until the next. */
+.step-ring {
     display: none;
+    position: absolute;
+    inset: -5px;
+    width: calc(100% + 10px);
+    height: calc(100% + 10px);
+    transform: rotate(-90deg);
+    fill: none;
 }
 
-/* --- 6. Questions: the title and a way forward on one side, the questions on the other --- */
-.faq {
-    display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: var(--s12);
-    align-items: start;
+.step-ring circle {
+    stroke: var(--accent);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-dasharray: 126;
+    stroke-dashoffset: 126;
 }
 
-.faq-intro {
-    position: sticky;
-    top: calc(var(--nav) + var(--s8));
-}
-
-.ask {
-    display: flex;
-    align-items: center;
-    gap: var(--s3);
-    padding: var(--s3) var(--s4);
-    border-radius: var(--r-lg);
-    line-height: 1.5;
-    white-space: nowrap;
-    background: var(--card);
-    border: 1px solid var(--line);
-    box-shadow: var(--shadow-sm);
-    transition: border-color 0.2s;
-}
-
-.ask:hover {
-    border-color: rgba(255, 107, 61, 0.35);
-}
-
-.ask b {
+.step.active .step-ring {
     display: block;
 }
 
-.ask small {
-    font-size: var(--text-sm);
-    color: var(--accent-deep);
+.step.active .step-ring circle {
+    animation: ring 4s linear;
 }
 
+.steps.paused .step-ring {
+    display: none;
+}
+
+/* --- 6. Questions: the title centred, the questions as cards under it --- */
+/* The questions as a column of cards. */
 .questions {
     display: grid;
     gap: var(--s2);
+    max-width: 760px;
+    margin: 0 auto;
 }
 
 details {
     border-radius: var(--r-lg);
     background: var(--card);
     border: 1px solid var(--line);
+    box-shadow: var(--shadow-sm);
     transition: box-shadow 0.2s, border-color 0.2s;
 }
 
+/* The open question: a thin coral edge all round, on plain white. */
 details[open] {
     border-color: rgba(255, 107, 61, 0.3);
     box-shadow: var(--shadow-md);
@@ -1289,11 +1306,15 @@ details[open] {
 summary {
     display: flex;
     align-items: center;
-    gap: var(--s3);
-    padding: var(--s2) var(--s3);
+    gap: var(--s4);
+    padding: var(--s4) var(--s5);
     font-weight: 700;
     list-style: none;
     cursor: pointer;
+}
+
+summary:hover .q-text {
+    color: var(--accent-deep);
 }
 
 summary::-webkit-details-marker {
@@ -1305,12 +1326,13 @@ summary::-webkit-details-marker {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: var(--badge);
-    height: var(--badge);
-    border-radius: var(--r-sm);
-    font-size: 17px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 15px;
     color: var(--accent-deep);
     background: var(--accent-soft);
+    transition: background 0.2s, color 0.2s;
 }
 
 details[open] .q-icon {
@@ -1322,69 +1344,78 @@ details[open] .q-icon {
     flex: 1;
 }
 
-/* A plus in a circle that turns into a minus. */
+/* A thin chevron in a soft circle that turns to point up when the answer is open. */
 .q-toggle {
-    position: relative;
     flex: none;
-    width: 26px;
-    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
+    color: var(--muted);
     background: var(--paper);
-    transition: transform 0.25s, background 0.2s;
+    transition: transform 0.25s, background 0.2s, color 0.2s;
 }
 
-.q-toggle::before,
-.q-toggle::after {
+.q-toggle::before {
     content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 10px;
-    height: 2px;
-    margin: -1px 0 0 -5px;
-    border-radius: 1px;
-    background: var(--text);
+    width: 5px;
+    height: 5px;
+    margin-top: -3px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    border-radius: 0 0 2px 0;
+    transform: rotate(45deg);
 }
 
-.q-toggle::after {
-    transform: rotate(90deg);
+summary:hover .q-toggle {
+    color: var(--accent-deep);
 }
 
 details[open] .q-toggle {
     transform: rotate(180deg);
+    color: var(--accent-deep);
     background: var(--accent-soft);
 }
 
-details[open] .q-toggle::after {
-    transform: rotate(0deg);
-}
-
-/* The one place a sentence may wrap: an answer explains. It starts under the question, not the icon. */
+/* The one place a sentence may wrap: an answer explains. It sits under the question, clear of the icon and the
+   toggle. */
 details p {
     margin: 0;
-    padding: 0 var(--s3) var(--s3);
-    padding-inline-start: calc(var(--badge) + var(--s3) * 2);
+    padding: 0 var(--s5) var(--s5);
+    padding-inline: calc(30px + var(--s4) + var(--s5)) calc(24px + var(--s4) + var(--s5));
     font-size: var(--text-sm);
     line-height: 2;
     color: var(--muted);
 }
 
-/* --- 7. Download: a card per app in its own colour, each downloading the newest file directly --- */
+/* The words to catch at a glance, in the text colour. */
+details p b {
+    font-weight: 700;
+    color: var(--text);
+}
+
+/* --- 7. Download: a card per app in its own colour, then two notes on where to get them and how to install --- */
 #download {
     justify-content: space-between;
     padding-bottom: 0;
 }
 
+/* The content sits centred between the top bar and the footer, with as much room under it as over it. */
 .download-body {
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding-bottom: var(--s12);
 }
 
+/* A card per app, edged and washed in its colour as the family cards are: what it is, what it does, and the
+   newest file in one tap. */
 .apps {
     display: grid;
-    grid-template-columns: repeat(2, 240px);
+    grid-template-columns: repeat(2, minmax(0, 360px));
     justify-content: center;
     gap: var(--s5);
 }
@@ -1392,35 +1423,51 @@ details p {
 .app-card {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: var(--s6) var(--s5) var(--s5);
+    gap: var(--s4);
+    padding: var(--s5);
     border-radius: var(--r-xl);
-    text-align: center;
-    line-height: 1.6;
-    white-space: nowrap;
-    background: var(--card);
-    border-top: 3px solid var(--parent);
+    background: linear-gradient(180deg, rgba(123, 97, 255, 0.06), var(--card) 120px) var(--card);
+    border: 1px solid rgba(123, 97, 255, 0.22);
     box-shadow: var(--shadow-lg);
 }
 
 .app-card.child {
-    border-top-color: var(--child);
+    background: linear-gradient(180deg, rgba(34, 184, 240, 0.07), var(--card) 120px) var(--card);
+    border-color: rgba(34, 184, 240, 0.28);
 }
 
-.app-card img {
-    width: 64px;
-    height: 64px;
-    margin-bottom: var(--s3);
+.app-head {
+    display: flex;
+    align-items: center;
+    gap: var(--s3);
+    line-height: 1.5;
+    white-space: nowrap;
 }
 
-.app-card b {
+.app-head img {
+    width: 52px;
+    height: 52px;
+}
+
+.app-head b {
+    display: block;
     font-size: var(--text-lg);
 }
 
-.app-card small {
-    margin-bottom: var(--s4);
+.app-head small {
+    font-size: var(--text-xs);
+    font-weight: 700;
+    color: var(--parent-deep);
+}
+
+.app-card.child .app-head small {
+    color: var(--child-deep);
+}
+
+.app-card .checks {
+    gap: var(--s2);
+    margin: 0;
     font-size: var(--text-sm);
-    color: var(--muted);
 }
 
 .get {
@@ -1451,12 +1498,53 @@ details p {
     font-size: 20px;
 }
 
-.release {
-    margin: var(--s5) 0 0;
-    text-align: center;
+/* The file's size as a light badge at the end of the button, filled in by page.js from the newest release;
+   hidden until it is known. */
+.get-size {
+    padding: 1px var(--s2);
+    border-radius: var(--r-pill);
+    font-size: 11px;
+    font-weight: 400;
+    background: rgba(255, 255, 255, 0.22);
+}
+
+.get-size:empty {
+    display: none;
+}
+
+/* Two things to know before installing, as a matching pair of notes: where the apps come from, so a copy in a
+   store is not mistaken for them, and the one permission Android asks for. */
+.notes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 360px));
+    justify-content: center;
+    gap: var(--s5);
+    margin-top: var(--s5);
+}
+
+.note {
+    display: flex;
+    align-items: center;
+    gap: var(--s3);
+    padding: var(--s3);
+    padding-inline-end: var(--s5);
+    border-radius: var(--r-lg);
+    line-height: 1.5;
+    white-space: nowrap;
+    background: linear-gradient(120deg, #fff4ee, var(--card) 70%);
+    border: 1px solid rgba(255, 107, 61, 0.22);
+}
+
+.note b {
+    display: block;
     font-size: var(--text-sm);
+}
+
+.note small {
+    font-size: var(--text-xs);
     color: var(--muted);
 }
+
 
 /* --- Footer --- */
 .footer {
@@ -1501,7 +1589,6 @@ details p {
     color: var(--muted);
 }
 
-.release a,
 .footer a:hover {
     color: var(--accent-deep);
 }
@@ -1532,9 +1619,15 @@ details p {
     }
 }
 
-@keyframes progress {
+@keyframes drift {
     to {
-        transform: scaleX(1);
+        background-position: 100% 0;
+    }
+}
+
+@keyframes ring {
+    to {
+        stroke-dashoffset: 0;
     }
 }
 
@@ -1546,7 +1639,8 @@ details p {
     }
 
     .toast,
-    .scroll span {
+    .scroll span,
+    .cta {
         animation: none;
     }
 }
@@ -1570,11 +1664,17 @@ details p {
 
     .hero-grid,
     .sides,
-    .preset-groups,
     .trio,
-    .setup,
-    .faq {
+    .setup {
         grid-template-columns: 1fr;
+    }
+
+    .trio {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .trio .stage {
+        --phone-pair: 46%;
     }
 
     .hero-grid {
@@ -1606,19 +1706,11 @@ details p {
         inset-inline-start: 0;
     }
 
-    /* Family: each panel's text above its phone */
-    .side {
-        grid-template-columns: 1fr;
-        justify-items: center;
-    }
-
-    .side-copy {
-        justify-self: stretch;
-    }
-
+    /* Family: the talk's words above the chat */
     .talk {
         flex-direction: column;
         align-items: stretch;
+        gap: var(--s4);
         padding: var(--s4);
     }
 
@@ -1626,36 +1718,63 @@ details p {
         font-size: var(--text-base);
     }
 
-    /* Presets */
-    .now-tag {
-        display: none;
+    .timetable {
+        padding-inline: var(--s2);
     }
 
     .ages {
-        grid-template-columns: repeat(3, 1fr);
+        flex-wrap: wrap;
     }
 
     .ages-head {
-        grid-column: 1 / -1;
+        flex-basis: 100%;
+        margin-bottom: var(--s1);
+    }
+
+    .age {
+        flex: 1;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        border-radius: var(--r-md);
+        line-height: 1.5;
+    }
+
+    /* Presets: each group's name above its rows, each preset's name above its day */
+    .preset-group,
+    .preset-group li {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+
+    .preset-group .group-head {
+        margin-bottom: var(--s1);
+    }
+
+    .preset-group li {
+        row-gap: var(--s1);
+    }
+
+    .preset-name {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        line-height: 1.5;
     }
 
     /* Questions */
-    .faq-intro {
-        position: static;
+    summary {
+        padding-inline: var(--s4);
     }
 
     details p {
-        padding-inline-start: var(--s3);
+        padding-inline: var(--s4);
     }
 
     /* Download and footer */
-    .apps {
-        grid-template-columns: 1fr 1fr;
-        gap: var(--s3);
-    }
-
-    .app-card {
-        padding: var(--s4) var(--s3) var(--s3);
+    .apps,
+    .notes {
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .footer-row,
