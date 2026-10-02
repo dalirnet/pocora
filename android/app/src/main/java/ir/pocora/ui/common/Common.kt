@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,6 +33,7 @@ import ir.pocora.model.Week
 import ir.pocora.preset.PresetStore
 import ir.pocora.preset.Presets
 import ir.pocora.ui.AppColors
+import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
 import ir.pocora.ui.component.Card
@@ -130,7 +129,7 @@ fun TemplateCard(
     val fits = rules.schedule in remember(presets) { Seasons(presets) }.fitting(LocalDate.now())
     Card {
         IconHeader(
-            icon = Icons.Filled.CalendarMonth,
+            icon = AppIcons.CalendarMonth,
             color = AppColors.violet,
             title = presets.schedule(rules.schedule).name.text(),
             subtitle = scheduleSummary(schedule, rules.schedule),

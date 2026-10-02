@@ -36,6 +36,7 @@ import ir.pocora.config.Look
 import ir.pocora.model.RequestKind
 import ir.pocora.model.Snapshot
 import ir.pocora.ui.AppColors
+import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
 import ir.pocora.ui.common.LanguageAndLook
@@ -165,9 +166,9 @@ fun SeesScreen(onBack: () -> Unit) {
     val parents = remember { app.peerStore.all().size }
     Screen(title = stringResource(R.string.what_my_parent_sees), onBack = onBack) {
         SectionTitle(stringResource(R.string.parent_sees))
-        Card { for (line in SEEN) Line(Icons.Filled.Visibility, AppColors.violet, stringResource(line)) }
+        Card { for (line in SEEN) Line(AppIcons.Visibility, AppColors.violet, stringResource(line)) }
         SectionTitle(stringResource(R.string.parent_never_sees))
-        Card { for (line in NOT_SEEN) Line(Icons.Filled.VisibilityOff, AppColors.green, stringResource(line)) }
+        Card { for (line in NOT_SEEN) Line(AppIcons.VisibilityOff, AppColors.green, stringResource(line)) }
         Text(
             text =
                 if (parents > 1) {
@@ -212,7 +213,7 @@ fun SettingsScreen(
                 Card {
                     LinkRow(
                         title = stringResource(R.string.set_up_this_phone),
-                        icon = Icons.Filled.Tune,
+                        icon = AppIcons.Tune,
                         iconColor = AppColors.blue,
                         onClick = onSetup,
                     )
@@ -223,7 +224,7 @@ fun SettingsScreen(
                 Card {
                     LinkRow(
                         title = stringResource(R.string.disconnect_from_parent),
-                        icon = Icons.Filled.LinkOff,
+                        icon = AppIcons.LinkOff,
                         iconColor = AppColors.orange,
                         onClick = { disconnecting = true },
                     )
@@ -234,7 +235,7 @@ fun SettingsScreen(
             Sheet(
                 onDismiss = { disconnecting = false },
                 title = stringResource(R.string.disconnect_title),
-                icon = Icons.Filled.LinkOff,
+                icon = AppIcons.LinkOff,
                 color = AppColors.orange,
                 subtitle = stringResource(R.string.disconnect_text),
             ) {

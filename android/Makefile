@@ -16,6 +16,7 @@ help:
 	@echo "  make phones-stop   shut the virtual phones down"
 	@echo "Code"
 	@echo "  make presets       write the presets JSON from ../preset/"
+	@echo "  make icons         write AppIcons.kt from the Solar icon set"
 	@echo "  make format        format Kotlin, JSON and XML"
 	@echo "  make test          run the unit tests of both apps"
 	@echo "Build"
@@ -54,6 +55,10 @@ phones-stop:
 .PHONY: presets
 presets:
 	@bash scripts/presets.sh
+
+.PHONY: icons
+icons:
+	@bash scripts/icons.sh
 
 .PHONY: format
 format:

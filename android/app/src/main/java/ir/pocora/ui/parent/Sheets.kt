@@ -39,6 +39,7 @@ import ir.pocora.model.Schedule
 import ir.pocora.model.Week
 import ir.pocora.preset.AppGroup
 import ir.pocora.ui.AppColors
+import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
 import ir.pocora.ui.common.rememberPresets
@@ -75,7 +76,7 @@ fun DurationSheet(
     Sheet(
         onDismiss = onClose,
         title = stringResource(if (allowed) R.string.allow_internet_now else R.string.stop_internet_now),
-        icon = if (allowed) Icons.Filled.Wifi else Icons.Filled.WifiOff,
+        icon = if (allowed) AppIcons.Wifi else AppIcons.WifiOff,
         color = color,
         subtitle = stringResource(R.string.for_how_long),
     ) {
@@ -120,7 +121,7 @@ fun CopySheet(
     Sheet(
         onDismiss = onClose,
         title = stringResource(R.string.same_as_another_day),
-        icon = Icons.Filled.ContentCopy,
+        icon = AppIcons.ContentCopy,
         color = AppColors.violet,
         subtitle = format.date(target),
     ) {
@@ -238,14 +239,14 @@ fun OneAppSheet(
             fontSize = Dimens.body,
             fontWeight = FontWeight.Bold,
         )
-        OptionCard(Icons.Filled.Apps, AppColors.blue, stringResource(R.string.choice_by_list), choice == null, {
+        OptionCard(AppIcons.Apps, AppColors.blue, stringResource(R.string.choice_by_list), choice == null, {
             setChoice(null)
         }, enabled = model.canEdit)
-        OptionCard(Icons.Filled.Wifi, AppColors.green, stringResource(R.string.choice_always), choice == AppChoice.IN, {
+        OptionCard(AppIcons.Wifi, AppColors.green, stringResource(R.string.choice_always), choice == AppChoice.IN, {
             setChoice(AppChoice.IN)
         }, enabled = model.canEdit)
         OptionCard(
-            Icons.Filled.WifiOff,
+            AppIcons.WifiOff,
             AppColors.orange,
             stringResource(R.string.choice_never),
             choice == AppChoice.OUT,
@@ -253,7 +254,7 @@ fun OneAppSheet(
             enabled = model.canEdit,
         )
         SwitchRow(
-            icon = Icons.Filled.Visibility,
+            icon = AppIcons.Visibility,
             iconColor = AppColors.violet,
             title = stringResource(R.string.watch_this_app),
             checked = packageName in rules.watch,
@@ -323,7 +324,7 @@ fun NotReachableSheet(
     Sheet(
         onDismiss = onCancel,
         title = stringResource(R.string.cant_reach, childName),
-        icon = Icons.Filled.WifiFind,
+        icon = AppIcons.WifiFind,
         color = AppColors.orange,
         subtitle = stringResource(R.string.cant_reach_text),
     ) {

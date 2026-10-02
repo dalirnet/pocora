@@ -9,12 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.PersonRemove
-import androidx.compose.material.icons.filled.WarningAmber
-import androidx.compose.material.icons.filled.Wifi
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,6 +31,7 @@ import ir.pocora.R
 import ir.pocora.config.Look
 import ir.pocora.model.Peer
 import ir.pocora.ui.AppColors
+import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
 import ir.pocora.ui.common.LanguageAndLook
@@ -107,7 +102,7 @@ fun SettingsScreen(
             SectionTitle(stringResource(R.string.notifications))
             Card {
                 PermissionRow(
-                    Icons.Filled.Notifications,
+                    AppIcons.Notifications,
                     AppColors.pink,
                     stringResource(R.string.show_notifications),
                     canNotify,
@@ -121,15 +116,15 @@ fun SettingsScreen(
                 SwitchRow(stringResource(R.string.notify_when_connects), home, {
                     home = it
                     config.notifyHome = it
-                }, enabled = canNotify, icon = Icons.Filled.Wifi, iconColor = AppColors.teal)
+                }, enabled = canNotify, icon = AppIcons.Wifi, iconColor = AppColors.teal)
                 SwitchRow(stringResource(R.string.alerts), alerts, {
                     alerts = it
                     config.notifyAlerts = it
-                }, enabled = canNotify, icon = Icons.Filled.WarningAmber, iconColor = AppColors.orange)
+                }, enabled = canNotify, icon = AppIcons.WarningAmber, iconColor = AppColors.orange)
                 SwitchRow(stringResource(R.string.schedule_suggestions), suggestions, {
                     suggestions = it
                     config.notifySuggestions = it
-                }, enabled = canNotify, icon = Icons.Filled.CalendarMonth, iconColor = AppColors.violet)
+                }, enabled = canNotify, icon = AppIcons.CalendarMonth, iconColor = AppColors.violet)
             }
 
             LanguageAndLook(onLanguage, onLook)
@@ -138,7 +133,7 @@ fun SettingsScreen(
             Sheet(
                 onDismiss = { removing = null },
                 title = stringResource(R.string.remove_child, child.name),
-                icon = Icons.Filled.PersonRemove,
+                icon = AppIcons.PersonRemove,
                 color = AppColors.orange,
                 subtitle = stringResource(R.string.remove_child_text, child.name),
             ) {

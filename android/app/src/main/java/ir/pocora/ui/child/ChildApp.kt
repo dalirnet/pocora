@@ -19,6 +19,7 @@ import ir.pocora.R
 import ir.pocora.config.Look
 import ir.pocora.protocol.PairingCode
 import ir.pocora.transport.PairingResult
+import ir.pocora.ui.AppIcons
 import ir.pocora.ui.component.BarItem
 import ir.pocora.ui.component.BottomBar
 

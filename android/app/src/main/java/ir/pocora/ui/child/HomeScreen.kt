@@ -2,14 +2,6 @@ package ir.pocora.ui.child
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.DataUsage
-import androidx.compose.material.icons.filled.HourglassEmpty
-import androidx.compose.material.icons.filled.Tune
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.Wifi
-import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -27,6 +19,7 @@ import ir.pocora.agent.AgentStatus
 import ir.pocora.model.Schedule
 import ir.pocora.model.Snapshot
 import ir.pocora.ui.AppColors
+import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
 import ir.pocora.ui.common.HomeHeader
@@ -94,20 +87,20 @@ fun HomeScreen(
             TileGrid(
                 listOf(
                     Tile(
-                        Icons.Filled.AccessTime,
+                        AppIcons.AccessTime,
                         AppColors.violet,
                         stringResource(R.string.tile_times),
                         status.rules != null,
                         onClick = onTimes,
                     ),
                     Tile(
-                        Icons.Filled.DataUsage,
+                        AppIcons.DataUsage,
                         AppColors.green,
                         stringResource(R.string.tile_usage),
                         onClick = onUsage,
                     ),
                     Tile(
-                        Icons.Filled.Visibility,
+                        AppIcons.Visibility,
                         AppColors.blue,
                         stringResource(R.string.tile_parent_sees),
                         onClick = onSees,
@@ -122,7 +115,7 @@ fun HomeScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(Dimens.row),
                     ) {
-                        IconTile(Icons.Filled.Tune, AppColors.orange, Dimens.rowIcon)
+                        IconTile(AppIcons.Tune, AppColors.orange, Dimens.rowIcon)
                         Text(
                             text = stringResource(R.string.setup_not_finished),
                             color = palette.text,
@@ -158,7 +151,7 @@ private fun Status(
 
         !status.hasRules -> {
             StatusPanel(
-                Icons.Filled.HourglassEmpty,
+                AppIcons.HourglassEmpty,
                 palette.muted,
                 stringResource(R.string.waiting_for_rules),
                 null,
@@ -168,7 +161,7 @@ private fun Status(
 
         else -> {
             StatusPanel(
-                if (status.allowed) Icons.Filled.Wifi else Icons.Filled.WifiOff,
+                if (status.allowed) AppIcons.Wifi else AppIcons.WifiOff,
                 if (status.allowed) palette.allowed else palette.muted,
                 internetSentence(status.allowed, status.until, toChild = true),
                 scheduleName,

@@ -56,6 +56,7 @@ import ir.pocora.model.Rules
 import ir.pocora.protocol.PairRequest
 import ir.pocora.transport.PairingHost
 import ir.pocora.ui.AppColors
+import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
 import ir.pocora.ui.component.Avatar
@@ -169,7 +170,7 @@ fun AddChildScreen(
                     modifier = Modifier.size(96.dp).background(palette.brand.copy(alpha = 0.12f), CircleShape),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Icon(Icons.Filled.Person, null, tint = palette.brand, modifier = Modifier.size(48.dp))
+                    Icon(AppIcons.Person, null, tint = palette.brand, modifier = Modifier.size(48.dp))
                 }
             } else {
                 Avatar(name, 96.dp)
@@ -336,7 +337,7 @@ fun PairingCodeScreen(
             Sheet(
                 onDismiss = reject,
                 title = stringResource(R.string.phone_wants_to_connect),
-                icon = Icons.Filled.PhonelinkRing,
+                icon = AppIcons.PhonelinkRing,
                 subtitle = stringResource(R.string.accept_only_if, childName),
             ) {
                 val palette = LocalPalette.current
@@ -351,7 +352,7 @@ fun PairingCodeScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(Dimens.row),
                 ) {
-                    IconTile(Icons.Filled.PhoneAndroid, AppColors.slate, Dimens.rowIcon)
+                    IconTile(AppIcons.PhoneAndroid, AppColors.slate, Dimens.rowIcon)
                     Column {
                         // A phone's name is Latin; the Persian font would turn its digits Persian.
                         Text(

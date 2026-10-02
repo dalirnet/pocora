@@ -15,14 +15,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Apps
-import androidx.compose.material.icons.filled.ContentCut
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,6 +41,7 @@ import ir.pocora.model.Mark
 import ir.pocora.model.Schedule
 import ir.pocora.model.Week
 import ir.pocora.ui.AppColors
+import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
 import ir.pocora.ui.common.WeekLegend
@@ -161,7 +154,7 @@ fun EditDayScreen(
 
             if (blocks.isEmpty()) {
                 EmptyState(
-                    icon = Icons.Filled.WifiOff,
+                    icon = AppIcons.WifiOff,
                     color = palette.muted,
                     title = stringResource(R.string.no_internet_all_day),
                     text = stringResource(R.string.no_internet_this_day),
@@ -174,7 +167,7 @@ fun EditDayScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(Dimens.row),
                     ) {
-                        IconTile(Icons.Filled.AccessTime, AppColors.cyan, Dimens.rowIcon)
+                        IconTile(AppIcons.AccessTime, AppColors.cyan, Dimens.rowIcon)
                         Text(
                             text =
                                 stringResource(
@@ -187,7 +180,7 @@ fun EditDayScreen(
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.weight(1f),
                         )
-                        IconAction(Icons.Filled.Delete, stringResource(R.string.remove), { setBlocks(blocks - block) })
+                        IconAction(AppIcons.Delete, stringResource(R.string.remove), { setBlocks(blocks - block) })
                     }
                     Row(horizontalArrangement = Arrangement.spacedBy(Dimens.small)) {
                         TimePill(stringResource(R.string.starts_at), format.mark(block.start), Modifier.weight(1f)) {
@@ -206,17 +199,17 @@ fun EditDayScreen(
                                 block.appsList?.let { presets.appsList(it).name.text() }
                                     ?: stringResource(R.string.usual_apps_list),
                             ),
-                        icon = Icons.Filled.Apps,
+                        icon = AppIcons.Apps,
                         iconColor = AppColors.blue,
                         onClick = { listFor = index },
                     )
                 }
             }
             Row(horizontalArrangement = Arrangement.spacedBy(Dimens.small)) {
-                ActionButton(Icons.Filled.Add, AppColors.cyan, stringResource(R.string.add_internet_time), {
+                ActionButton(AppIcons.Add, AppColors.cyan, stringResource(R.string.add_internet_time), {
                     setBlocks(blocks + newBlock(plan))
                 }, Modifier.weight(1f))
-                ActionButton(Icons.Filled.ContentCut, AppColors.orange, stringResource(R.string.add_a_break), {
+                ActionButton(AppIcons.ContentCut, AppColors.orange, stringResource(R.string.add_a_break), {
                     cutting =
                         true
                 }, Modifier.weight(1f), blocks.isNotEmpty())
@@ -262,7 +255,7 @@ fun EditDayScreen(
                 Sheet(
                     onDismiss = { listFor = null },
                     title = stringResource(R.string.which_apps_this_time),
-                    icon = Icons.Filled.Apps,
+                    icon = AppIcons.Apps,
                     color = AppColors.blue,
                     subtitle =
                         stringResource(
@@ -272,7 +265,7 @@ fun EditDayScreen(
                         ),
                 ) {
                     OptionCard(
-                        Icons.Filled.Apps,
+                        AppIcons.Apps,
                         AppColors.slate,
                         stringResource(R.string.usual_apps_list),
                         block.appsList == null,
@@ -335,9 +328,9 @@ private fun TimeSheet(
         rememberLazyListState(
             initialFirstVisibleItemIndex = (hours.indexOfFirst { it * 2 >= mark } - 2).coerceAtLeast(0),
         )
-    Sheet(onDismiss = onCancel, title = title, icon = Icons.Filled.AccessTime, color = AppColors.cyan) {
+    Sheet(onDismiss = onCancel, title = title, icon = AppIcons.AccessTime, color = AppColors.cyan) {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            RoundStep(Icons.Filled.Remove, mark - 1 in range) { mark -= 1 }
+            RoundStep(AppIcons.Remove, mark - 1 in range) { mark -= 1 }
             Text(
                 text = format.mark(mark),
                 color = palette.text,
@@ -347,7 +340,7 @@ private fun TimeSheet(
                 maxLines = 1,
                 modifier = Modifier.weight(1f),
             )
-            RoundStep(Icons.Filled.Add, mark + 1 in range) { mark += 1 }
+            RoundStep(AppIcons.Add, mark + 1 in range) { mark += 1 }
         }
         LazyRow(state = list, horizontalArrangement = Arrangement.spacedBy(Dimens.small)) {
             items(hours) { hour ->
@@ -418,7 +411,7 @@ private fun BreakSheet(
     Sheet(
         onDismiss = onCancel,
         title = stringResource(R.string.add_a_break),
-        icon = Icons.Filled.ContentCut,
+        icon = AppIcons.ContentCut,
         color = AppColors.orange,
     ) {
         TimePill(

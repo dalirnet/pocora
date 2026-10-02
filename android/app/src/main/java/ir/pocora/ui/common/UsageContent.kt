@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -32,6 +30,7 @@ import ir.pocora.model.Week
 import ir.pocora.parent.ContactLog
 import ir.pocora.preset.AppGroup
 import ir.pocora.preset.Presets
+import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.Format
 import ir.pocora.ui.LocalPalette
@@ -201,7 +200,7 @@ private fun AppRows(
         CardTitle(stringResource(R.string.apps_used))
         if (byApp.isEmpty()) {
             EmptyState(
-                Icons.Filled.Apps,
+                AppIcons.Apps,
                 palette.muted,
                 stringResource(R.string.nothing_used_title),
                 stringResource(R.string.no_use),

@@ -5,13 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.DataUsage
-import androidx.compose.material.icons.filled.DeleteSweep
-import androidx.compose.material.icons.filled.Event
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -28,6 +21,7 @@ import ir.pocora.model.Seasons
 import ir.pocora.model.Week
 import ir.pocora.preset.SchedulePreset
 import ir.pocora.ui.AppColors
+import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
 import ir.pocora.ui.common.WeekLegend
@@ -112,7 +106,7 @@ private fun TemplateCard(
         title = preset.name.text(),
         selected = current,
         onClick = onClick,
-        tags = listOfNotNull(preset.seasons.firstOrNull()?.let { Icons.Filled.Event to format.season(it.from, it.to) }),
+        tags = listOfNotNull(preset.seasons.firstOrNull()?.let { AppIcons.Event to format.season(it.from, it.to) }),
         chip =
             when {
                 current -> stringResource(R.string.current)
@@ -191,21 +185,21 @@ fun PreviewScheduleScreen(
         Card {
             CardTitle(stringResource(R.string.what_changes))
             Fact(
-                Icons.Filled.AccessTime,
+                AppIcons.AccessTime,
                 AppColors.cyan,
                 stringResource(R.string.row_internet_time),
                 stringResource(R.string.hours_a_week, format.durationOfMarks(schedule.allowedMarksPerWeek(scheduleId))),
             )
             if (rules != null) {
                 Fact(
-                    Icons.Filled.DataUsage,
+                    AppIcons.DataUsage,
                     AppColors.green,
                     stringResource(R.string.row_data),
                     ceilingText(schedule.monthlyCeilingBytes(scheduleId, perMark)),
                 )
                 if (rules.schedule != scheduleId) {
                     Fact(
-                        Icons.Filled.SwapHoriz,
+                        AppIcons.SwapHoriz,
                         AppColors.violet,
                         stringResource(R.string.row_replaces),
                         presets.schedule(rules.schedule).name.text(),
@@ -222,7 +216,7 @@ fun PreviewScheduleScreen(
                             stringResource(R.string.label_and_value, day, blocksText(format, change.blocks))
                         }
                     Fact(
-                        Icons.Filled.DeleteSweep,
+                        AppIcons.DeleteSweep,
                         AppColors.orange,
                         stringResource(R.string.row_removes),
                         (
@@ -234,7 +228,7 @@ fun PreviewScheduleScreen(
                 }
             }
             Fact(
-                Icons.Filled.PlayArrow,
+                AppIcons.PlayArrow,
                 AppColors.blue,
                 stringResource(R.string.row_starts),
                 stringResource(R.string.now_every_week),

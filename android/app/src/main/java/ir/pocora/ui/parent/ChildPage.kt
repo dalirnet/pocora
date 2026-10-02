@@ -29,6 +29,7 @@ import ir.pocora.model.Mark
 import ir.pocora.model.Schedule
 import ir.pocora.model.Snapshot
 import ir.pocora.ui.AppColors
+import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
 import ir.pocora.ui.common.UsageContent
@@ -65,7 +66,7 @@ fun ChildPage(
                     LoadingCards(3)
                 } else {
                     EmptyState(
-                        icon = Icons.Filled.CloudOff,
+                        icon = AppIcons.CloudOff,
                         color = palette.brand,
                         title = stringResource(R.string.empty_nothing_title, model.child.name),
                         text = stringResource(R.string.empty_nothing_text),
@@ -178,7 +179,7 @@ fun DataTab(
     )
     for (level in presets.quotas) {
         OptionCard(
-            icon = Icons.Filled.DataUsage,
+            icon = AppIcons.DataUsage,
             color = levelColor(level.megabytesPerMark),
             title = level.name.text(),
             selected = level.id == rules.quota,
@@ -191,7 +192,7 @@ fun DataTab(
                             stringResource(R.string.per_hour, format.number(it * Mark.PER_HOUR))
                     },
                     schedule.monthlyCeilingBytes(rules.schedule, level.bytesPerMark)?.let {
-                        Icons.Filled.CalendarMonth to stringResource(R.string.a_month_short, format.size(it))
+                        AppIcons.CalendarMonth to stringResource(R.string.a_month_short, format.size(it))
                     },
                 ),
             onClick = { if (level.id != rules.quota) model.apply(rules.copy(quota = level.id)) },

@@ -22,8 +22,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.HourglassEmpty
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -51,6 +49,7 @@ import ir.pocora.model.Snapshot
 import ir.pocora.preset.AppGroup
 import ir.pocora.preset.Presets
 import ir.pocora.ui.AppColors
+import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.Format
 import ir.pocora.ui.LocalPalette
@@ -326,7 +325,7 @@ fun ScreenTimeSection(
             contentAlignment = Alignment.Center,
         ) {
             EmptyState(
-                Icons.Filled.HourglassEmpty,
+                AppIcons.HourglassEmpty,
                 AppColors.teal,
                 stringResource(R.string.no_screen_time_yet),
                 compact = true,
