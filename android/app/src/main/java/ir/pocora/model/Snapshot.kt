@@ -14,7 +14,6 @@ data class Snapshot(
     val apps: List<InstalledApp> = emptyList(),
     val usage: List<AppDay> = emptyList(),
     val events: List<Event> = emptyList(),
-    val requests: List<Request> = emptyList(),
 ) {
     companion object {
         const val DAYS_KEPT = 7
@@ -88,6 +87,9 @@ data class Event(
 )
 
 // What can happen on the child's phone. Alert marks the ones the parent is notified about.
+// The alerts among a child's events, newest first: what both apps show.
+fun List<Event>.alerts(): List<Event> = filter { it.kind.alert }.sortedByDescending { it.start }
+
 enum class EventKind(
     val alert: Boolean,
 ) {
@@ -100,22 +102,9 @@ enum class EventKind(
     REBOOT(false),
     APP_INSTALLED(false),
     APP_REMOVED(false),
+
+    // No longer recorded. Kept so events from an older child app can still be read.
     REQUEST_IGNORED(false),
-}
-
-// A parent's install suggestion or removal request. It lives on the child's phone until the child answers.
-@Serializable
-data class Request(
-    val id: String,
-    val kind: RequestKind,
-    val `package`: String,
-    val appName: String,
-    val sentAt: Long,
-)
-
-enum class RequestKind {
-    INSTALL,
-    REMOVE,
 }
 
 // A stretch of time the child's phone kept syncing with the parent's. Between two of them is "no contact".

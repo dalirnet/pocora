@@ -25,10 +25,6 @@ class MainActivity : ComponentActivity() {
         // Debug builds only: in a release build, only a person holding the phone can start pairing.
         private const val EXTRA_PAIRING_CODE = "pairing_code"
 
-        // A parent's request, from its notification, and the child's answer when a button was tapped.
-        const val EXTRA_REQUEST = "request"
-        const val EXTRA_APPROVE = "approve"
-
         // A parent's notification: the child, and what to open on the child's page.
         const val EXTRA_CHILD = "child"
         const val EXTRA_OPEN = "open"
@@ -42,9 +38,6 @@ class MainActivity : ComponentActivity() {
     private val opened = mutableStateOf<Pair<String, String?>?>(null)
     private val look = mutableStateOf(Look.SYSTEM)
 
-    // The request to show on the Requests tab, when its notification was tapped without an answer.
-    private val shownRequest = mutableStateOf<String?>(null)
-
     // The parent app opens locked, and locks again each time it leaves the screen: the child may use the same phone.
     private val locked = mutableStateOf(Role.current == Role.PARENT)
 
@@ -57,7 +50,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         savedInstanceState?.let { locked.value = it.getBoolean(STATE_LOCKED, locked.value) }
         val debugCode = if (isDebuggable()) intent.getStringExtra(EXTRA_PAIRING_CODE) else null
-        handleRequest(intent)
         handleOpen(intent)
         look.value = (application as PocoraApp).configStore.look
         setContent {
@@ -66,8 +58,6 @@ class MainActivity : ComponentActivity() {
                     if (Role.current == Role.CHILD) {
                         ChildApp(
                             handedCode = debugCode?.let(PairingCode::parse),
-                            shownRequest = shownRequest.value,
-                            onRequestShown = { shownRequest.value = null },
                             onLanguage = ::setLanguage,
                             onLook = ::setLook,
                         )
@@ -99,7 +89,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        handleRequest(intent)
         handleOpen(intent)
     }
 
@@ -113,19 +102,6 @@ class MainActivity : ComponentActivity() {
     private fun setLook(value: Look) {
         (application as PocoraApp).configStore.look = value
         look.value = value
-    }
-
-    private fun handleRequest(intent: Intent) {
-        if (Role.current != Role.CHILD) return
-        val id = intent.getStringExtra(EXTRA_REQUEST) ?: return
-        intent.removeExtra(EXTRA_REQUEST)
-        val agent = (application as PocoraApp).agent
-        val request = agent.requests.all().firstOrNull { it.id == id } ?: return
-        if (intent.hasExtra(EXTRA_APPROVE)) {
-            agent.answer(this, request, intent.getBooleanExtra(EXTRA_APPROVE, false))
-        } else {
-            shownRequest.value = id
-        }
     }
 
     // The language is read when the activity is created, so switching it starts the activity again.

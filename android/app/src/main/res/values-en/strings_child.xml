@@ -32,15 +32,10 @@
     <string name="last_contact">Last contact with your parent: %1$s</string>
     <string name="no_contact_yet">No contact with your parent yet</string>
     <string name="child_connected">Connected to your parent</string>
-    <string name="tile_requests">Requests</string>
     <string name="tile_parent_sees">Parent\'s view</string>
-    <string name="requests_title">Requests from your parent</string>
-    <string name="no_requests">No requests from your parent.</string>
-    <string name="request_remove_line">Asks you to remove it</string>
-    <string name="request_install_line">Suggests you install it</string>
-    <string name="only_parent_changes">Only your parent can change these times.</string>
-    <string name="not_now">Not now</string>
-    <string name="install">Install</string>
+    <string name="only_parent_changes">Only your parent sets these times.</string>
+    <string name="my_activity">My activity</string>
+    <string name="parent_sees_these">Your parent sees the same list.</string>
     <string name="what_my_parent_sees">What my parent can see</string>
     <string name="parent_sees">Your parent sees</string>
     <string name="seen_apps_time">Which apps you use, and for how long</string>
@@ -58,7 +53,6 @@
     <string name="channel_allowed">Internet starts</string>
     <string name="channel_ending">Internet ends soon</string>
     <string name="channel_quota">Data</string>
-    <string name="channel_request">Requests from your parent</string>
     <string name="notify_internet_until">Internet until %1$s</string>
     <string name="notify_no_internet_until">No internet until %1$s</string>
     <string name="notify_internet_started">Internet is on until %1$s</string>

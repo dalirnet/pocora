@@ -4,17 +4,15 @@ import ir.pocora.PocoraApp
 import ir.pocora.debug.FileLogger
 import ir.pocora.model.Event
 import ir.pocora.model.Peer
-import ir.pocora.model.Request
-import ir.pocora.model.RequestKind
 import ir.pocora.model.Rules
 import ir.pocora.model.Seasons
 import ir.pocora.model.Snapshot
+import ir.pocora.model.alerts
 import ir.pocora.preset.PresetStore
 import ir.pocora.protocol.Applied
 import ir.pocora.protocol.Message
 import ir.pocora.protocol.Protocol
 import ir.pocora.protocol.Read
-import ir.pocora.protocol.SendRequest
 import ir.pocora.protocol.SetRules
 import ir.pocora.protocol.Sync
 import ir.pocora.protocol.SyncAnswer
@@ -27,7 +25,6 @@ import kotlinx.coroutines.flow.StateFlow
 import java.net.InetSocketAddress
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
-import java.util.UUID
 import java.util.concurrent.Executors
 
 // The parent's phone at work: takes in the children's syncs, keeps their snapshots and contact, raises alerts,
@@ -148,8 +145,7 @@ class Parent(
 
     fun isOnline(childId: String): Boolean = contacts.isOnline(childId, System.currentTimeMillis())
 
-    fun alertsOf(snapshot: Snapshot): List<Event> =
-        snapshot.events.filter { it.kind.alert }.sortedByDescending { it.start }
+    fun alertsOf(snapshot: Snapshot): List<Event> = snapshot.events.alerts()
 
     fun unseenAlerts(childId: String): Int {
         val snapshot = snapshots.read(childId) ?: return 0
@@ -180,16 +176,6 @@ class Parent(
     ): Boolean {
         val now = System.currentTimeMillis()
         return answer(child, SetRules(rules.copy(changedAt = now), now)) != null
-    }
-
-    fun sendRequest(
-        child: Peer,
-        kind: RequestKind,
-        packageName: String,
-        appName: String,
-    ): Boolean {
-        val request = Request(UUID.randomUUID().toString(), kind, packageName, appName, System.currentTimeMillis())
-        return answer(child, SendRequest(request)) != null
     }
 
     private fun answer(

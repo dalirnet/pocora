@@ -67,9 +67,7 @@ fun ParentApp(
     fun model(id: String?): ChildModel? =
         id?.let(parent::child)?.let { child ->
             models.getOrPut(child.id) {
-                ChildModel(parent, child, scope) { request ->
-                    Toasts.show(if (request) context.getString(R.string.sent_to, child.name) else savedText)
-                }
+                ChildModel(parent, child, scope) { Toasts.show(savedText) }
             }
         }
 

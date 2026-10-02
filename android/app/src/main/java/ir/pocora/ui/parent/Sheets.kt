@@ -7,22 +7,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Apps
-import androidx.compose.material.icons.filled.ContentCopy
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.GetApp
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.Wifi
-import androidx.compose.material.icons.filled.WifiFind
-import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -34,7 +23,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ir.pocora.R
 import ir.pocora.model.AppChoice
-import ir.pocora.model.RequestKind
 import ir.pocora.model.Schedule
 import ir.pocora.model.Week
 import ir.pocora.preset.AppGroup
@@ -43,12 +31,10 @@ import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
 import ir.pocora.ui.common.rememberPresets
-import ir.pocora.ui.component.ActionButton
 import ir.pocora.ui.component.ButtonPair
 import ir.pocora.ui.component.CardTitle
 import ir.pocora.ui.component.Categories
 import ir.pocora.ui.component.ChoiceTile
-import ir.pocora.ui.component.Field
 import ir.pocora.ui.component.HourAxis
 import ir.pocora.ui.component.OptionCard
 import ir.pocora.ui.component.Sheet
@@ -272,44 +258,6 @@ fun OneAppSheet(
                     ),
                 )
             },
-        )
-        ActionButton(
-            Icons.Filled.Delete,
-            AppColors.red,
-            stringResource(R.string.ask_to_remove, model.child.name),
-            { model.request(RequestKind.REMOVE, packageName, name, onClose) },
-            Modifier.fillMaxWidth(),
-            model.canEdit,
-        )
-    }
-}
-
-// Suggest an app: the child gets it as a request, and approving opens the store. The keyboard pushes the sheet up.
-@Composable
-fun SuggestSheet(
-    model: ChildModel,
-    onClose: () -> Unit,
-) {
-    var name by rememberSaveable { mutableStateOf("") }
-    var packageName by rememberSaveable { mutableStateOf("") }
-    val valid = name.isNotBlank() && Regex("[a-zA-Z][\\w]*(\\.[a-zA-Z][\\w]*)+").matches(packageName.trim())
-    Sheet(
-        onDismiss = onClose,
-        title = stringResource(R.string.suggest_an_app),
-        icon = Icons.Filled.GetApp,
-        color = AppColors.magenta,
-    ) {
-        Field(label = stringResource(R.string.app_name_field), value = name, onValueChange = { name = it.take(40) })
-        Field(label = stringResource(R.string.app_id_field), value = packageName, onValueChange = {
-            packageName =
-                it.take(100)
-        })
-        ButtonPair(
-            stringResource(R.string.cancel),
-            onClose,
-            stringResource(R.string.send_to_child, model.child.name),
-            { model.request(RequestKind.INSTALL, packageName.trim(), name.trim(), onClose) },
-            mainEnabled = valid && model.canEdit,
         )
     }
 }

@@ -8,7 +8,6 @@ import ir.pocora.model.Event
 import ir.pocora.model.EventKind
 import ir.pocora.model.Mark
 import ir.pocora.model.Peer
-import ir.pocora.model.Request
 import ir.pocora.model.Rules
 import ir.pocora.model.Snapshot
 import kotlinx.serialization.Serializable
@@ -68,32 +67,6 @@ private data class Goodbye(
     val parent: Peer,
     val since: Long,
 )
-
-// Install suggestions and removal requests waiting for the child's answer.
-class RequestStore(
-    context: Context,
-) {
-    private val file = JsonFile(context, "requests.json", ListSerializer(Request.serializer()))
-
-    fun all(): List<Request> = file.read() ?: emptyList()
-
-    // A second request for the same app and kind replaces the first.
-    fun add(request: Request) {
-        file.update(emptyList()) { requests ->
-            requests.filterNot {
-                it.`package` == request.`package` &&
-                    it.kind == request.kind
-            } +
-                request
-        }
-    }
-
-    fun remove(id: String) {
-        file.update(emptyList()) { requests -> requests.filterNot { it.id == id } }
-    }
-
-    fun delete() = file.delete()
-}
 
 // What happened on the child's phone, kept for 7 days. Never cleared on send: each parent gets all of it.
 class EventLog(

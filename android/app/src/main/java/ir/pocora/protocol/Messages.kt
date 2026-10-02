@@ -1,6 +1,5 @@
 package ir.pocora.protocol
 
-import ir.pocora.model.Request
 import ir.pocora.model.Rules
 import ir.pocora.model.Snapshot
 import kotlinx.serialization.SerialName
@@ -64,13 +63,6 @@ data class Read(
 data class SetRules(
     val rules: Rules,
     val time: Long,
-) : Message
-
-// Parent to child: an install suggestion or a removal request, for the child to answer.
-@Serializable
-@SerialName("send_request")
-data class SendRequest(
-    val request: Request,
 ) : Message
 
 // Either side: forget me. Sent when a parent forgets a child, if the child's phone can be reached.

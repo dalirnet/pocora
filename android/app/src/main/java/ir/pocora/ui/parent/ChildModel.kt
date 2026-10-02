@@ -4,7 +4,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import ir.pocora.model.Peer
-import ir.pocora.model.RequestKind
 import ir.pocora.model.Rules
 import ir.pocora.parent.Parent
 import kotlinx.coroutines.CoroutineScope
@@ -18,8 +17,8 @@ class ChildModel(
     private val parent: Parent,
     val child: Peer,
     private val scope: CoroutineScope,
-    // Told when a change was applied; true when it was a request sent to the child, not a change of rules.
-    private val onSaved: (Boolean) -> Unit,
+    // Told when a change was applied.
+    private val onSaved: () -> Unit,
 ) {
     var snapshot by mutableStateOf(parent.snapshots.read(child.id))
         private set
@@ -63,17 +62,7 @@ class ChildModel(
     fun apply(
         rules: Rules,
         onDone: () -> Unit = {},
-    ): Unit = act({ parent.setRules(child, rules) }, onDone, request = false) { apply(rules, onDone) }
-
-    fun request(
-        kind: RequestKind,
-        packageName: String,
-        appName: String,
-        onDone: () -> Unit = {},
-    ): Unit =
-        act({
-            parent.sendRequest(child, kind, packageName, appName)
-        }, onDone, request = true) { request(kind, packageName, appName, onDone) }
+    ): Unit = act({ parent.setRules(child, rules) }, onDone) { apply(rules, onDone) }
 
     fun dismissRetry() {
         retry = null
@@ -87,7 +76,6 @@ class ChildModel(
     private fun act(
         call: () -> Boolean,
         onDone: () -> Unit,
-        request: Boolean,
         again: () -> Unit,
     ) {
         if (busy) return
@@ -99,7 +87,7 @@ class ChildModel(
             if (done) {
                 reload()
                 online = true
-                onSaved(request)
+                onSaved()
                 onDone()
             } else {
                 online = parent.isOnline(child.id)

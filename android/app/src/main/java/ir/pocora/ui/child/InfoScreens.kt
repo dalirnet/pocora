@@ -2,17 +2,8 @@ package ir.pocora.ui.child
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.filled.LinkOff
-import androidx.compose.material.icons.filled.MarkEmailRead
-import androidx.compose.material.icons.filled.Tune
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -27,18 +18,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ir.pocora.PocoraApp
 import ir.pocora.R
 import ir.pocora.config.Look
-import ir.pocora.model.RequestKind
 import ir.pocora.model.Snapshot
+import ir.pocora.model.alerts
 import ir.pocora.ui.AppColors
 import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
+import ir.pocora.ui.common.AlertList
 import ir.pocora.ui.common.LanguageAndLook
 import ir.pocora.ui.common.TemplateCard
 import ir.pocora.ui.common.UsageContent
@@ -57,7 +48,7 @@ import ir.pocora.ui.rememberFormat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-// The child's read-only screens: internet times, usage, requests, what the parent sees, and settings.
+// The child's read-only screens: internet times, usage, what the parent sees, and settings.
 
 // The same week the parent sees, to read only.
 @Composable
@@ -90,59 +81,27 @@ fun UsageScreen(onBack: () -> Unit) {
     }
 }
 
-// The second tab: the parent's install suggestions and removal requests, each with its two answers.
+// The second tab: the same alerts the parent sees about this phone, so nothing about the child is hidden from them.
 @Composable
-fun RequestsScreen(bottom: @Composable () -> Unit) {
-    val context = LocalContext.current
-    val agent = (context.applicationContext as PocoraApp).agent
-    val palette = LocalPalette.current
+fun ActivityScreen(bottom: @Composable () -> Unit) {
+    val agent = (LocalContext.current.applicationContext as PocoraApp).agent
     val updates by agent.updates.collectAsState()
-    val requests = remember(updates) { agent.status.requests }
-    Screen(title = stringResource(R.string.requests_title), bottom = bottom, centered = requests.isEmpty()) {
-        if (requests.isEmpty()) {
+    val alerts = remember(updates) { agent.events.all().alerts() }
+    Screen(title = stringResource(R.string.my_activity), bottom = bottom, centered = alerts.isEmpty()) {
+        if (alerts.isEmpty()) {
             EmptyState(
-                Icons.Filled.MarkEmailRead,
-                AppColors.pink,
-                stringResource(R.string.no_requests_title),
-                stringResource(R.string.no_requests),
+                AppIcons.CheckCircle,
+                AppColors.green,
+                stringResource(R.string.all_quiet),
+                stringResource(R.string.parent_sees_these),
             )
-        }
-        for (request in requests) {
-            val remove = request.kind == RequestKind.REMOVE
-            Card {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(Dimens.row),
-                ) {
-                    IconTile(
-                        if (remove) Icons.Filled.Delete else Icons.Filled.Download,
-                        if (remove) AppColors.orange else AppColors.green,
-                        44.dp,
-                    )
-                    Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                        Text(
-                            text = request.appName,
-                            color = palette.text,
-                            fontSize = Dimens.heading,
-                            fontWeight = FontWeight.Bold,
-                        )
-                        Text(
-                            text =
-                                stringResource(
-                                    if (remove) R.string.request_remove_line else R.string.request_install_line,
-                                ),
-                            color = palette.muted,
-                            fontSize = Dimens.caption,
-                        )
-                    }
-                }
-                ButtonPair(
-                    quiet = stringResource(R.string.not_now),
-                    onQuiet = { agent.answer(context, request, false) },
-                    main = stringResource(if (remove) R.string.remove else R.string.install),
-                    onMain = { agent.answer(context, request, true) },
-                )
-            }
+        } else {
+            Text(
+                text = stringResource(R.string.parent_sees_these),
+                color = LocalPalette.current.muted,
+                fontSize = Dimens.caption,
+            )
+            AlertList(alerts)
         }
     }
 }

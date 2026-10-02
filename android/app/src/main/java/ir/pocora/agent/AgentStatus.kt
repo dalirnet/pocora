@@ -1,7 +1,6 @@
 package ir.pocora.agent
 
 import ir.pocora.model.DayPlan
-import ir.pocora.model.Request
 import ir.pocora.model.Rules
 import java.time.LocalDateTime
 
@@ -16,7 +15,6 @@ data class AgentStatus(
     val lastParentContact: Long,
     // The name the parent gave this child, once a parent has sent it.
     val childName: String? = null,
-    val requests: List<Request>,
     // The rules in force, for the child's own view of the schedule.
     val rules: Rules? = null,
 ) {
@@ -24,6 +22,6 @@ data class AgentStatus(
         get() = rules != null
 
     companion object {
-        val EMPTY = AgentStatus(false, null, 0, null, false, DayPlan(emptyList()), 0, null, emptyList())
+        val EMPTY = AgentStatus(false, null, 0, null, false, DayPlan(emptyList()), 0, null)
     }
 }

@@ -150,11 +150,7 @@
     <string name="choice_never">هیچ‌وقت</string>
     <string name="watch_this_app">وقتی باز شد، خبرم کن</string>
     <string name="watched">زیر نظر</string>
-    <string name="ask_to_remove">درخواست حذف از %1$s</string>
     <string name="app_week_use">این هفته: %1$s استفاده، %2$s</string>
-    <string name="app_name_field">نام برنامه</string>
-    <string name="app_id_field">شناسه برنامه، از لینک فروشگاه (مثل ir.medu.shad)</string>
-    <string name="send_to_child">ارسال برای %1$s</string>
     <string name="used_this_month">مصرف این ماه</string>
     <string name="at_most">حداکثر</string>
     <string name="change_the_limit">تغییر حجم مجاز</string>

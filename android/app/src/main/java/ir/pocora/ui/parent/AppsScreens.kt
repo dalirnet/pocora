@@ -145,12 +145,6 @@ fun AppsTab(
             }
         }
     }
-    MainButton(
-        text = stringResource(R.string.suggest_an_app),
-        onClick = { SheetState.open = ChildSheet.Suggest },
-        enabled = model.canEdit,
-        modifier = Modifier.fillMaxWidth(),
-    )
 }
 
 // The child's apps of one kind, with this week's use. Tapping one opens its sheet.
