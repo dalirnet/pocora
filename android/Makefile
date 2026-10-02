@@ -16,7 +16,6 @@ help:
 	@echo "                     add TWO_PHONES=1 for a phone per app"
 	@echo "  make phones-stop   shut the virtual phones down"
 	@echo "Code"
-	@echo "  make presets       write the presets JSON from ../preset/"
 	@echo "  make icons         write AppIcons.kt from the Solar icon set"
 	@echo "  make format        format Kotlin, JSON and XML"
 	@echo "  make test          run the unit tests of both apps"
@@ -52,10 +51,6 @@ phones-stop:
 	@bash scripts/phones.sh stop
 
 # --- Code ---
-
-.PHONY: presets
-presets:
-	@bash scripts/presets.sh
 
 .PHONY: icons
 icons:

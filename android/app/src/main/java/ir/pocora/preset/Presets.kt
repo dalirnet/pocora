@@ -5,7 +5,7 @@ import ir.pocora.config.Language
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-// Everything in assets/presets.json, written by `make presets` from ../preset/.
+// Everything in assets/presets.json, the one place a preset is edited.
 @Serializable
 data class Presets(
     val schedules: List<SchedulePreset>,

@@ -4,7 +4,7 @@ Parental supervision for families in Iran. Two Android apps, one on the parent's
 
 Pocora is not a lock. It turns what happens on the child's phone into moments for a conversation: "Aparat, 3 hours today" is a reason to talk, and so is a child turning Pocora off.
 
-> Presets: [`preset/`](./preset/README.md) · Android project: [`android/`](./android/README.md) · Landing page: [`docs/`](./docs/), published at [dalirnet.github.io/pocora](https://dalirnet.github.io/pocora/)
+> Presets: [`presets.json`](./android/app/src/main/assets/presets.json) · Android project: [`android/`](./android/README.md) · Landing page: [`docs/`](./docs/), published at [dalirnet.github.io/pocora](https://dalirnet.github.io/pocora/)
 
 ## Principles
 
@@ -33,7 +33,7 @@ Made for children aged 8 to 16. Outside Iran, Google Family Link already does th
 
 ## Rules
 
-Each child has three settings, all picked from [presets](./preset/README.md):
+Each child has three settings, all picked from [presets](./android/app/src/main/assets/presets.json):
 
 | Setting      | What it says                                                                                                                                                                                                                                                                                                                    |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -55,12 +55,11 @@ On top of the preset the parent changes single days, for this week or every week
 ## Project
 
 ```
-preset/         presets and app groups as markdown, the source of truth (make presets writes the app's JSON)
 docs/           the Persian landing page, served by GitHub Pages from main; tools/icons.sh writes its icon sprite
 assets/         source artwork: fonts/ (Dana), icon/ (the app icon as SVG)
 android/        one Gradle project that builds both apps
-  Makefile      check, image, phones, presets, icons, format, test, build, release, run, run-both, pair, publish, clean
-  scripts/      one shell script per Makefile target, with presets.py behind one of them
+  Makefile      check, image, phones, icons, format, test, build, release, run, run-both, pair, publish, clean
+  scripts/      one shell script per Makefile target
   version.properties  the released version, written by make publish
   app/src/main/java/ir/pocora/
     ui/         screens and drawn components; colours in AppColors, sizes in Dimens, icons in AppIcons
@@ -93,7 +92,7 @@ More, including virtual phones and pairing without a camera: [`android/README.md
 
 The apps are on the [Releases](https://github.com/dalirnet/pocora/releases) page: `pocora-parent-<version>.apk` for the parent's phone and `pocora-child-<version>.apk` for the child's, with their SHA-256 sums. Each release also carries `pocora-parent.apk` and `pocora-child.apk`, the same files without the version, so `releases/latest/download/pocora-parent.apk` always downloads the newest; the landing page links there.
 
-- **Every push** runs `.github/workflows/build.yml`: presets up to date, tests, debug APKs kept as a run artifact for 14 days.
+- **Every push** runs `.github/workflows/build.yml`: tests, debug APKs kept as a run artifact for 14 days.
 - **A version tag** runs `.github/workflows/release.yml`: tests, signed and minified APKs, and a GitHub Release with generated notes.
 
 To release, run `make publish` in `android/` with a clean tree. It asks for a patch, minor or major bump (or a rebuild of the current version), writes it into `android/version.properties` with the next `versionCode`, commits it, merges into `main`, and pushes the `vX.Y.Z` tag that starts the release. A rebuild replaces the published release and tag, so it asks you to type the tag to confirm.

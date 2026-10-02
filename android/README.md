@@ -20,7 +20,6 @@ make image         # install the system image for the virtual phones
 make phones        # create and start the virtual phone (TWO_PHONES=1 for one per app)
 make phones-stop   # shut the virtual phones down
 
-make presets       # write the presets JSON from ../preset/
 make icons         # write ui/AppIcons.kt from the Solar icon set (needs the internet)
 make format        # format Kotlin, JSON and XML (requires ktlint, jq, xmllint)
 make test          # run the unit tests of both apps
@@ -46,7 +45,6 @@ Every target runs one script from `scripts/`. The scripts share `scripts/common.
 | `check.sh` | Checks Java, the SDK and Gradle, and reports the optional tools |
 | `image.sh` | Downloads and installs the system image, continuing after a failure |
 | `phones.sh` | Creates, starts and stops the two virtual phones |
-| `presets.sh` | Writes `presets.json` from `../preset/` through `presets.py` |
 | `icons.sh` | Writes `AppIcons.kt` from the Solar icon set with curl and jq; the icons in use are listed there |
 | `format.sh` | Formats Kotlin, JSON and XML |
 | `test.sh` | Runs the unit tests and counts them |
