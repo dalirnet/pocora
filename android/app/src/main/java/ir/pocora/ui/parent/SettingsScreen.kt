@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BatteryChargingFull
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.PersonRemove
@@ -76,7 +75,6 @@ fun SettingsScreen(
         onPauseOrDispose { }
     }
     val canNotify = remember(checks) { Permissions.canNotify(context) }
-    val exempt = remember(checks) { Permissions.isBatteryExempt(context) }
     val askNotifications = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { checks++ }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -132,14 +130,6 @@ fun SettingsScreen(
                     suggestions = it
                     config.notifySuggestions = it
                 }, enabled = canNotify, icon = Icons.Filled.CalendarMonth, iconColor = AppColors.violet)
-                PermissionRow(
-                    Icons.Filled.BatteryChargingFull,
-                    AppColors.green,
-                    stringResource(R.string.run_in_background),
-                    exempt,
-                ) {
-                    context.startActivity(Permissions.batteryExemptionIntent(context))
-                }
             }
 
             LanguageAndLook(onLanguage, onLook)

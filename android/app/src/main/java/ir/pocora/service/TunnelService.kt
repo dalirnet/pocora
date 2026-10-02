@@ -77,8 +77,8 @@ class TunnelService : VpnService() {
             stopSelf()
             return START_NOT_STICKY
         }
-        // Started by Android as an Always-on VPN, or by the agent. Either way, the agent should be running.
-        if (intent?.action != ACTION_APPLY) AgentService.start(this)
+        // Started by Android as an Always-on VPN, or by the agent. Either way, a paired phone's agent should be running.
+        if (intent?.action != ACTION_APPLY) (application as PocoraApp).startServiceIfPaired()
         establish(blocked)
         return START_STICKY
     }

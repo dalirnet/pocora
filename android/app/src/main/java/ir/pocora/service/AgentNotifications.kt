@@ -126,5 +126,8 @@ class AgentNotifications(
 
     fun cancelRequest(request: Request) = manager.cancel(idOf(request))
 
+    // After disconnecting: nothing from the old pairing stays on screen.
+    fun cancelAll() = manager.cancelAll()
+
     private fun idOf(request: Request) = REQUEST_ID_BASE + request.id.hashCode().mod(REQUEST_ID_BASE)
 }

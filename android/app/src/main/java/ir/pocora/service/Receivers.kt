@@ -9,7 +9,7 @@ import ir.pocora.R
 
 // The broadcast receivers.
 
-// Starts the agent or the listener after the phone restarts, or after Pocora is updated, once the phone is paired.
+// Starts the agent after the phone restarts, or after Pocora is updated, once the phone is paired.
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(
         context: Context,

@@ -52,6 +52,9 @@ fun ChildApp(
     // Where a screen with a back arrow returns to.
     var parentStep by rememberSaveable { mutableStateOf(ChildStep.HOME) }
 
+    // A parent this phone disconnected from, and not yet told, is tried again each time the app opens.
+    LaunchedEffect(Unit) { app.agent.sendGoodbyes() }
+
     // A request's notification, tapped without an answer, opens the requests.
     LaunchedEffect(shownRequest) {
         if (shownRequest != null && paired) {
@@ -160,6 +163,11 @@ fun ChildApp(
                 onSetup = { open(ChildStep.SETUP) },
                 onLanguage = onLanguage,
                 onLook = onLook,
+                onDisconnect = {
+                    app.agent.disconnect()
+                    paired = false
+                    step = ChildStep.WELCOME
+                },
                 bottom = if (paired) bottom else null,
             )
         }

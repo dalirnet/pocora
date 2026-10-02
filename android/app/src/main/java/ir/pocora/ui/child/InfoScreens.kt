@@ -1,11 +1,14 @@
 package ir.pocora.ui.child
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.LinkOff
 import androidx.compose.material.icons.filled.MarkEmailRead
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material.icons.filled.Visibility
@@ -14,8 +17,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -46,6 +51,7 @@ import ir.pocora.ui.component.LinkRow
 import ir.pocora.ui.component.LoadingCards
 import ir.pocora.ui.component.Screen
 import ir.pocora.ui.component.SectionTitle
+import ir.pocora.ui.component.Sheet
 import ir.pocora.ui.rememberFormat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -196,19 +202,55 @@ fun SettingsScreen(
     onSetup: () -> Unit,
     onLanguage: (String) -> Unit,
     onLook: (Look) -> Unit,
+    onDisconnect: () -> Unit,
     bottom: (@Composable () -> Unit)? = null,
 ) {
-    Screen(title = stringResource(R.string.settings), onBack = onBack, bottom = bottom) {
-        if (paired) {
-            Card {
-                LinkRow(
-                    title = stringResource(R.string.set_up_this_phone),
-                    icon = Icons.Filled.Tune,
-                    iconColor = AppColors.blue,
-                    onClick = onSetup,
+    var disconnecting by remember { mutableStateOf(false) }
+    Box(modifier = Modifier.fillMaxSize()) {
+        Screen(title = stringResource(R.string.settings), onBack = onBack, bottom = bottom) {
+            if (paired) {
+                Card {
+                    LinkRow(
+                        title = stringResource(R.string.set_up_this_phone),
+                        icon = Icons.Filled.Tune,
+                        iconColor = AppColors.blue,
+                        onClick = onSetup,
+                    )
+                }
+            }
+            LanguageAndLook(onLanguage, onLook)
+            if (paired) {
+                Card {
+                    LinkRow(
+                        title = stringResource(R.string.disconnect_from_parent),
+                        icon = Icons.Filled.LinkOff,
+                        iconColor = AppColors.orange,
+                        onClick = { disconnecting = true },
+                    )
+                }
+            }
+        }
+        if (disconnecting) {
+            Sheet(
+                onDismiss = { disconnecting = false },
+                title = stringResource(R.string.disconnect_title),
+                icon = Icons.Filled.LinkOff,
+                color = AppColors.orange,
+                subtitle = stringResource(R.string.disconnect_text),
+            ) {
+                ButtonPair(
+                    stringResource(
+                        R.string.cancel,
+                    ),
+                    { disconnecting = false },
+                    stringResource(R.string.disconnect),
+                    {
+                        disconnecting = false
+                        onDisconnect()
+                    },
+                    danger = true,
                 )
             }
         }
-        LanguageAndLook(onLanguage, onLook)
     }
 }

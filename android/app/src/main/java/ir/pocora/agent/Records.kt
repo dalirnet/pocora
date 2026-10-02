@@ -7,9 +7,11 @@ import ir.pocora.model.DayRecord
 import ir.pocora.model.Event
 import ir.pocora.model.EventKind
 import ir.pocora.model.Mark
+import ir.pocora.model.Peer
 import ir.pocora.model.Request
 import ir.pocora.model.Rules
 import ir.pocora.model.Snapshot
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
 import java.time.LocalDate
 import java.util.UUID
@@ -25,7 +27,47 @@ class RulesStore(
     fun read(): Rules? = file.read()
 
     fun write(rules: Rules) = file.write(rules)
+
+    fun delete() = file.delete()
 }
+
+// Parents this phone disconnected from, still to be told. Each is tried until it hears, or for 7 days.
+class GoodbyeStore(
+    context: Context,
+) {
+    companion object {
+        private const val KEPT_MILLISECONDS = 7 * 86_400_000L
+    }
+
+    private val file = JsonFile(context, "goodbyes.json", ListSerializer(Goodbye.serializer()))
+
+    fun pending(now: Long): List<Peer> =
+        file
+            .read()
+            .orEmpty()
+            .filter { now - it.since < KEPT_MILLISECONDS }
+            .map { it.parent }
+
+    fun add(
+        parents: List<Peer>,
+        now: Long,
+    ) {
+        file.update(emptyList()) { goodbyes ->
+            goodbyes.filter { old -> parents.none { it.id == old.parent.id } } +
+                parents.map { Goodbye(it, now) }
+        }
+    }
+
+    fun remove(parentId: String) {
+        file.update(emptyList()) { goodbyes -> goodbyes.filter { it.parent.id != parentId } }
+    }
+}
+
+@Serializable
+private data class Goodbye(
+    val parent: Peer,
+    val since: Long,
+)
 
 // Install suggestions and removal requests waiting for the child's answer.
 class RequestStore(
@@ -49,6 +91,8 @@ class RequestStore(
     fun remove(id: String) {
         file.update(emptyList()) { requests -> requests.filterNot { it.id == id } }
     }
+
+    fun delete() = file.delete()
 }
 
 // What happened on the child's phone, kept for 7 days. Never cleared on send: each parent gets all of it.
@@ -111,6 +155,8 @@ class EventLog(
         val oldest = Snapshot.keptSince(now)
         file.update(emptyList()) { events -> events.filter { (it.end ?: now) >= oldest } }
     }
+
+    fun delete() = file.delete()
 }
 
 // Each day's marks as they were applied, and the data each mark used, for the last 7 days.
@@ -145,6 +191,8 @@ class DaysLog(
         date: LocalDate,
         mark: Int,
     ): Long = all().firstOrNull { it.date == date.toEpochDay() }?.bytes?.getOrNull(mark) ?: 0
+
+    fun delete() = file.delete()
 }
 
 // The data the whole phone moved since the last reading. Android's counters restart at boot, so a drop counts as zero.

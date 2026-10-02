@@ -81,6 +81,7 @@ fun SetupScreen(onDone: () -> Unit) {
             return
         }
         if (step == SetupStep.ALWAYS_ON) app.configStore.alwaysOnOpened = true
+        if (step == SetupStep.BATTERY) app.configStore.batteryOpened = true
         val intent = step.intent(context) ?: return
         try {
             launcher.launch(intent)
@@ -205,7 +206,8 @@ enum class SetupStep(
             }
 
             BATTERY -> {
-                Permissions.isBatteryExempt(context)
+                Permissions.isBatteryExempt(context) ||
+                    (Permissions.hasOwnBatterySettings() && app.configStore.batteryOpened)
             }
         }
     }

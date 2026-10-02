@@ -1,5 +1,6 @@
 package ir.pocora.service
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.Service
 import android.content.Context
@@ -12,7 +13,7 @@ import androidx.core.app.ServiceCompat
 import androidx.core.content.ContextCompat
 import ir.pocora.debug.FileLogger
 
-// Starting the agent and listener services, and putting them in the foreground.
+// Starting the agent service, and putting it in the foreground.
 object Foreground {
     private const val TAG = "Foreground"
 
@@ -28,7 +29,9 @@ object Foreground {
         }
     }
 
-    // Android 14 asks for a foreground type. Neither service fits a named one.
+    // Android 14 asks for a foreground type. The agent fits no named one. Its type is declared in the child's
+    // manifest only, since the parent app runs nothing in the background, so lint does not see it there.
+    @SuppressLint("ForegroundServiceType")
     fun enter(
         service: Service,
         id: Int,
@@ -44,7 +47,7 @@ object Foreground {
     }
 }
 
-// Tells a service when the phone joins a network, so it can announce itself again at its new address.
+// Tells the agent or the open parent app when the phone joins a network, so it can announce itself again at its new address.
 class NetworkWatch(
     context: Context,
     private val onJoined: () -> Unit,

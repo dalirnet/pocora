@@ -1,6 +1,5 @@
 package ir.pocora.service
 
-import android.app.Notification
 import android.app.NotificationManager
 import ir.pocora.PocoraApp
 import ir.pocora.R
@@ -18,15 +17,12 @@ class ParentNotifications(
 ) : Notifications(
         app,
         listOf(
-            Triple(CHANNEL_LISTENER, R.string.channel_listener, NotificationManager.IMPORTANCE_MIN),
             Triple(CHANNEL_HOME, R.string.notify_when_connects, NotificationManager.IMPORTANCE_DEFAULT),
             Triple(CHANNEL_ALERTS, R.string.alerts, NotificationManager.IMPORTANCE_DEFAULT),
             Triple(CHANNEL_SUGGESTIONS, R.string.schedule_suggestions, NotificationManager.IMPORTANCE_LOW),
         ),
     ) {
     companion object {
-        const val LISTENER_ID = 1
-        private const val CHANNEL_LISTENER = "listener"
         private const val CHANNEL_HOME = "home"
         private const val CHANNEL_ALERTS = "alerts"
         private const val CHANNEL_SUGGESTIONS = "suggestions"
@@ -38,16 +34,10 @@ class ParentNotifications(
         const val OPEN_USAGE = "usage"
     }
 
-    // The quiet notification the listener needs to keep running.
-    fun listener(): Notification =
-        builder(CHANNEL_LISTENER)
-            .setAutoCancel(false)
-            .setContentTitle(text.getString(R.string.listening_for_children))
-            .setOngoing(true)
-            .setSilent(true)
-            .setShowWhen(false)
-            .setContentIntent(open())
-            .build()
+    // Earlier versions kept a listener running in the background, with a channel of its own. Updated phones drop it.
+    init {
+        manager.deleteNotificationChannel("listener")
+    }
 
     fun childHome(
         child: Peer,
@@ -84,6 +74,15 @@ class ParentNotifications(
             CHANNEL_ALERTS,
             text.getString(R.string.child_and_event, child.name, text.getString(R.string.event_missing)),
             tap = openChild(child, null),
+        )
+
+    // The child is no longer on this phone, so the tap opens the app's start.
+    fun disconnected(child: Peer) =
+        show(
+            idOf(child, DISCONNECTED),
+            CHANNEL_ALERTS,
+            text.getString(R.string.child_disconnected, child.name),
+            text.getString(R.string.child_disconnected_text),
         )
 
     fun season(
@@ -129,3 +128,4 @@ class ParentNotifications(
 
 private const val HOLIDAY = "holiday"
 private const val MISSING = "missing"
+private const val DISCONNECTED = "disconnected"

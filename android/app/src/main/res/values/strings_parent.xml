@@ -183,11 +183,11 @@
     <string name="remove_child_text">گوشی %1$s دیگر اطلاعاتی به این گوشی نمی‌فرستد. بعداً می‌توانید دوباره وصلش کنید.</string>
     <string name="notify_when_connects">وقتی گوشی فرزند در دسترس شد</string>
     <string name="schedule_suggestions">پیشنهاد زمان‌بندی</string>
-    <string name="channel_listener">در انتظار گوشی فرزندان</string>
-    <string name="listening_for_children">پوکورا در انتظار گوشی فرزندانتان است</string>
     <string name="child_connected_title">گوشی %1$s در دسترس است</string>
     <string name="child_connected_text">امروز: %1$s استفاده، %2$s هشدار تازه</string>
     <string name="child_turned_off_at">%1$s ساعت %2$s پوکورا را خاموش کرد</string>
     <string name="child_and_event">%1$s: %2$s</string>
     <string name="see_schedule">دیدن زمان‌بندی</string>
+    <string name="child_disconnected">%1$s از پوکورا جدا شد</string>
+    <string name="child_disconnected_text">برای وصل کردن دوباره، او را از نو اضافه کنید.</string>
 </resources>

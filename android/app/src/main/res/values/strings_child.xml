@@ -72,4 +72,8 @@
     <string name="parent_sees_admin_off">والدینت می‌بینند که این خاموش شده.</string>
     <string name="tile_internet">اینترنت وصل</string>
     <string name="tile_no_internet">اینترنت قطع</string>
+    <string name="disconnect_from_parent">قطع اتصال از والدین</string>
+    <string name="disconnect_title">اتصال از والدین قطع شود؟</string>
+    <string name="disconnect_text">قانون‌ها روی این گوشی متوقف می‌شوند و والدینت می‌بینند که اتصال را قطع کرده‌ای. بعد می‌توانی دوباره کد را اسکن کنی.</string>
+    <string name="disconnect">قطع اتصال</string>
 </resources>

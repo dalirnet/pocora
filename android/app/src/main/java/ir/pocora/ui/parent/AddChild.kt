@@ -289,6 +289,7 @@ fun PairingCodeScreen(
                 identity = { app.identity },
                 peerStore = app.peerStore,
                 onRequest = { request = it },
+                onPairing = app.parent::clearData,
                 onPaired = { currentOnPaired() },
                 onRequestGone = { request = null },
             )

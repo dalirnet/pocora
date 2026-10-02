@@ -54,6 +54,10 @@ import java.time.ZoneId
 private const val DAY = 0
 private const val DAY_MILLISECONDS = 86_400_000L
 
+// Less than both of these is noise, as an app that only synced in the background. It still counts in the totals.
+private const val LEAST_SCREEN_MILLISECONDS = 60_000L
+private const val LEAST_BYTES = 1_000_000L
+
 // Usage in both apps. Day or week: the two numbers, the data over time against the limit, then the apps used.
 // The contacts are the parent's record of when the child's phone was in touch; the child app has none.
 @Composable
@@ -178,7 +182,7 @@ fun UsageContent(
     AppRows(format, snapshot, usage)
 }
 
-// The apps used in the period, most time first.
+// The apps used in the period, most time first, leaving out the ones barely used.
 @Composable
 private fun AppRows(
     format: Format,
@@ -191,7 +195,7 @@ private fun AppRows(
             .groupBy { it.`package` }
             .map { (packageName, days) ->
                 Triple(packageName, days.sumOf { it.bytes }, days.sumOf { it.screenMilliseconds })
-            }.filter { it.second > 0 || it.third > 0 }
+            }.filter { it.second >= LEAST_BYTES || it.third >= LEAST_SCREEN_MILLISECONDS }
             .sortedWith(compareByDescending<Triple<String, Long, Long>> { it.third }.thenByDescending { it.second })
     Card {
         CardTitle(stringResource(R.string.apps_used))

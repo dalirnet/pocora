@@ -60,18 +60,24 @@ class UsageReader(
         }
     }
 
-    // Screen time and data for every app and every day from the first date to today.
+    // Screen time and data for every app and every day from the first date to today, counted from since only,
+    // so use from before the phone was paired never shows.
     fun days(
         first: LocalDate,
         today: LocalDate,
         now: Long,
+        since: Long,
     ): List<AppDay> {
         if (!hasAccess()) return emptyList()
         val result = mutableMapOf<Pair<String, Long>, AppDay>()
         var date = first
         while (!date.isAfter(today)) {
-            val start = startOf(date)
+            val start = maxOf(startOf(date), since)
             val end = minOf(startOf(date.plusDays(1)), now)
+            if (start >= end) {
+                date = date.plusDays(1)
+                continue
+            }
             for ((app, milliseconds) in screenTime(start, end)) {
                 val key = app to date.toEpochDay()
                 result[key] = (result[key] ?: AppDay(app, date.toEpochDay())).copy(screenMilliseconds = milliseconds)
