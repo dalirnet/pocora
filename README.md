@@ -4,7 +4,7 @@ Parental supervision for families in Iran. Two Android apps, one on the parent's
 
 Pocora is not a lock. It turns what happens on the child's phone into moments for a conversation: "Aparat, 3 hours today" is a reason to talk, and so is a child turning Pocora off.
 
-> Presets: [`presets.json`](./android/app/src/main/assets/presets.json) · Android project: [`android/`](./android/README.md) · Landing page: [`docs/`](./docs/), published at [dalirnet.github.io/pocora](https://dalirnet.github.io/pocora/)
+> Presets: [`presets.json`](./android/app/src/main/assets/presets.json) · Android project: [`android/`](./android/README.md) · Landing page: [`docs/`](./docs/), published at [pocora.ir](https://pocora.ir/)
 
 ## Principles
 
