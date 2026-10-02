@@ -30,6 +30,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -243,6 +244,10 @@ fun Card(
     )
 }
 
+// True while the parent app's lock covers the screens. A sheet opens a window of its own, above the lock,
+// so it waits, hidden, until the password is typed.
+val LocalLocked = compositionLocalOf { false }
+
 // A card that slides up from the bottom over a dimmed screen. Swiping it down, tapping outside it, or Back
 // closes it, through onDismiss. It scrolls when it is taller than the screen, and makes room for the keyboard.
 // Every sheet starts with the same header: an icon tile, a title, and a line under it.
@@ -256,6 +261,7 @@ fun Sheet(
     subtitle: String? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
+    if (LocalLocked.current) return
     val palette = LocalPalette.current
     ModalBottomSheet(
         onDismissRequest = onDismiss,

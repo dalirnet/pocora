@@ -28,6 +28,10 @@ class Endpoint(
     @Volatile
     private var pairingHost: PairingHost? = null
 
+    // Asked to stop while a pairing code was open: it stops once the code closes.
+    // On one phone the parent app leaves the screen for the child app, and must still answer it.
+    private var stopAfterPairing = false
+
     // What to do with a connection from a paired phone. Runs on the connection's own thread.
     @Volatile
     var onPaired: ((Connection, Peer) -> Unit)? = null
@@ -54,11 +58,13 @@ class Endpoint(
     fun closePairing(host: PairingHost) {
         if (pairingHost === host) pairingHost = null
         host.reject()
+        thread(name = "pocora-endpoint") { stopIfAsked() }
     }
 
     // Blocking: call it off the main thread. Safe to call again.
     @Synchronized
     fun start(): Int {
+        stopAfterPairing = false
         server?.let { return it.port }
         val started = Server(identity(), ::isTrusted, ::onConnection)
         started.start(Protocol.portOf(Role.current))
@@ -69,9 +75,18 @@ class Endpoint(
 
     @Synchronized
     fun stop() {
+        if (pairingHost != null) {
+            stopAfterPairing = true
+            return
+        }
         server?.stop()
         server = null
         discovery.stopAnnouncing()
+    }
+
+    @Synchronized
+    private fun stopIfAsked() {
+        if (stopAfterPairing && pairingHost == null) stop()
     }
 
     // Announce again, as after the Wi-Fi changed, so the new address is the one found.

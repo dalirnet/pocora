@@ -4,9 +4,17 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <!-- Lets the parent app hand its pairing code to the child app on the same phone. Only apps signed with Pocora's key hold it. -->
+    <permission android:name="ir.pocora.permission.PAIR_HERE" android:protectionLevel="signature"/>
+    <uses-permission android:name="ir.pocora.permission.PAIR_HERE"/>
+    <!-- The parent app looks for the child app on the same phone. -->
+    <queries>
+        <package android:name="ir.pocora.child"/>
+    </queries>
     <application android:name=".PocoraApp" android:allowBackup="false" android:icon="@mipmap/ic_launcher" android:label="${appLabel}" android:roundIcon="@mipmap/ic_launcher_round" android:supportsRtl="true" android:theme="@style/Theme.Pocora">
-        <!-- The screens redraw themselves when the phone turns or changes theme, so a pairing in progress is not restarted. -->
-        <activity android:name=".ui.MainActivity" android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden|uiMode" android:exported="true" android:theme="@style/Theme.Pocora" android:windowSoftInputMode="adjustResize">
+        <!-- The screens redraw themselves when the phone turns or changes theme, so a pairing in progress is not restarted.
+             One instance: opening the app again, as the child app does on the same phone, returns to the screen left open. -->
+        <activity android:name=".ui.MainActivity" android:launchMode="singleTask" android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden|uiMode" android:exported="true" android:theme="@style/Theme.Pocora" android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

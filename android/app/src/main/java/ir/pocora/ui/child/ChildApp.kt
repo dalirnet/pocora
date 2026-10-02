@@ -9,6 +9,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import ir.pocora.PocoraApp
 import ir.pocora.R
 import ir.pocora.config.Look
@@ -48,6 +49,19 @@ fun ChildApp(
 
     // A parent this phone disconnected from, and not yet told, is tried again each time the app opens.
     LaunchedEffect(Unit) { app.agent.sendGoodbyes() }
+
+    // The parent app on this phone may have paired this app in the background, while it was closed or
+    // on another screen. Coming back finds the pairing and goes on to setup, and the agent starts here
+    // if Android did not let it start from the background.
+    LifecycleResumeEffect(Unit) {
+        if (!paired && app.peerStore.all().isNotEmpty()) {
+            paired = true
+            failure = null
+            step = ChildStep.SETUP
+        }
+        app.startServiceIfPaired()
+        onPauseOrDispose { }
+    }
 
     fun open(next: ChildStep) {
         parentStep = step

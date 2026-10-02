@@ -17,7 +17,7 @@ make               # list every target
 
 make check         # check this machine can build and run the project
 make image         # install the system image for the virtual phones
-make phones        # create and start the two virtual phones
+make phones        # create and start the virtual phone (TWO_PHONES=1 for one per app)
 make phones-stop   # shut the virtual phones down
 
 make presets       # write the presets JSON from ../preset/
@@ -30,8 +30,8 @@ make release       # release APKs, minified
 
 make run           # build, install and open the child app on its phone
 make run ROLE=parent
-make run-both      # both apps, each on its own phone
-make pair          # pair the two virtual phones, in place of scanning the code
+make run-both      # both apps, on the virtual phone
+make pair          # pair the apps by script, in place of scanning the code
 
 make publish       # cut a release: bump the version, merge to main, tag; GitHub builds it
 
@@ -58,18 +58,24 @@ Every target runs one script from `scripts/`. The scripts share `scripts/common.
 
 ## Virtual phones
 
-`make phones` creates two Android 15 virtual phones and starts them:
+`make phones` creates one Android 15 virtual phone, `pocora` (`emulator-5554`), and `make run-both` installs both apps on it. That is how a parent often tries Pocora first, and it pairs through the apps' own same-phone flow: in the parent app, add a child and tap **Connect Pocora Child on this phone**. The parent app hands its code and a one-time token to the child app through a receiver only an app signed with Pocora's key may reach. The child app pairs in the background over loopback, and the parent app accepts the request that brings the token back without asking. Nobody switches apps; the child app opens into its setup the next time it is opened.
+
+`TWO_PHONES=1` gives each app its own phone, for the network side:
 
 | Phone | For | Serial |
 | --- | --- | --- |
 | `pocora-child` | The child app | `emulator-5554` |
 | `pocora-parent` | The parent app | `emulator-5556` |
 
-`make run` sends each app to its own phone. To use another device, such as a real phone, pass its serial: `make run ROLE=child SERIAL=<serial>`. `make run-both SERIAL=<serial>` puts both apps on that one device.
+```bash
+make phones TWO_PHONES=1
+make run-both TWO_PHONES=1
+make pair TWO_PHONES=1
+```
 
-The two virtual phones cannot find each other: each sits behind its own virtual router, and neither has a camera to scan the other's screen. `make pair` stands in for both. Open the parent app, add a child and stay on the pairing code, then run `make pair` and tap Accept. It forwards the parent's port to this computer, which is the child phone's gateway, and hands the code to the child app. Debug builds only.
+The two virtual phones cannot find each other: each sits behind its own virtual router, and neither has a camera to scan the other's screen. `make pair` stands in for both. Open the parent app, add a child and stay on the pairing code, then run `make pair` and tap Accept. It forwards the parent's port to this computer, which is the child phone's gateway, and hands the code to the child app. Debug builds only. Two phones use about 3 GB of memory; on an 8 GB computer they start one after the other and can still stall.
 
-Two phones use about 3 GB of memory. On an 8 GB computer they start one after the other and can still stall. Both apps on one phone pair too, over loopback: stop the child phone, `make run-both SERIAL=emulator-5556`, then `make pair`.
+To use another device, such as a real phone, pass its serial: `make run ROLE=child SERIAL=<serial>`. `make run-both SERIAL=<serial>` puts both apps on that one device.
 
 They need the emulator and one system image, installed once:
 

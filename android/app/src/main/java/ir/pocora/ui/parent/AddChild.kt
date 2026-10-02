@@ -33,6 +33,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,6 +60,7 @@ import ir.pocora.ui.AppColors
 import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
+import ir.pocora.ui.SamePhone
 import ir.pocora.ui.component.Avatar
 import ir.pocora.ui.component.BottomAction
 import ir.pocora.ui.component.ButtonPair
@@ -67,6 +69,7 @@ import ir.pocora.ui.component.Chip
 import ir.pocora.ui.component.Field
 import ir.pocora.ui.component.Hero
 import ir.pocora.ui.component.IconTile
+import ir.pocora.ui.component.LinkRow
 import ir.pocora.ui.component.MainButton
 import ir.pocora.ui.component.QrCode
 import ir.pocora.ui.component.Screen
@@ -280,7 +283,12 @@ fun PairingCodeScreen(
     onBack: () -> Unit,
     onPaired: () -> Unit,
 ) {
-    val app = LocalContext.current.applicationContext as PocoraApp
+    val context = LocalContext.current
+    val app = context.applicationContext as PocoraApp
+    val childAppHere = remember { SamePhone.hasChildApp(context) }
+    // Handed to the child app on this phone with the code. The request that brings it back is accepted at once.
+    val token = remember { SamePhone.newToken() }
+    var connectingHere by remember { mutableStateOf(false) }
     val currentOnPaired by rememberUpdatedState(onPaired)
     var code by remember { mutableStateOf<String?>(null) }
     var request by remember { mutableStateOf<PairRequest?>(null) }
@@ -299,6 +307,11 @@ fun PairingCodeScreen(
         app.endpoint.openPairing(host) { code = it.encode() }
         onDispose { app.endpoint.closePairing(host) }
     }
+    // The child app on this phone, back with the handed token: the parent already chose this, so no sheet.
+    val handedBack = connectingHere && request?.token == token
+    LaunchedEffect(handedBack) {
+        if (handedBack) host.accept(childName, childAge, rules)
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Screen(
@@ -308,27 +321,46 @@ fun PairingCodeScreen(
         ) {
             Card(horizontalAlignment = Alignment.CenterHorizontally) {
                 val codeModifier =
-                    Modifier.widthIn(max = 260.dp).fillMaxWidth().alpha(
-                        if (request ==
-                            null
-                        ) {
-                            1f
-                        } else {
-                            DIMMED_ALPHA
-                        },
-                    )
+                    Modifier
+                        .widthIn(max = 260.dp)
+                        .fillMaxWidth()
+                        .alpha(if (request == null && !connectingHere) 1f else DIMMED_ALPHA)
                 code?.let { QrCode(it, codeModifier) } ?: Spacer(codeModifier.aspectRatio(1f))
+                Chip(
+                    if (connectingHere) {
+                        stringResource(R.string.connecting_here)
+                    } else {
+                        stringResource(R.string.waiting_for_childs_phone, childName)
+                    },
+                )
             }
             Column(verticalArrangement = Arrangement.spacedBy(Dimens.row)) {
                 Step(1, stringResource(R.string.pair_step_install, childName))
                 Step(2, stringResource(R.string.pair_step_wifi))
                 Step(3, stringResource(R.string.pair_step_scan, childName))
             }
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                Chip(stringResource(R.string.waiting_for_childs_phone, childName))
+            // No camera can scan its own screen, so with the child app on this phone the code is handed over.
+            code?.takeIf { childAppHere }?.let { shown ->
+                Card {
+                    LinkRow(
+                        title = stringResource(R.string.pair_on_this_phone),
+                        subtitle =
+                            stringResource(
+                                if (connectingHere) R.string.connecting_here else R.string.pair_on_this_phone_text,
+                            ),
+                        icon = AppIcons.PhonelinkRing,
+                        iconColor = AppColors.green,
+                        onClick = {
+                            if (!connectingHere) {
+                                connectingHere = true
+                                SamePhone.handCode(context, shown, token)
+                            }
+                        },
+                    )
+                }
             }
         }
-        request?.let { asking ->
+        request?.takeUnless { handedBack }?.let { asking ->
             val reject = {
                 request = null
                 host.reject()

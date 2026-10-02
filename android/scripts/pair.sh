@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Pair the two virtual phones, in place of scanning the code.
+# Pair the virtual phones, in place of scanning the code or tapping the same-phone button.
 #
 # Usage:  sh pair.sh
 #

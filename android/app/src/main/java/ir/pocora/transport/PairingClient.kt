@@ -21,6 +21,8 @@ class PairingClient(
     private val code: PairingCode,
     // Takes the parent's yes, with the first rules and the child's name, on the pairing thread, before the parent is saved.
     private val onAccepted: (PairAnswer) -> Unit,
+    // Handed over by the parent app on this same phone, which then accepts without asking. See SamePhone.
+    private val token: String? = null,
     private val onResult: (PairingResult) -> Unit,
 ) {
     companion object {
@@ -42,16 +44,17 @@ class PairingClient(
         }
     }
 
+    // Called from the main thread, where closing a TLS socket is not allowed: it may still write.
     fun cancel() {
         cancelled = true
-        connection?.close()
+        connection?.let { open -> thread(name = "pocora-pairing-cancel") { open.close() } }
     }
 
     private fun pair(): PairingResult {
         val opened = connect() ?: return PairingResult.NOT_REACHABLE
         connection = opened
         return opened.use {
-            if (cancelled || !it.send(PairRequest(identity().id, Device.name, Device.androidVersion))) {
+            if (cancelled || !it.send(PairRequest(identity().id, Device.name, Device.androidVersion, token))) {
                 return@use PairingResult.NOT_REACHABLE
             }
             val answer = it.receive(Protocol.PAIR_ANSWER_TIMEOUT_MILLISECONDS) as? PairAnswer

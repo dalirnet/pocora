@@ -13,12 +13,15 @@ import kotlinx.serialization.json.Json
 sealed interface Message
 
 // Child to parent, after scanning the code. The child's certificate arrives with the TLS handshake.
+// With both apps on one phone, the token the parent app handed over with its code: the parent asked for this
+// pairing on this phone, so it is accepted without asking again.
 @Serializable
 @SerialName("pair_request")
 data class PairRequest(
     val id: String,
     val deviceName: String,
     val androidVersion: String,
+    val token: String? = null,
 ) : Message
 
 // Parent to child, once the parent has accepted or rejected. An accepted child gets its first rules with it,
