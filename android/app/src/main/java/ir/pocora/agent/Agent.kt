@@ -359,7 +359,7 @@ class Agent(
                     ),
                 days = days.all(),
                 apps = catalog.installed(),
-                usage = usage.days(today.minusDays(Snapshot.DAYS_KEPT - 1L), today, now),
+                usage = usage.days(today.minusDays(Snapshot.DAYS_KEPT - 1L), today, now, app.configStore.pairedAt),
                 events = events.all(),
                 requests = requests.all(),
             )
@@ -427,6 +427,7 @@ class Agent(
     // The parent's yes: the agent starts with the rules that came with it, and the header shows the child's name.
     fun paired(answer: PairAnswer) {
         goodbyes.remove(answer.id)
+        app.configStore.pairedAt = System.currentTimeMillis()
         answer.childName?.let { app.configStore.childName = it }
         answer.rules?.let {
             rulesStore.write(it)

@@ -30,6 +30,7 @@ class ConfigStore(
         private const val KEY_SETUP_DONE = "setup_done"
         private const val KEY_ALWAYS_ON_OPENED = "always_on_opened"
         private const val KEY_BATTERY_OPENED = "battery_opened"
+        private const val KEY_PAIRED_AT = "paired_at"
         private const val KEY_DONE_ONCE = "done_once"
         private const val KEY_PASSWORD_SALT = "password_salt"
         private const val KEY_PASSWORD_HASH = "password_hash"
@@ -101,6 +102,11 @@ class ConfigStore(
         get() = preferences.getBoolean(KEY_BATTERY_OPENED, false)
         set(value) = preferences.edit().putBoolean(KEY_BATTERY_OPENED, value).apply()
 
+    // When this child's phone was paired, so usage from before it is left out. Zero for phones paired before this was kept.
+    var pairedAt: Long
+        get() = preferences.getLong(KEY_PAIRED_AT, 0)
+        set(value) = preferences.edit().putLong(KEY_PAIRED_AT, value).apply()
+
     // The child's phone after disconnecting: everything learned while paired goes, so the next pairing starts fresh.
     // The language, the look and this phone's id stay.
     fun forgetPairing() {
@@ -113,6 +119,7 @@ class ConfigStore(
             .remove(KEY_SETUP_DONE)
             .remove(KEY_ALWAYS_ON_OPENED)
             .remove(KEY_BATTERY_OPENED)
+            .remove(KEY_PAIRED_AT)
             .remove(KEY_DONE_ONCE)
             .apply()
     }
