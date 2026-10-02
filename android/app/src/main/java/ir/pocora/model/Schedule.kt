@@ -188,6 +188,39 @@ class Schedule(
         return addTime(rules, date, start, marks)
     }
 
+    // More data for the Allowed block on now. A second gift for the same block adds to the first.
+    // Outside an Allowed block there is nothing to give data to, and the rules come back unchanged.
+    fun addData(
+        rules: Rules,
+        now: LocalDateTime,
+        megabytes: Int,
+    ): Rules {
+        val date = now.toLocalDate()
+        val block = day(rules, date).blockAt(markOf(now)) ?: return rules
+        val day = date.toEpochDay()
+        val same = rules.extraData.firstOrNull { it.day == day && it.start == block.start && it.end == block.end }
+        val total = (same?.megabytes ?: 0) + megabytes
+        return rules.copy(
+            extraData =
+                rules.extraData - listOfNotNull(same) + ExtraData(day, block.start, block.end, total),
+        )
+    }
+
+    // How much one mark may use: its quota, and what the block's extra data has left after the marks before it.
+    fun markLimit(
+        rules: Rules,
+        date: LocalDate,
+        mark: Int,
+        bytesPerMark: Long,
+        bytesOfMark: (Int) -> Long,
+    ): Long {
+        val extra =
+            rules.extraData.firstOrNull { it.day == date.toEpochDay() && mark >= it.start && mark < it.end }
+                ?: return bytesPerMark
+        val usedBefore = (extra.start until mark).sumOf { maxOf(0L, bytesOfMark(it) - bytesPerMark) }
+        return bytesPerMark + maxOf(0L, extra.bytes - usedBefore)
+    }
+
     // A holiday in the week: give one day the hours of another, for this week.
     fun copyDay(
         rules: Rules,

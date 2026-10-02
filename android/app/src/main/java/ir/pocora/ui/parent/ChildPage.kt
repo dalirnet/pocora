@@ -101,6 +101,7 @@ sealed interface ChildSheet {
         val packageName: String,
     ) : ChildSheet
 
+    data object Data : ChildSheet
 }
 
 object SheetState {
@@ -113,6 +114,7 @@ fun ChildSheets(model: ChildModel) {
         is ChildSheet.Duration -> DurationSheet(model, sheet.allowed) { SheetState.open = null }
         is ChildSheet.Copy -> CopySheet(model, sheet.epochDay, sheet.from) { SheetState.open = null }
         is ChildSheet.OneApp -> OneAppSheet(model, sheet.packageName) { SheetState.open = null }
+        ChildSheet.Data -> DataSheet(model) { SheetState.open = null }
         null -> Unit
     }
 }

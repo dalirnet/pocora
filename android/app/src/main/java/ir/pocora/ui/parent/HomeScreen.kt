@@ -174,6 +174,10 @@ private fun Status(
     val allowed = status.allowed
     // The two things a parent most often does, under the sentence they change.
     // The second one follows the state: stop the internet while there is some, allow it while there is none.
+    // More data makes sense only with a limit, and inside the Allowed block on now.
+    val canGiveData =
+        parent.presets.quota(snapshot.rules.quota).bytesPerMark != null &&
+            plan.blockAt(schedule.markOf(LocalDateTime.now())) != null
     val actions: @Composable ColumnScope.() -> Unit = {
         Row(horizontalArrangement = Arrangement.spacedBy(Dimens.small)) {
             ActionButton(AppIcons.MoreTime, AppColors.cyan, stringResource(R.string.thirty_more_minutes), {
@@ -185,6 +189,16 @@ private fun Status(
                 stringResource(if (allowed) R.string.tile_stop else R.string.tile_allow),
                 { SheetState.open = ChildSheet.Duration(allowed = !allowed) },
                 Modifier.weight(1f),
+                model.canEdit,
+            )
+        }
+        if (canGiveData) {
+            ActionButton(
+                AppIcons.DataSaverOn,
+                AppColors.green,
+                stringResource(R.string.more_data),
+                { SheetState.open = ChildSheet.Data },
+                Modifier.fillMaxWidth(),
                 model.canEdit,
             )
         }

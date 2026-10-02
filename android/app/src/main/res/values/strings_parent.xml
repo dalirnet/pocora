@@ -74,8 +74,10 @@
     <string name="switch_to_afternoon">نوبت عصر</string>
     <string name="switch_to_morning">نوبت صبح</string>
     <string name="thirty_more_minutes">نیم ساعت بیشتر</string>
-    <string name="stop_internet_now">قطع اینترنت از الان</string>
-    <string name="allow_internet_now">وصل اینترنت از الان</string>
+    <string name="more_data">حجم بیشتر</string>
+    <string name="more_data_title">حجم بیشتر برای همین بازه</string>
+    <string name="stop_internet_now">همین حالا قطع شود</string>
+    <string name="allow_internet_now">همین حالا وصل شود</string>
     <string name="for_how_long">برای چه مدت؟</string>
     <string name="this_week_title">این هفته</string>
     <string name="tap_a_day">برای تغییر، روی یک روز بزنید.</string>

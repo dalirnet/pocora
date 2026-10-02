@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ir.pocora.R
 import ir.pocora.model.AppChoice
+import ir.pocora.model.Mark
 import ir.pocora.model.Schedule
 import ir.pocora.model.Week
 import ir.pocora.preset.AppGroup
@@ -46,6 +47,10 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 private val DURATIONS = listOf(1, 2, 4)
+
+private val EXTRA_MEGABYTES = listOf(100, 250, 500, 1000)
+
+private const val BYTES_PER_MEGABYTE = 1_000_000L
 
 // "Stop internet" and "Allow internet": a change for today from now. It asks only how long, and each answer sends at once.
 @Composable
@@ -78,6 +83,36 @@ fun DurationSheet(
                             schedule.cut(rules, now.toLocalDate(), mark, marks)
                         }
                     model.apply(changed, onClose)
+                }, Modifier.weight(1f), enabled = model.canEdit)
+            }
+        }
+    }
+}
+
+// "More data": extra for the Allowed block on now, on top of the quota. Each amount sends at once.
+@Composable
+fun DataSheet(
+    model: ChildModel,
+    onClose: () -> Unit,
+) {
+    val format = rememberFormat()
+    val presets = rememberPresets()
+    val schedule = remember { Schedule(presets) }
+    val rules = model.rules ?: return
+    val now = LocalDateTime.now()
+    val block = schedule.day(rules, now.toLocalDate()).blockAt(schedule.markOf(now)) ?: return
+    val end = now.toLocalDate().atStartOfDay().plusMinutes(block.end * Mark.DURATION_MINUTES.toLong())
+    Sheet(
+        onDismiss = onClose,
+        title = stringResource(R.string.more_data_title),
+        icon = AppIcons.DataSaverOn,
+        color = AppColors.green,
+        subtitle = stringResource(R.string.until_capital, format.time(end)),
+    ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(Dimens.small)) {
+            for (megabytes in EXTRA_MEGABYTES) {
+                ChoiceTile(format.size(megabytes * BYTES_PER_MEGABYTE), AppColors.green, {
+                    model.apply(schedule.addData(rules, LocalDateTime.now(), megabytes), onClose)
                 }, Modifier.weight(1f), enabled = model.canEdit)
             }
         }

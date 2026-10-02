@@ -72,6 +72,8 @@
     <string name="switch_to_afternoon">Afternoon shift</string>
     <string name="switch_to_morning">Morning shift</string>
     <string name="thirty_more_minutes">30 more minutes</string>
+    <string name="more_data">More data</string>
+    <string name="more_data_title">More data for this block</string>
     <string name="stop_internet_now">Stop internet now</string>
     <string name="allow_internet_now">Allow internet now</string>
     <string name="for_how_long">For how long?</string>

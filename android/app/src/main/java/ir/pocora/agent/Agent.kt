@@ -166,7 +166,16 @@ class Agent(
         val state = schedule.state(rules, now)
         days.record(date, mark, state.allowed && !quotaReached, bytes)
         val markBytes = days.markBytes(date, mark)
-        val perMark = presets.quota(rules.quota).bytesPerMark
+        // The quota, raised by any extra data the parent gave for the block on now.
+        val perMark =
+            presets.quota(rules.quota).bytesPerMark?.let { quota ->
+                schedule.markLimit(rules, date, mark, quota) { days.markBytes(date, it) }
+            }
+        // More data arrived after this mark's quota ran out: the internet comes back now.
+        if (quotaReached && perMark != null && markBytes < perMark) {
+            quotaReached = false
+            quotaWarned = false
+        }
         if (perMark != null && state.allowed) {
             if (!quotaReached && markBytes >= perMark) {
                 quotaReached = true
