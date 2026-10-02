@@ -28,7 +28,6 @@
     <string name="look_light">روشن</string>
     <string name="look_dark">تیره</string>
     <string name="notifications">اعلان‌ها</string>
-    <string name="run_in_background">اجرا در پس‌زمینه</string>
     <string name="time_range">%1$s تا %2$s</string>
     <string name="list_separator">"، "</string>
     <string name="day_and_time">%1$s %2$s</string>

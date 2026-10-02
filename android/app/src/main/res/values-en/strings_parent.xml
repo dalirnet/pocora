@@ -182,8 +182,6 @@
     <string name="remove_child_text">%1$s\'s phone will stop sending updates here. You can connect it again later.</string>
     <string name="notify_when_connects">When a child\'s phone connects</string>
     <string name="schedule_suggestions">Schedule suggestions</string>
-    <string name="channel_listener">Waiting for children\'s phones</string>
-    <string name="listening_for_children">Pocora is waiting for your children\'s phones</string>
     <string name="child_connected_title">%1$s\'s phone is connected</string>
     <string name="child_connected_text">Today: %1$s on screen · %2$s new alerts</string>
     <string name="child_turned_off_at">%1$s turned Pocora off at %2$s</string>

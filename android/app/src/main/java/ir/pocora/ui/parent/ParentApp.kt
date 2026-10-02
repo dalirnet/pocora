@@ -23,11 +23,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.LifecycleStartEffect
 import ir.pocora.PocoraApp
 import ir.pocora.R
 import ir.pocora.config.Look
 import ir.pocora.model.Suggested
-import ir.pocora.service.ListenerService
 import ir.pocora.service.ParentNotifications
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.component.BarItem
@@ -76,9 +76,10 @@ fun ParentApp(
             }
         }
 
-    LaunchedEffect(Unit) {
+    // Nothing runs in the background: the children's phones are heard while the app is on screen, and not after.
+    LifecycleStartEffect(Unit) {
         parent.start()
-        if (children.isNotEmpty()) ListenerService.start(app)
+        onStopOrDispose { parent.stop() }
     }
     LaunchedEffect(changes) {
         children = parent.children()
@@ -198,7 +199,6 @@ fun ParentApp(
                         children = parent.children()
                         selectedId = children.lastOrNull()?.id
                         setDraft(Draft())
-                        ListenerService.start(app)
                         navigator.reset(Route.Home)
                     },
                 )

@@ -10,7 +10,6 @@ import ir.pocora.config.PeerStore
 import ir.pocora.debug.FileLogger
 import ir.pocora.parent.Parent
 import ir.pocora.service.AgentService
-import ir.pocora.service.ListenerService
 import ir.pocora.transport.Discovery
 import ir.pocora.transport.Endpoint
 import ir.pocora.transport.PeerLink
@@ -66,10 +65,10 @@ class PocoraApp : Application() {
         FileLogger.i(TAG, "Started as ${Role.current}, language ${configStore.language}")
     }
 
-    // A paired phone runs its agent or listener from the first moment, opened from the launcher or not,
-    // and again after a restart or an update.
+    // A paired child's phone runs its agent from the first moment, opened from the launcher or not,
+    // and again after a restart or an update. The parent app runs nothing in the background.
     fun startServiceIfPaired() {
-        if (peerStore.all().isEmpty()) return
-        if (Role.current == Role.CHILD) AgentService.start(this) else ListenerService.start(this)
+        if (Role.current != Role.CHILD || peerStore.all().isEmpty()) return
+        AgentService.start(this)
     }
 }

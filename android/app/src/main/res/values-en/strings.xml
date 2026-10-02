@@ -27,7 +27,6 @@
     <string name="look_light">Light</string>
     <string name="look_dark">Dark</string>
     <string name="notifications">Notifications</string>
-    <string name="run_in_background">Run in the background</string>
     <string name="time_range">%1$s to %2$s</string>
     <string name="list_separator">", "</string>
     <string name="day_and_time">%1$s %2$s</string>

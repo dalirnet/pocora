@@ -19,6 +19,7 @@ import ir.pocora.protocol.SetRules
 import ir.pocora.protocol.Sync
 import ir.pocora.protocol.SyncAnswer
 import ir.pocora.protocol.Unpair
+import ir.pocora.service.NetworkWatch
 import ir.pocora.service.ParentNotifications
 import ir.pocora.transport.Connection
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,7 +28,7 @@ import java.net.InetSocketAddress
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import java.util.UUID
-import kotlin.concurrent.thread
+import java.util.concurrent.Executors
 
 // The parent's phone at work: takes in the children's syncs, keeps their snapshots and contact, raises alerts,
 // and carries the parent's changes to a child's phone. Changing anything needs the child's phone to answer.
@@ -53,11 +54,32 @@ class Parent(
     @Volatile
     private var started = false
 
+    // One thread, so a stop never overtakes the start before it.
+    private val worker = Executors.newSingleThreadExecutor { Thread(it, "pocora-parent") }
+    private val network by lazy { NetworkWatch(app) { app.endpoint.reannounce() } }
+
+    // The parent's phone takes the children's syncs only while the app is open, and checks the calendar on each open.
     fun start() {
         if (started) return
         started = true
         app.endpoint.onPaired = ::onChildConnection
-        thread(name = "pocora-endpoint-start") { app.endpoint.start() }
+        network.start()
+        worker.execute {
+            app.endpoint.start()
+            try {
+                checkCalendar()
+            } catch (error: RuntimeException) {
+                FileLogger.e(TAG, "Calendar check failed", error)
+            }
+        }
+    }
+
+    // The app was closed or left. The children's phones keep trying, and sync the next time it is open.
+    fun stop() {
+        if (!started) return
+        started = false
+        network.stop()
+        worker.execute { app.endpoint.stop() }
     }
 
     fun changed() {
@@ -182,7 +204,7 @@ class Parent(
         changed()
     }
 
-    // --- Once an hour: suggestions, holidays, and children gone missing ---
+    // --- Each time the app opens: suggestions, holidays, and children gone missing ---
 
     fun checkCalendar() {
         val today = LocalDate.now()
