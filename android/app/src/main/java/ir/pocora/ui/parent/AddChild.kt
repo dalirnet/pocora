@@ -19,20 +19,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.FamilyRestroom
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.PhoneAndroid
-import androidx.compose.material.icons.filled.PhonelinkRing
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,7 +33,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -56,72 +48,67 @@ import ir.pocora.model.Rules
 import ir.pocora.protocol.PairRequest
 import ir.pocora.transport.PairingHost
 import ir.pocora.ui.AppColors
+import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
+import ir.pocora.ui.SamePhone
 import ir.pocora.ui.component.Avatar
 import ir.pocora.ui.component.BottomAction
 import ir.pocora.ui.component.ButtonPair
 import ir.pocora.ui.component.Card
 import ir.pocora.ui.component.Chip
+import ir.pocora.ui.component.EmptyState
 import ir.pocora.ui.component.Field
-import ir.pocora.ui.component.Hero
+import ir.pocora.ui.component.IconAction
 import ir.pocora.ui.component.IconTile
+import ir.pocora.ui.component.LinkRow
 import ir.pocora.ui.component.MainButton
+import ir.pocora.ui.component.PointRow
 import ir.pocora.ui.component.QrCode
 import ir.pocora.ui.component.Screen
 import ir.pocora.ui.component.Sheet
-import ir.pocora.ui.component.WhiteIcon
 import ir.pocora.ui.rememberFormat
 
 // Adding a child: welcome, name and age, and the pairing code.
 
+// What Pocora does, as on Home: each point with the colour and icon of its feature there.
+private class Point(
+    val icon: ImageVector,
+    val color: Color,
+    val title: Int,
+)
+
 private val POINTS =
     listOf(
-        R.string.welcome_point_times,
-        R.string.welcome_point_apps,
-        R.string.welcome_point_alerts,
-        R.string.welcome_point_private,
+        Point(AppIcons.AccessTime, AppColors.violet, R.string.welcome_point_times),
+        Point(AppIcons.Apps, AppColors.blue, R.string.welcome_point_apps),
+        Point(AppIcons.Warning, AppColors.orange, R.string.welcome_point_alerts),
+        Point(AppIcons.Home, AppColors.green, R.string.welcome_point_private),
     )
 
-// First run only: what Pocora does, in four lines, and one way forward.
+// First run only: what Pocora does, in four points, and one way forward at the bottom.
 @Composable
 fun WelcomeScreen(
     onStart: () -> Unit,
     onSettings: () -> Unit,
 ) {
-    val palette = LocalPalette.current
-    Hero(
-        color = AppColors.violet,
-        icon = Icons.Filled.FamilyRestroom,
+    Screen(
         title = stringResource(R.string.app_name_parent),
-        around = listOf(Icons.Filled.PhoneAndroid, Icons.Filled.AccessTime, Icons.Filled.Shield),
-        trailing = { WhiteIcon(Icons.Filled.Settings, stringResource(R.string.settings), onSettings) },
-    ) {
-        Card {
-            Text(
-                text = stringResource(R.string.welcome_title),
-                color = palette.text,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-            )
-            for (point in POINTS) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                ) {
-                    Icon(Icons.Filled.CheckCircle, null, tint = palette.brand, modifier = Modifier.size(20.dp))
-                    Text(text = stringResource(point), color = palette.text, fontSize = Dimens.body)
-                }
+        trailing = { IconAction(AppIcons.Settings, stringResource(R.string.settings), onSettings) },
+        bottom = {
+            BottomAction {
+                MainButton(text = stringResource(R.string.start), onClick = onStart, modifier = Modifier.fillMaxWidth())
             }
-            MainButton(text = stringResource(R.string.start), onClick = onStart, modifier = Modifier.fillMaxWidth())
-        }
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-            Icon(Icons.Filled.Home, null, tint = palette.muted, modifier = Modifier.size(20.dp))
-            Text(
-                text = "  " + stringResource(R.string.welcome_need_wifi),
-                color = palette.muted,
-                fontSize = Dimens.caption,
-            )
+        },
+    ) {
+        EmptyState(
+            icon = AppIcons.FamilyRestroom,
+            color = AppColors.violet,
+            title = stringResource(R.string.welcome_title),
+            text = stringResource(R.string.welcome_need_wifi),
+        )
+        Card {
+            for (point in POINTS) PointRow(point.icon, point.color, stringResource(point.title))
         }
     }
 }
@@ -169,7 +156,7 @@ fun AddChildScreen(
                     modifier = Modifier.size(96.dp).background(palette.brand.copy(alpha = 0.12f), CircleShape),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Icon(Icons.Filled.Person, null, tint = palette.brand, modifier = Modifier.size(48.dp))
+                    Icon(AppIcons.Person, null, tint = palette.brand, modifier = Modifier.size(48.dp))
                 }
             } else {
                 Avatar(name, 96.dp)
@@ -254,7 +241,12 @@ private fun StepDots(
     count: Int,
 ) {
     val palette = LocalPalette.current
-    Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+    // The top bar's edge is 12dp and the content's 20dp; the dots line up with the content.
+    Row(
+        modifier = Modifier.padding(end = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
         repeat(count) { index ->
             Box(
                 modifier =
@@ -279,7 +271,12 @@ fun PairingCodeScreen(
     onBack: () -> Unit,
     onPaired: () -> Unit,
 ) {
-    val app = LocalContext.current.applicationContext as PocoraApp
+    val context = LocalContext.current
+    val app = context.applicationContext as PocoraApp
+    val childAppHere = remember { SamePhone.hasChildApp(context) }
+    // Handed to the child app on this phone with the code. The request that brings it back is accepted at once.
+    val token = remember { SamePhone.newToken() }
+    var connectingHere by remember { mutableStateOf(false) }
     val currentOnPaired by rememberUpdatedState(onPaired)
     var code by remember { mutableStateOf<String?>(null) }
     var request by remember { mutableStateOf<PairRequest?>(null) }
@@ -298,6 +295,11 @@ fun PairingCodeScreen(
         app.endpoint.openPairing(host) { code = it.encode() }
         onDispose { app.endpoint.closePairing(host) }
     }
+    // The child app on this phone, back with the handed token: the parent already chose this, so no sheet.
+    val handedBack = connectingHere && request?.token == token
+    LaunchedEffect(handedBack) {
+        if (handedBack) host.accept(childName, childAge, rules)
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Screen(
@@ -307,27 +309,50 @@ fun PairingCodeScreen(
         ) {
             Card(horizontalAlignment = Alignment.CenterHorizontally) {
                 val codeModifier =
-                    Modifier.widthIn(max = 260.dp).fillMaxWidth().alpha(
-                        if (request ==
-                            null
-                        ) {
-                            1f
-                        } else {
-                            DIMMED_ALPHA
+                    Modifier
+                        .widthIn(max = 260.dp)
+                        .fillMaxWidth()
+                        .alpha(if (request == null && !connectingHere) 1f else DIMMED_ALPHA)
+                code?.let { QrCode(it, codeModifier) } ?: Spacer(codeModifier.aspectRatio(1f))
+                Chip(
+                    if (connectingHere) {
+                        stringResource(R.string.connecting_here)
+                    } else {
+                        stringResource(R.string.waiting_for_childs_phone, childName)
+                    },
+                )
+            }
+            Card {
+                PointRow(
+                    AppIcons.PhoneAndroid,
+                    AppColors.violet,
+                    stringResource(R.string.pair_step_install, childName),
+                )
+                PointRow(AppIcons.Wifi, AppColors.teal, stringResource(R.string.pair_step_wifi))
+                PointRow(AppIcons.QrCodeScanner, AppColors.blue, stringResource(R.string.pair_step_scan, childName))
+            }
+            // No camera can scan its own screen, so with the child app on this phone the code is handed over.
+            code?.takeIf { childAppHere }?.let { shown ->
+                Card {
+                    LinkRow(
+                        title = stringResource(R.string.pair_on_this_phone),
+                        subtitle =
+                            stringResource(
+                                if (connectingHere) R.string.connecting_here else R.string.pair_on_this_phone_text,
+                            ),
+                        icon = AppIcons.PhonelinkRing,
+                        iconColor = AppColors.green,
+                        onClick = {
+                            if (!connectingHere) {
+                                connectingHere = true
+                                SamePhone.handCode(context, shown, token)
+                            }
                         },
                     )
-                code?.let { QrCode(it, codeModifier) } ?: Spacer(codeModifier.aspectRatio(1f))
-            }
-            Column(verticalArrangement = Arrangement.spacedBy(Dimens.row)) {
-                Step(1, stringResource(R.string.pair_step_install, childName))
-                Step(2, stringResource(R.string.pair_step_wifi))
-                Step(3, stringResource(R.string.pair_step_scan, childName))
-            }
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                Chip(stringResource(R.string.waiting_for_childs_phone, childName))
+                }
             }
         }
-        request?.let { asking ->
+        request?.takeUnless { handedBack }?.let { asking ->
             val reject = {
                 request = null
                 host.reject()
@@ -336,7 +361,7 @@ fun PairingCodeScreen(
             Sheet(
                 onDismiss = reject,
                 title = stringResource(R.string.phone_wants_to_connect),
-                icon = Icons.Filled.PhonelinkRing,
+                icon = AppIcons.PhonelinkRing,
                 subtitle = stringResource(R.string.accept_only_if, childName),
             ) {
                 val palette = LocalPalette.current
@@ -351,7 +376,7 @@ fun PairingCodeScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(Dimens.row),
                 ) {
-                    IconTile(Icons.Filled.PhoneAndroid, AppColors.slate, Dimens.rowIcon)
+                    IconTile(AppIcons.PhoneAndroid, AppColors.slate, Dimens.rowIcon)
                     Column {
                         // A phone's name is Latin; the Persian font would turn its digits Persian.
                         Text(
@@ -376,26 +401,5 @@ fun PairingCodeScreen(
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun Step(
-    number: Int,
-    text: String,
-) {
-    val palette = LocalPalette.current
-    Row(horizontalArrangement = Arrangement.spacedBy(Dimens.row), verticalAlignment = Alignment.CenterVertically) {
-        Box(
-            modifier = Modifier.size(28.dp).background(palette.limited, CircleShape),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                text = String.format(LocalConfiguration.current.locales[0], "%d", number),
-                color = palette.text,
-                fontSize = 14.sp,
-            )
-        }
-        Text(text = text, color = palette.text, fontSize = Dimens.body, modifier = Modifier.weight(1f))
     }
 }

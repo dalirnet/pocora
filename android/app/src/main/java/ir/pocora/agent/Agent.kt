@@ -1,11 +1,9 @@
 package ir.pocora.agent
 
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.net.Uri
 import android.net.VpnService
 import android.os.Handler
 import android.os.HandlerThread
@@ -16,8 +14,6 @@ import ir.pocora.model.AppAccess
 import ir.pocora.model.EventKind
 import ir.pocora.model.Mark
 import ir.pocora.model.Peer
-import ir.pocora.model.Request
-import ir.pocora.model.RequestKind
 import ir.pocora.model.Rules
 import ir.pocora.model.Schedule
 import ir.pocora.model.Snapshot
@@ -28,7 +24,6 @@ import ir.pocora.protocol.Applied
 import ir.pocora.protocol.PairAnswer
 import ir.pocora.protocol.Protocol
 import ir.pocora.protocol.Read
-import ir.pocora.protocol.SendRequest
 import ir.pocora.protocol.SetRules
 import ir.pocora.protocol.Sync
 import ir.pocora.protocol.SyncAnswer
@@ -39,6 +34,7 @@ import ir.pocora.service.TunnelService
 import ir.pocora.transport.Connection
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import java.io.File
 import java.net.InetSocketAddress
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -53,6 +49,7 @@ class Agent(
     private val app: PocoraApp,
 ) {
     companion object {
+        private const val OLD_REQUESTS_FILE = "requests.json"
         private const val TAG = "Agent"
 
         // How long an answer to the parent waits for a change to be applied on the agent's thread.
@@ -72,7 +69,6 @@ class Agent(
     private val rulesStore = RulesStore(app)
     val events = EventLog(app)
     private val days = DaysLog(app)
-    val requests = RequestStore(app)
     private val goodbyes = GoodbyeStore(app)
     val catalog = AppCatalog(app, presets)
     val usage = UsageReader(app)
@@ -112,6 +108,8 @@ class Agent(
             app.endpoint.onPaired = ::onParentConnection
             thread(name = "pocora-endpoint-start") { app.endpoint.start() }
             noteStopsAndReboots()
+            // The parent's requests were removed; their file may still be there from an older version.
+            File(app.filesDir, OLD_REQUESTS_FILE).delete()
             tick()
         }
 
@@ -168,7 +166,16 @@ class Agent(
         val state = schedule.state(rules, now)
         days.record(date, mark, state.allowed && !quotaReached, bytes)
         val markBytes = days.markBytes(date, mark)
-        val perMark = presets.quota(rules.quota).bytesPerMark
+        // The quota, raised by any extra data the parent gave for the block on now.
+        val perMark =
+            presets.quota(rules.quota).bytesPerMark?.let { quota ->
+                schedule.markLimit(rules, date, mark, quota) { days.markBytes(date, it) }
+            }
+        // More data arrived after this mark's quota ran out: the internet comes back now.
+        if (quotaReached && perMark != null && markBytes < perMark) {
+            quotaReached = false
+            quotaWarned = false
+        }
         if (perMark != null && state.allowed) {
             if (!quotaReached && markBytes >= perMark) {
                 quotaReached = true
@@ -203,7 +210,6 @@ class Agent(
                 today = schedule.day(rules, date),
                 lastParentContact = app.configStore.lastParentContact,
                 childName = app.configStore.childName,
-                requests = requests.all(),
                 rules = rules,
             )
         notifications.status(status)
@@ -275,12 +281,16 @@ class Agent(
         rules: Rules,
         now: Long,
     ) {
-        val since = if (lastWatchCheck == 0L) now - TICK_MILLISECONDS else lastWatchCheck
-        lastWatchCheck = now
+        // Android stamps app events with the phone's own clock, which may differ from the agent's,
+        // so the window is asked for in phone time and each event moved onto the agent's clock.
+        val phoneNow = System.currentTimeMillis()
+        val since = if (lastWatchCheck == 0L) phoneNow - TICK_MILLISECONDS else lastWatchCheck
+        lastWatchCheck = phoneNow
         if (rules.watch.isEmpty()) return
         var added = false
-        for ((packageName, time) in usage.opened(since, now)) {
+        for ((packageName, phoneTime) in usage.opened(since, phoneNow)) {
             if (packageName !in rules.watch) continue
+            val time = phoneTime + (now - phoneNow)
             val last = events.lastOf(EventKind.WATCHED_APP, packageName)
             if (last != null && time - last.start < WATCH_SESSION_MILLISECONDS) continue
             events.add(EventKind.WATCHED_APP, time, app = packageName, appName = catalog.find(packageName)?.name)
@@ -361,7 +371,6 @@ class Agent(
                 apps = catalog.installed(),
                 usage = usage.days(today.minusDays(Snapshot.DAYS_KEPT - 1L), today, now, app.configStore.pairedAt),
                 events = events.all(),
-                requests = requests.all(),
             )
         cachedSnapshot = snapshot
         return snapshot
@@ -386,13 +395,6 @@ class Agent(
                 clock.setFromParent(message.time)
                 rulesStore.write(message.rules)
                 FileLogger.i(TAG, "New rules from ${parent.deviceName}")
-                runOnAgent { work() }
-                connection.send(Applied(snapshot(fresh = true)))
-            }
-
-            is SendRequest -> {
-                requests.add(message.request)
-                notifications.request(message.request)
                 runOnAgent { work() }
                 connection.send(Applied(snapshot(fresh = true)))
             }
@@ -450,7 +452,6 @@ class Agent(
     // Every file, setting and notification from the pairing. The tick after finds no rules and turns the VPN off.
     private fun forgetPairing() {
         rulesStore.delete()
-        requests.delete()
         events.delete()
         days.delete()
         app.configStore.forgetPairing()
@@ -477,32 +478,6 @@ class Agent(
                 FileLogger.i(TAG, "Told ${parent.deviceName} about the disconnect")
             }
         }
-    }
-
-    // The child's answer to a parent's request. An approved one opens the store, or Android's own uninstall prompt.
-    fun answer(
-        context: Context,
-        request: Request,
-        approved: Boolean,
-    ) {
-        requests.remove(request.id)
-        if (!approved) {
-            events.add(EventKind.REQUEST_IGNORED, clock.now(), app = request.`package`, appName = request.appName)
-        } else {
-            val intent =
-                when (request.kind) {
-                    RequestKind.INSTALL -> AppStores.detailsIntent(context, request.`package`)
-                    RequestKind.REMOVE -> Intent(Intent.ACTION_DELETE, Uri.parse("package:${request.`package`}"))
-                }.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            try {
-                context.startActivity(intent)
-            } catch (error: ActivityNotFoundException) {
-                FileLogger.w(TAG, "Nothing to open ${request.kind} with", error)
-            }
-        }
-        notifications.cancelRequest(request)
-        refresh()
-        syncSoon()
     }
 
     // A package arrived or left. Installs and removals go on the timeline, and a new VPN app is an alert.

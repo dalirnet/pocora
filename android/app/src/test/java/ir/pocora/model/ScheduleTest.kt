@@ -172,4 +172,55 @@ class ScheduleTest {
     fun markOf() {
         assertEquals(37, schedule.markOf(LocalDateTime.of(2026, 10, 1, 18, 45)))
     }
+
+    // --- Extra data ---
+
+    @Test
+    fun addData_insideBlock() {
+        val changed = schedule.addData(rules, monday.atTime(18, 10), 100)
+        assertEquals(listOf(ExtraData(monday.toEpochDay(), 34, 41, 100)), changed.extraData)
+    }
+
+    @Test
+    fun addData_twiceAddsUp() {
+        val once = schedule.addData(rules, monday.atTime(18, 10), 100)
+        val twice = schedule.addData(once, monday.atTime(19, 0), 250)
+        assertEquals(listOf(ExtraData(monday.toEpochDay(), 34, 41, 350)), twice.extraData)
+    }
+
+    @Test
+    fun addData_outsideBlockChangesNothing() {
+        assertEquals(rules, schedule.addData(rules, monday.atTime(10, 0), 100))
+    }
+
+    @Test
+    fun markLimit_withoutExtraIsQuota() {
+        assertEquals(MEGABYTE * 100, schedule.markLimit(rules, monday, 35, MEGABYTE * 100) { 0L })
+    }
+
+    @Test
+    fun markLimit_sharesExtraAcrossBlock() {
+        val given = schedule.addData(rules, monday.atTime(17, 0), 150)
+        // The first mark used 80 MB over its quota, so 70 MB of the extra is left.
+        val limit = schedule.markLimit(given, monday, 35, MEGABYTE * 100) { MEGABYTE * 180 }
+        assertEquals(MEGABYTE * 170, limit)
+    }
+
+    @Test
+    fun markLimit_usedUpExtraIsQuota() {
+        val given = schedule.addData(rules, monday.atTime(17, 0), 150)
+        val limit = schedule.markLimit(given, monday, 36, MEGABYTE * 100) { MEGABYTE * 200 }
+        assertEquals(MEGABYTE * 100, limit)
+    }
+
+    @Test
+    fun withoutPastChanges_dropsOldExtraData() {
+        val given = schedule.addData(rules, monday.atTime(18, 0), 100)
+        val nextWeek = Week.startOf(monday.plusDays(7)).toEpochDay()
+        assertTrue(given.withoutPastChanges(nextWeek).extraData.isEmpty())
+    }
+
+    private companion object {
+        const val MEGABYTE = 1_000_000L
+    }
 }

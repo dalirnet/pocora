@@ -23,6 +23,18 @@ class MessageCodecTest {
     }
 
     @Test
+    fun decode_roundTripRequestWithToken() {
+        val request = PairRequest("id", "Samsung Galaxy A15", "14", "token")
+        assertEquals(request, MessageCodec.decode(MessageCodec.encode(request)))
+    }
+
+    @Test
+    fun decode_requestFromOlderAppHasNoToken() {
+        val text = """{"type":"pair_request","id":"id","deviceName":"Pixel 6","androidVersion":"14"}"""
+        assertEquals(PairRequest("id", "Pixel 6", "14"), MessageCodec.decode(text.toByteArray()))
+    }
+
+    @Test
     fun decode_roundTripAnswer() {
         val answer = PairAnswer(false, "id", "گوشی مادر")
         assertEquals(answer, MessageCodec.decode(MessageCodec.encode(answer)))

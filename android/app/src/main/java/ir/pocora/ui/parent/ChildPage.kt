@@ -6,11 +6,6 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.CloudOff
-import androidx.compose.material.icons.filled.DataUsage
-import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,6 +24,7 @@ import ir.pocora.model.Mark
 import ir.pocora.model.Schedule
 import ir.pocora.model.Snapshot
 import ir.pocora.ui.AppColors
+import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
 import ir.pocora.ui.common.UsageContent
@@ -65,7 +61,7 @@ fun ChildPage(
                     LoadingCards(3)
                 } else {
                     EmptyState(
-                        icon = Icons.Filled.CloudOff,
+                        icon = AppIcons.CloudOff,
                         color = palette.brand,
                         title = stringResource(R.string.empty_nothing_title, model.child.name),
                         text = stringResource(R.string.empty_nothing_text),
@@ -105,7 +101,7 @@ sealed interface ChildSheet {
         val packageName: String,
     ) : ChildSheet
 
-    data object Suggest : ChildSheet
+    data object Data : ChildSheet
 }
 
 object SheetState {
@@ -118,7 +114,7 @@ fun ChildSheets(model: ChildModel) {
         is ChildSheet.Duration -> DurationSheet(model, sheet.allowed) { SheetState.open = null }
         is ChildSheet.Copy -> CopySheet(model, sheet.epochDay, sheet.from) { SheetState.open = null }
         is ChildSheet.OneApp -> OneAppSheet(model, sheet.packageName) { SheetState.open = null }
-        ChildSheet.Suggest -> SuggestSheet(model) { SheetState.open = null }
+        ChildSheet.Data -> DataSheet(model) { SheetState.open = null }
         null -> Unit
     }
 }
@@ -178,7 +174,7 @@ fun DataTab(
     )
     for (level in presets.quotas) {
         OptionCard(
-            icon = Icons.Filled.DataUsage,
+            icon = AppIcons.DataUsage,
             color = levelColor(level.megabytesPerMark),
             title = level.name.text(),
             selected = level.id == rules.quota,
@@ -186,12 +182,11 @@ fun DataTab(
             tags =
                 listOfNotNull(
                     // Shown per hour, which reads more easily. The limit itself still applies to each half hour.
-                    level.megabytesPerMark?.let {
-                        Icons.Filled.Timer to
-                            stringResource(R.string.per_hour, format.number(it * Mark.PER_HOUR))
+                    level.bytesPerMark?.let {
+                        AppIcons.Timer to stringResource(R.string.per_hour, format.size(it * Mark.PER_HOUR))
                     },
                     schedule.monthlyCeilingBytes(rules.schedule, level.bytesPerMark)?.let {
-                        Icons.Filled.CalendarMonth to stringResource(R.string.a_month_short, format.size(it))
+                        AppIcons.CalendarMonth to stringResource(R.string.a_month_short, format.size(it))
                     },
                 ),
             onClick = { if (level.id != rules.quota) model.apply(rules.copy(quota = level.id)) },
@@ -205,8 +200,10 @@ private fun levelColor(megabytes: Int?) =
         megabytes == null -> AppColors.violet
         megabytes <= LIGHT_MEGABYTES -> AppColors.teal
         megabytes <= MEDIUM_MEGABYTES -> AppColors.green
-        else -> AppColors.orange
+        megabytes <= HIGH_MEGABYTES -> AppColors.orange
+        else -> AppColors.red
     }
 
 private const val LIGHT_MEGABYTES = 25
 private const val MEDIUM_MEGABYTES = 100
+private const val HIGH_MEGABYTES = 250

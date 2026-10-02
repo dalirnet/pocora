@@ -6,9 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Apps
-import androidx.compose.material.icons.filled.Cake
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,6 +27,7 @@ import ir.pocora.preset.AppGroup
 import ir.pocora.preset.AppsListPreset
 import ir.pocora.preset.Presets
 import ir.pocora.ui.AppColors
+import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
 import ir.pocora.ui.common.rememberPresets
@@ -74,7 +72,7 @@ fun AppsTab(
 
     Card {
         IconHeader(
-            Icons.Filled.Apps,
+            AppIcons.Apps,
             AppColors.blue,
             list.name.text(),
             subtitle =
@@ -147,12 +145,6 @@ fun AppsTab(
             }
         }
     }
-    MainButton(
-        text = stringResource(R.string.suggest_an_app),
-        onClick = { SheetState.open = ChildSheet.Suggest },
-        enabled = model.canEdit,
-        modifier = Modifier.fillMaxWidth(),
-    )
 }
 
 // The child's apps of one kind, with this week's use. Tapping one opens its sheet.
@@ -279,10 +271,10 @@ fun ChooseAppsScreen(
                     tags =
                         listOfNotNull(
                             ages?.let {
-                                Icons.Filled.Cake to
+                                AppIcons.Cake to
                                     stringResource(R.string.years_range, format.number(it[0]), format.number(it[1]))
                             },
-                            Icons.Filled.Apps to
+                            AppIcons.Apps to
                                 stringResource(R.string.kinds_short, format.number(open), format.number(kinds.size)),
                         ),
                     chip =

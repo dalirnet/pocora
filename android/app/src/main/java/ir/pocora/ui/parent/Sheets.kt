@@ -7,22 +7,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Apps
-import androidx.compose.material.icons.filled.ContentCopy
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.GetApp
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.Wifi
-import androidx.compose.material.icons.filled.WifiFind
-import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -34,20 +23,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ir.pocora.R
 import ir.pocora.model.AppChoice
-import ir.pocora.model.RequestKind
+import ir.pocora.model.Mark
 import ir.pocora.model.Schedule
 import ir.pocora.model.Week
 import ir.pocora.preset.AppGroup
 import ir.pocora.ui.AppColors
+import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
 import ir.pocora.ui.common.rememberPresets
-import ir.pocora.ui.component.ActionButton
 import ir.pocora.ui.component.ButtonPair
 import ir.pocora.ui.component.CardTitle
 import ir.pocora.ui.component.Categories
 import ir.pocora.ui.component.ChoiceTile
-import ir.pocora.ui.component.Field
 import ir.pocora.ui.component.HourAxis
 import ir.pocora.ui.component.OptionCard
 import ir.pocora.ui.component.Sheet
@@ -59,6 +47,10 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 private val DURATIONS = listOf(1, 2, 4)
+
+private val EXTRA_MEGABYTES = listOf(100, 250, 500, 1000)
+
+private const val BYTES_PER_MEGABYTE = 1_000_000L
 
 // "Stop internet" and "Allow internet": a change for today from now. It asks only how long, and each answer sends at once.
 @Composable
@@ -75,7 +67,7 @@ fun DurationSheet(
     Sheet(
         onDismiss = onClose,
         title = stringResource(if (allowed) R.string.allow_internet_now else R.string.stop_internet_now),
-        icon = if (allowed) Icons.Filled.Wifi else Icons.Filled.WifiOff,
+        icon = if (allowed) AppIcons.Wifi else AppIcons.WifiOff,
         color = color,
         subtitle = stringResource(R.string.for_how_long),
     ) {
@@ -91,6 +83,36 @@ fun DurationSheet(
                             schedule.cut(rules, now.toLocalDate(), mark, marks)
                         }
                     model.apply(changed, onClose)
+                }, Modifier.weight(1f), enabled = model.canEdit)
+            }
+        }
+    }
+}
+
+// "More data": extra for the Allowed block on now, on top of the quota. Each amount sends at once.
+@Composable
+fun DataSheet(
+    model: ChildModel,
+    onClose: () -> Unit,
+) {
+    val format = rememberFormat()
+    val presets = rememberPresets()
+    val schedule = remember { Schedule(presets) }
+    val rules = model.rules ?: return
+    val now = LocalDateTime.now()
+    val block = schedule.day(rules, now.toLocalDate()).blockAt(schedule.markOf(now)) ?: return
+    val end = now.toLocalDate().atStartOfDay().plusMinutes(block.end * Mark.DURATION_MINUTES.toLong())
+    Sheet(
+        onDismiss = onClose,
+        title = stringResource(R.string.more_data_title),
+        icon = AppIcons.DataSaverOn,
+        color = AppColors.green,
+        subtitle = stringResource(R.string.until_capital, format.time(end)),
+    ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(Dimens.small)) {
+            for (megabytes in EXTRA_MEGABYTES) {
+                ChoiceTile(format.size(megabytes * BYTES_PER_MEGABYTE), AppColors.green, {
+                    model.apply(schedule.addData(rules, LocalDateTime.now(), megabytes), onClose)
                 }, Modifier.weight(1f), enabled = model.canEdit)
             }
         }
@@ -120,7 +142,7 @@ fun CopySheet(
     Sheet(
         onDismiss = onClose,
         title = stringResource(R.string.same_as_another_day),
-        icon = Icons.Filled.ContentCopy,
+        icon = AppIcons.ContentCopy,
         color = AppColors.violet,
         subtitle = format.date(target),
     ) {
@@ -238,14 +260,14 @@ fun OneAppSheet(
             fontSize = Dimens.body,
             fontWeight = FontWeight.Bold,
         )
-        OptionCard(Icons.Filled.Apps, AppColors.blue, stringResource(R.string.choice_by_list), choice == null, {
+        OptionCard(AppIcons.Apps, AppColors.blue, stringResource(R.string.choice_by_list), choice == null, {
             setChoice(null)
         }, enabled = model.canEdit)
-        OptionCard(Icons.Filled.Wifi, AppColors.green, stringResource(R.string.choice_always), choice == AppChoice.IN, {
+        OptionCard(AppIcons.Wifi, AppColors.green, stringResource(R.string.choice_always), choice == AppChoice.IN, {
             setChoice(AppChoice.IN)
         }, enabled = model.canEdit)
         OptionCard(
-            Icons.Filled.WifiOff,
+            AppIcons.WifiOff,
             AppColors.orange,
             stringResource(R.string.choice_never),
             choice == AppChoice.OUT,
@@ -253,7 +275,7 @@ fun OneAppSheet(
             enabled = model.canEdit,
         )
         SwitchRow(
-            icon = Icons.Filled.Visibility,
+            icon = AppIcons.Visibility,
             iconColor = AppColors.violet,
             title = stringResource(R.string.watch_this_app),
             checked = packageName in rules.watch,
@@ -272,44 +294,6 @@ fun OneAppSheet(
                 )
             },
         )
-        ActionButton(
-            Icons.Filled.Delete,
-            AppColors.red,
-            stringResource(R.string.ask_to_remove, model.child.name),
-            { model.request(RequestKind.REMOVE, packageName, name, onClose) },
-            Modifier.fillMaxWidth(),
-            model.canEdit,
-        )
-    }
-}
-
-// Suggest an app: the child gets it as a request, and approving opens the store. The keyboard pushes the sheet up.
-@Composable
-fun SuggestSheet(
-    model: ChildModel,
-    onClose: () -> Unit,
-) {
-    var name by rememberSaveable { mutableStateOf("") }
-    var packageName by rememberSaveable { mutableStateOf("") }
-    val valid = name.isNotBlank() && Regex("[a-zA-Z][\\w]*(\\.[a-zA-Z][\\w]*)+").matches(packageName.trim())
-    Sheet(
-        onDismiss = onClose,
-        title = stringResource(R.string.suggest_an_app),
-        icon = Icons.Filled.GetApp,
-        color = AppColors.magenta,
-    ) {
-        Field(label = stringResource(R.string.app_name_field), value = name, onValueChange = { name = it.take(40) })
-        Field(label = stringResource(R.string.app_id_field), value = packageName, onValueChange = {
-            packageName =
-                it.take(100)
-        })
-        ButtonPair(
-            stringResource(R.string.cancel),
-            onClose,
-            stringResource(R.string.send_to_child, model.child.name),
-            { model.request(RequestKind.INSTALL, packageName.trim(), name.trim(), onClose) },
-            mainEnabled = valid && model.canEdit,
-        )
     }
 }
 
@@ -323,7 +307,7 @@ fun NotReachableSheet(
     Sheet(
         onDismiss = onCancel,
         title = stringResource(R.string.cant_reach, childName),
-        icon = Icons.Filled.WifiFind,
+        icon = AppIcons.WifiFind,
         color = AppColors.orange,
         subtitle = stringResource(R.string.cant_reach_text),
     ) {

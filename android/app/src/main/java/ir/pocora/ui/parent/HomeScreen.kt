@@ -11,15 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.Apps
-import androidx.compose.material.icons.filled.CloudOff
-import androidx.compose.material.icons.filled.DataUsage
-import androidx.compose.material.icons.filled.MoreTime
-import androidx.compose.material.icons.filled.PowerSettingsNew
-import androidx.compose.material.icons.filled.Wifi
-import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,6 +32,7 @@ import ir.pocora.model.Seasons
 import ir.pocora.model.Snapshot
 import ir.pocora.parent.Parent
 import ir.pocora.ui.AppColors
+import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
 import ir.pocora.ui.common.LayeredHome
@@ -82,19 +74,19 @@ fun HomeScreen(
             TileGrid(
                 listOf(
                     Tile(
-                        Icons.Filled.AccessTime,
+                        AppIcons.AccessTime,
                         AppColors.violet,
                         stringResource(R.string.tile_times),
                         snapshot != null,
                     ) { go(Route.Times(id)) },
                     Tile(
-                        Icons.Filled.Apps,
+                        AppIcons.Apps,
                         AppColors.blue,
                         stringResource(R.string.tab_apps),
                         snapshot != null,
                     ) { go(Route.Apps(id)) },
                     Tile(
-                        Icons.Filled.DataUsage,
+                        AppIcons.DataUsage,
                         AppColors.green,
                         stringResource(R.string.card_data),
                         snapshot != null,
@@ -122,7 +114,7 @@ fun HomeScreen(
                         contentAlignment = Alignment.Center,
                     ) {
                         EmptyState(
-                            icon = Icons.Filled.CloudOff,
+                            icon = AppIcons.CloudOff,
                             color = LocalPalette.current.brand,
                             title = stringResource(R.string.empty_nothing_title, model.child.name),
                             text = stringResource(R.string.empty_nothing_text),
@@ -151,7 +143,7 @@ private fun Status(
     val schedule = remember { Schedule(parent.presets) }
     if (snapshot == null) {
         StatusPanel(
-            Icons.Filled.CloudOff,
+            AppIcons.CloudOff,
             palette.muted,
             stringResource(R.string.not_connected_status),
             stringResource(R.string.nothing_yet),
@@ -168,7 +160,7 @@ private fun Status(
             .text()
     if (!model.online) {
         StatusPanel(
-            Icons.Filled.CloudOff,
+            AppIcons.CloudOff,
             palette.muted,
             stringResource(R.string.last_update, format.dayAndTime(snapshot.takenAt)),
             scheduleName,
@@ -182,13 +174,17 @@ private fun Status(
     val allowed = status.allowed
     // The two things a parent most often does, under the sentence they change.
     // The second one follows the state: stop the internet while there is some, allow it while there is none.
+    // More data makes sense only with a limit, and inside the Allowed block on now.
+    val canGiveData =
+        parent.presets.quota(snapshot.rules.quota).bytesPerMark != null &&
+            plan.blockAt(schedule.markOf(LocalDateTime.now())) != null
     val actions: @Composable ColumnScope.() -> Unit = {
         Row(horizontalArrangement = Arrangement.spacedBy(Dimens.small)) {
-            ActionButton(Icons.Filled.MoreTime, AppColors.cyan, stringResource(R.string.thirty_more_minutes), {
+            ActionButton(AppIcons.MoreTime, AppColors.cyan, stringResource(R.string.thirty_more_minutes), {
                 model.apply(schedule.extend(snapshot.rules, LocalDateTime.now(), 1))
             }, Modifier.weight(1f), model.canEdit)
             ActionButton(
-                if (allowed) Icons.Filled.WifiOff else Icons.Filled.Wifi,
+                if (allowed) AppIcons.WifiOff else AppIcons.Wifi,
                 if (allowed) AppColors.orange else AppColors.blue,
                 stringResource(if (allowed) R.string.tile_stop else R.string.tile_allow),
                 { SheetState.open = ChildSheet.Duration(allowed = !allowed) },
@@ -196,10 +192,20 @@ private fun Status(
                 model.canEdit,
             )
         }
+        if (canGiveData) {
+            ActionButton(
+                AppIcons.DataSaverOn,
+                AppColors.green,
+                stringResource(R.string.more_data),
+                { SheetState.open = ChildSheet.Data },
+                Modifier.fillMaxWidth(),
+                model.canEdit,
+            )
+        }
     }
     if (off) {
         StatusPanel(
-            Icons.Filled.PowerSettingsNew,
+            AppIcons.PowerSettingsNew,
             palette.alert,
             stringResource(R.string.pocora_off_on_phone),
             scheduleName,
@@ -208,7 +214,7 @@ private fun Status(
         )
     } else {
         StatusPanel(
-            if (allowed) Icons.Filled.Wifi else Icons.Filled.WifiOff,
+            if (allowed) AppIcons.Wifi else AppIcons.WifiOff,
             if (allowed) palette.allowed else palette.muted,
             internetSentence(status.allowed, status.until, toChild = false),
             scheduleName,

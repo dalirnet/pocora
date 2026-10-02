@@ -14,8 +14,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,6 +33,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ir.pocora.R
 import ir.pocora.model.Peer
+import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
 import ir.pocora.ui.component.Avatar
@@ -146,7 +145,7 @@ private fun AddBubble(onClick: () -> Unit) {
                         }.background(palette.brand.copy(alpha = 0.06f), CircleShape),
                 contentAlignment = Alignment.Center,
             ) {
-                Icon(Icons.Filled.Add, null, tint = palette.brand, modifier = Modifier.size(26.dp))
+                Icon(AppIcons.Add, null, tint = palette.brand, modifier = Modifier.size(26.dp))
             }
         }
         Text(text = label, color = palette.brand, fontSize = Dimens.caption, fontWeight = FontWeight.Bold, maxLines = 1)

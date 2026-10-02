@@ -1,11 +1,11 @@
 #!/bin/bash
 #
-# The two virtual phones: one for the child app, one for the parent app.
+# The virtual phone holding both apps, or with TWO_PHONES=1 two phones: one for the child app, one for the parent app.
 #
 # Usage:  sh phones.sh [start|stop|create]
 #
 #   start    create them if needed, boot them one after the other and wait until each is ready
-#   stop     shut both down
+#   stop     shut them down
 #   create   only create them
 #
 # Requires: avdmanager, adb, the emulator (sdkmanager "emulator") and the system image (make image)
@@ -29,7 +29,7 @@ create() {
     [ -f "$(image_folder)/system.img" ] || fail "the system image is not installed. Install it with: make image"
 
     local role name
-    for role in $ROLES; do
+    for role in $(phone_roles); do
         name=$(phone_name "$role")
         if avdmanager list avd 2>/dev/null | grep -q "Name: $name\$"; then
             echo "  exists   $name"
@@ -54,7 +54,7 @@ configure() {
     done
 }
 
-# Two phones share the computer's memory, so each one is kept small:
+# Two phones may share the computer's memory, so each one is kept small:
 # less memory, two cores, no sound, and the computer's own graphics card.
 # Without -gpu host the emulator falls back to software graphics when memory
 # is short, stalls, and is then killed by its own hang detection.
@@ -94,7 +94,7 @@ wait_ready() {
 
 stop() {
     local role serial
-    for role in $ROLES; do
+    for role in $(phone_roles); do
         serial=$(phone_serial "$role")
         if adb devices | grep -q "^$serial"; then
             adb -s "$serial" emu kill >/dev/null
@@ -113,7 +113,7 @@ case "${1:-start}" in
         need adb
         create
         # One after the other: booting both at once is what runs out of memory.
-        for role in $ROLES; do
+        for role in $(phone_roles); do
             boot "$role"
             wait_ready "$role"
         done

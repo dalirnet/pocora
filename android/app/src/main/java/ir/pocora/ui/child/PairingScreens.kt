@@ -12,13 +12,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.HourglassTop
-import androidx.compose.material.icons.filled.Link
-import androidx.compose.material.icons.filled.PhoneAndroid
-import androidx.compose.material.icons.filled.QrCodeScanner
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Wifi
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -34,7 +27,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import ir.pocora.PocoraApp
@@ -43,13 +35,16 @@ import ir.pocora.protocol.PairingCode
 import ir.pocora.transport.PairingClient
 import ir.pocora.transport.PairingResult
 import ir.pocora.ui.AppColors
+import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
+import ir.pocora.ui.component.BottomAction
 import ir.pocora.ui.component.Card
-import ir.pocora.ui.component.Hero
+import ir.pocora.ui.component.EmptyState
+import ir.pocora.ui.component.IconAction
 import ir.pocora.ui.component.MainButton
+import ir.pocora.ui.component.PointRow
 import ir.pocora.ui.component.Screen
-import ir.pocora.ui.component.WhiteIcon
 
 // Connecting to the parent's phone: welcome, scan, and waiting for the parent.
 
@@ -60,13 +55,18 @@ fun WelcomeScreen(
     onScan: () -> Unit,
     onSettings: () -> Unit,
 ) {
-    val palette = LocalPalette.current
-    Hero(
-        color = AppColors.violet,
-        icon = Icons.Filled.QrCodeScanner,
-        title = stringResource(R.string.connect_to_parent),
-        around = listOf(Icons.Filled.PhoneAndroid, Icons.Filled.Wifi, Icons.Filled.Link),
-        trailing = { WhiteIcon(Icons.Filled.Settings, stringResource(R.string.settings), onSettings) },
+    Screen(
+        title = stringResource(R.string.app_name_child),
+        trailing = { IconAction(AppIcons.Settings, stringResource(R.string.settings), onSettings) },
+        bottom = {
+            BottomAction {
+                MainButton(
+                    text = stringResource(R.string.scan_the_code),
+                    onClick = onScan,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+        },
     ) {
         if (failure != null) {
             val reason =
@@ -77,21 +77,23 @@ fun WelcomeScreen(
                 } else {
                     R.string.could_not_reach_parent
                 }
-            Card { Text(text = stringResource(reason), color = palette.alert, fontSize = Dimens.body) }
+            Card { PointRow(AppIcons.LinkOff, AppColors.orange, stringResource(reason)) }
         }
-        Card {
-            Text(
-                text = stringResource(R.string.connect_to_parent_text),
-                color = palette.text,
-                fontSize = Dimens.body,
-                lineHeight = 24.sp,
-            )
-            MainButton(
-                text = stringResource(R.string.scan_the_code),
-                onClick = onScan,
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
+        EmptyState(
+            icon = AppIcons.QrCodeScanner,
+            color = AppColors.violet,
+            title = stringResource(R.string.connect_to_parent),
+        )
+        ConnectSteps()
+    }
+}
+
+// How to connect, in two points: on the welcome, and under the camera.
+@Composable
+private fun ConnectSteps() {
+    Card {
+        PointRow(AppIcons.PhoneAndroid, AppColors.violet, stringResource(R.string.connect_step_ask))
+        PointRow(AppIcons.Wifi, AppColors.teal, stringResource(R.string.connect_step_wifi))
     }
 }
 
@@ -121,7 +123,7 @@ fun ScanScreen(
                     onCode(code)
                 }
             }
-            Text(text = stringResource(R.string.connect_to_parent_text), color = palette.muted, fontSize = Dimens.body)
+            ConnectSteps()
         } else {
             Card {
                 Text(text = stringResource(R.string.camera_needed), color = palette.text, fontSize = Dimens.body)
@@ -193,7 +195,6 @@ fun WaitingScreen(
     onCancel: () -> Unit,
 ) {
     val app = LocalContext.current.applicationContext as PocoraApp
-    val palette = LocalPalette.current
     val currentOnResult by rememberUpdatedState(onResult)
     DisposableEffect(code) {
         val client =
@@ -206,20 +207,25 @@ fun WaitingScreen(
         onDispose { client?.cancel() }
     }
 
-    Hero(color = AppColors.violet, icon = Icons.Filled.HourglassTop, title = stringResource(R.string.code_scanned)) {
-        Card {
-            Text(
-                text = stringResource(R.string.waiting_for_parent),
-                color = palette.text,
-                fontSize = Dimens.body,
-                lineHeight = 24.sp,
-            )
-            MainButton(
-                text = stringResource(R.string.cancel),
-                onClick = onCancel,
-                quiet = true,
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
+    Screen(
+        title = null,
+        centered = true,
+        bottom = {
+            BottomAction {
+                MainButton(
+                    text = stringResource(R.string.cancel),
+                    onClick = onCancel,
+                    quiet = true,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+        },
+    ) {
+        EmptyState(
+            icon = AppIcons.HourglassTop,
+            color = AppColors.violet,
+            title = stringResource(R.string.code_scanned),
+            text = stringResource(R.string.waiting_for_parent),
+        )
     }
 }

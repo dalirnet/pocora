@@ -11,6 +11,7 @@ data class Rules(
     val apps: Map<String, AppChoice> = emptyMap(),
     val quota: String,
     val watch: List<String> = emptyList(),
+    val extraData: List<ExtraData> = emptyList(),
     // When the parent last changed anything, in the parent's clock. The newest edit wins.
     val changedAt: Long = 0,
 ) {
@@ -21,7 +22,7 @@ data class Rules(
     // The schedule this week and every week: a new preset removes every change, of both kinds.
     fun withSchedule(id: String): Rules = copy(schedule = id, changes = emptyList())
 
-    // Old this-week changes are dropped, so the list never grows.
+    // Old this-week changes and extra data are dropped, so the lists never grow.
     fun withoutPastChanges(thisWeek: Long): Rules =
         copy(
             changes =
@@ -29,6 +30,7 @@ data class Rules(
                     it.week == null ||
                         it.week >= thisWeek
                 },
+            extraData = extraData.filter { it.day >= thisWeek },
         )
 }
 
@@ -49,6 +51,24 @@ data class Block(
     val end: Int,
     val appsList: String? = null,
 )
+
+// More data for one Allowed block of one day, on top of the quota: "100 MB more for now".
+// The block's marks share it: once a mark has used its own quota, it draws on what is left.
+@Serializable
+data class ExtraData(
+    // The epoch day.
+    val day: Long,
+    val start: Int,
+    val end: Int,
+    val megabytes: Int,
+) {
+    val bytes: Long
+        get() = megabytes * BYTES_PER_MEGABYTE
+
+    companion object {
+        private const val BYTES_PER_MEGABYTE = 1_000_000L
+    }
+}
 
 // A single app the parent fixed by hand. It beats the apps list.
 enum class AppChoice {

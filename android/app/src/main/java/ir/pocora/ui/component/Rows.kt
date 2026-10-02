@@ -21,29 +21,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Chat
-import androidx.compose.material.icons.automirrored.filled.MenuBook
-import androidx.compose.material.icons.filled.AllInclusive
-import androidx.compose.material.icons.filled.Apps
-import androidx.compose.material.icons.filled.BeachAccess
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.ChildCare
-import androidx.compose.material.icons.filled.EmojiPeople
-import androidx.compose.material.icons.filled.Groups
-import androidx.compose.material.icons.filled.Language
-import androidx.compose.material.icons.filled.MusicNote
-import androidx.compose.material.icons.filled.PhoneAndroid
-import androidx.compose.material.icons.filled.PlayCircle
-import androidx.compose.material.icons.filled.School
-import androidx.compose.material.icons.filled.SportsEsports
-import androidx.compose.material.icons.filled.Storefront
-import androidx.compose.material.icons.filled.Tune
-import androidx.compose.material.icons.filled.VideogameAssetOff
-import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Switch
@@ -81,6 +58,7 @@ import ir.pocora.R
 import ir.pocora.preset.AppGroup
 import ir.pocora.preset.SchedulePreset
 import ir.pocora.ui.AppColors
+import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
 import kotlin.math.ceil
@@ -189,6 +167,44 @@ fun SwitchRow(
     }
 }
 
+// One point in a card, as on a first-run screen: an icon tile, a title, and a line under it when there is one.
+@Composable
+fun PointRow(
+    icon: ImageVector,
+    color: Color,
+    title: String,
+    text: String? = null,
+) {
+    val palette = LocalPalette.current
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(Dimens.row),
+    ) {
+        IconTile(icon, color, Dimens.rowIcon)
+        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            // Bold only over a line of its own, as a heading; alone, it is a sentence. Each stays on one line.
+            Text(
+                text = title,
+                color = palette.text,
+                fontSize = Dimens.body,
+                fontWeight = if (text != null) FontWeight.Bold else FontWeight.Normal,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            if (text != null) {
+                Text(
+                    text = text,
+                    color = palette.muted,
+                    fontSize = Dimens.caption,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+        }
+    }
+}
+
 // A row that opens something: an icon tile or a colour mark, a title, a note, and an arrow.
 @Composable
 fun LinkRow(
@@ -259,7 +275,7 @@ fun OptionCard(
             title = title,
             subtitle = subtitle,
             titleSize = Dimens.body,
-            chip = chip?.let { { Chip(it, color = AppColors.green, icon = Icons.Filled.Check) } },
+            chip = chip?.let { { Chip(it, color = AppColors.green, icon = AppIcons.Check) } },
             below =
                 if (tags.isEmpty()) {
                     null
@@ -275,7 +291,7 @@ fun OptionCard(
                 },
         ) {
             when {
-                selected -> Icon(Icons.Filled.CheckCircle, null, tint = palette.brand, modifier = Modifier.size(26.dp))
+                selected -> Icon(AppIcons.CheckCircle, null, tint = palette.brand, modifier = Modifier.size(26.dp))
                 opensMore -> Arrow()
                 else -> Box(modifier = Modifier.size(22.dp).border(2.dp, palette.limited, CircleShape))
             }
@@ -427,40 +443,40 @@ object Categories {
 
     fun of(group: String): Style =
         when (group) {
-            AppGroup.SCHOOL -> Style(Icons.Filled.School, AppColors.blue)
-            AppGroup.LEARNING -> Style(Icons.AutoMirrored.Filled.MenuBook, AppColors.teal)
-            AppGroup.KIDS -> Style(Icons.Filled.ChildCare, AppColors.pink)
-            AppGroup.MESSAGING -> Style(Icons.AutoMirrored.Filled.Chat, AppColors.green)
-            AppGroup.VIDEO -> Style(Icons.Filled.PlayCircle, AppColors.red)
-            AppGroup.GAMES -> Style(Icons.Filled.SportsEsports, AppColors.violet)
-            AppGroup.MUSIC -> Style(Icons.Filled.MusicNote, AppColors.orange)
-            AppGroup.BROWSER -> Style(Icons.Filled.Language, AppColors.cyan)
-            AppGroup.SOCIAL -> Style(Icons.Filled.Groups, AppColors.magenta)
-            AppGroup.STORES -> Style(Icons.Filled.Storefront, AppColors.amber)
-            AppGroup.DAILY_TOOLS -> Style(Icons.Filled.Build, AppColors.slate)
-            AppGroup.SYSTEM -> Style(Icons.Filled.PhoneAndroid, AppColors.grey)
-            else -> Style(Icons.Filled.Apps, AppColors.grey)
+            AppGroup.SCHOOL -> Style(AppIcons.School, AppColors.blue)
+            AppGroup.LEARNING -> Style(AppIcons.MenuBook, AppColors.teal)
+            AppGroup.KIDS -> Style(AppIcons.ChildCare, AppColors.pink)
+            AppGroup.MESSAGING -> Style(AppIcons.Chat, AppColors.green)
+            AppGroup.VIDEO -> Style(AppIcons.PlayCircle, AppColors.red)
+            AppGroup.GAMES -> Style(AppIcons.SportsEsports, AppColors.violet)
+            AppGroup.MUSIC -> Style(AppIcons.MusicNote, AppColors.orange)
+            AppGroup.BROWSER -> Style(AppIcons.Language, AppColors.cyan)
+            AppGroup.SOCIAL -> Style(AppIcons.Groups, AppColors.magenta)
+            AppGroup.STORES -> Style(AppIcons.Storefront, AppColors.amber)
+            AppGroup.DAILY_TOOLS -> Style(AppIcons.Build, AppColors.slate)
+            AppGroup.SYSTEM -> Style(AppIcons.PhoneAndroid, AppColors.grey)
+            else -> Style(AppIcons.Apps, AppColors.grey)
         }
 
     // Each schedule section has its own icon and colour.
     fun ofSection(section: String): Style =
         when (section) {
-            SchedulePreset.SECTION_SCHOOL_YEAR -> Style(Icons.Filled.School, AppColors.blue)
-            SchedulePreset.SECTION_HOLIDAYS -> Style(Icons.Filled.BeachAccess, AppColors.orange)
-            else -> Style(Icons.Filled.Tune, AppColors.violet)
+            SchedulePreset.SECTION_SCHOOL_YEAR -> Style(AppIcons.School, AppColors.blue)
+            SchedulePreset.SECTION_HOLIDAYS -> Style(AppIcons.BeachAccess, AppColors.orange)
+            else -> Style(AppIcons.Tune, AppColors.violet)
         }
 
     // Each apps list has its own icon and colour too.
     fun ofList(list: String): Style =
         when (list) {
-            "kids" -> Style(Icons.Filled.ChildCare, AppColors.pink)
-            "everyday" -> Style(Icons.Filled.WbSunny, AppColors.orange)
-            "teen" -> Style(Icons.Filled.EmojiPeople, AppColors.violet)
-            "school" -> Style(Icons.Filled.School, AppColors.blue)
-            "study" -> Style(Icons.AutoMirrored.Filled.MenuBook, AppColors.teal)
-            "reachable" -> Style(Icons.Filled.Call, AppColors.green)
-            "no-games" -> Style(Icons.Filled.VideogameAssetOff, AppColors.red)
-            else -> Style(Icons.Filled.AllInclusive, AppColors.slate)
+            "kids" -> Style(AppIcons.ChildCare, AppColors.pink)
+            "everyday" -> Style(AppIcons.WbSunny, AppColors.orange)
+            "teen" -> Style(AppIcons.EmojiPeople, AppColors.violet)
+            "school" -> Style(AppIcons.School, AppColors.blue)
+            "study" -> Style(AppIcons.MenuBook, AppColors.teal)
+            "reachable" -> Style(AppIcons.Call, AppColors.green)
+            "no-games" -> Style(AppIcons.VideogameAssetOff, AppColors.red)
+            else -> Style(AppIcons.AllInclusive, AppColors.slate)
         }
 }
 

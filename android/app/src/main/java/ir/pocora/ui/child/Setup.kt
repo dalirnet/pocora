@@ -17,17 +17,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AdminPanelSettings
-import androidx.compose.material.icons.filled.Autorenew
-import androidx.compose.material.icons.filled.BarChart
-import androidx.compose.material.icons.filled.BatteryChargingFull
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.VpnKey
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -39,27 +31,28 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import ir.pocora.PocoraApp
 import ir.pocora.R
 import ir.pocora.debug.FileLogger
 import ir.pocora.service.AdminReceiver
 import ir.pocora.ui.AppColors
-import ir.pocora.ui.Dimens
+import ir.pocora.ui.AppIcons
 import ir.pocora.ui.LocalPalette
 import ir.pocora.ui.common.Permissions
+import ir.pocora.ui.component.BottomAction
 import ir.pocora.ui.component.Card
-import ir.pocora.ui.component.Hero
+import ir.pocora.ui.component.EmptyState
 import ir.pocora.ui.component.MainButton
+import ir.pocora.ui.component.PointRow
+import ir.pocora.ui.component.Screen
 
-// C3b. One step at a time: a large icon, the step, a plain reason, and the one button that grants it.
-// A row of dots shows how far along the child is. A step done in Android's screen moves on by itself.
+// C3b. One step at a time, as the parent's first screen: the step and a plain reason, every step in a card,
+// and the one button that grants it at the bottom. A step done in Android's screen moves on by itself.
 @Composable
 fun SetupScreen(onDone: () -> Unit) {
     val context = LocalContext.current
     val app = context.applicationContext as PocoraApp
-    val palette = LocalPalette.current
     var checks by remember { mutableIntStateOf(0) }
     LifecycleResumeEffect(Unit) {
         checks++
@@ -91,77 +84,114 @@ fun SetupScreen(onDone: () -> Unit) {
         }
     }
 
-    val count = done.values.count { it }
-    if (open == null) {
-        Hero(
-            color = AppColors.green,
-            icon = Icons.Filled.CheckCircle,
-            title = stringResource(R.string.setup_all_done),
-        ) {
-            Card {
-                Text(text = stringResource(R.string.setup_all_done_text), color = palette.text, fontSize = Dimens.body)
-                MainButton(text = stringResource(R.string.done), onClick = {
-                    app.configStore.setupDone = true
-                    onDone()
-                }, modifier = Modifier.fillMaxWidth())
-            }
-        }
-        return
+    val finish = {
+        app.configStore.setupDone = true
+        onDone()
     }
-    Hero(
-        color = AppColors.violet,
-        icon = iconOf(open),
-        title = stringResource(open.title),
-        subtitle = stringResource(R.string.step_of, count + 1, SetupStep.entries.size),
+    Screen(
+        title = stringResource(R.string.setup_title),
+        trailing = { Progress(done, open) },
+        bottom = {
+            BottomAction {
+                if (open == null) {
+                    MainButton(
+                        text = stringResource(R.string.done),
+                        onClick = finish,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                } else {
+                    MainButton(
+                        text = stringResource(open.action),
+                        onClick = { start(open) },
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    // The VPN is the one step Pocora cannot work without; the others can wait.
+                    if (done[SetupStep.VPN] == true) {
+                        MainButton(
+                            text = stringResource(R.string.finish_later),
+                            onClick = finish,
+                            quiet = true,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
+                }
+            }
+        },
     ) {
-        Card {
-            Text(text = stringResource(open.why), color = palette.text, fontSize = Dimens.body, lineHeight = 24.sp)
-            MainButton(
-                text = stringResource(open.action),
-                onClick = { start(open) },
-                modifier = Modifier.fillMaxWidth(),
+        if (open == null) {
+            EmptyState(
+                icon = AppIcons.CheckCircle,
+                color = AppColors.green,
+                title = stringResource(R.string.setup_all_done),
+                text = stringResource(R.string.setup_all_done_text),
+            )
+        } else {
+            EmptyState(
+                icon = iconOf(open),
+                color = AppColors.violet,
+                title = stringResource(open.title),
+                text = stringResource(open.why),
             )
         }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
-        ) {
+        // Every step at a glance: done in green with a tick, this one in violet, the rest waiting in grey.
+        Card {
             for (step in SetupStep.entries) {
-                val current = step == open
-                Box(
-                    modifier =
-                        Modifier
-                            .width(if (current) 22.dp else 8.dp)
-                            .height(8.dp)
-                            .background(
-                                when {
-                                    current -> palette.brand
-                                    done[step] == true -> AppColors.green
-                                    else -> palette.limited
-                                },
-                                RoundedCornerShape(4.dp),
-                            ),
+                PointRow(
+                    icon = if (done[step] == true) AppIcons.Check else iconOf(step),
+                    color =
+                        when {
+                            done[step] == true -> AppColors.green
+                            step == open -> AppColors.violet
+                            else -> AppColors.grey
+                        },
+                    title = stringResource(step.title),
                 )
             }
         }
-        // The VPN is the one step Pocora cannot work without; the others can wait.
-        if (done[SetupStep.VPN] == true) {
-            MainButton(text = stringResource(R.string.finish_later), onClick = {
-                app.configStore.setupDone = true
-                onDone()
-            }, quiet = true, modifier = Modifier.fillMaxWidth())
+    }
+}
+
+// How far along, in the top bar: a dot per step, green when done, the current one long and violet.
+@Composable
+private fun Progress(
+    done: Map<SetupStep, Boolean>,
+    open: SetupStep?,
+) {
+    val palette = LocalPalette.current
+    // The top bar's edge is 12dp and the content's 20dp; the dots line up with the content.
+    Row(
+        modifier = Modifier.padding(end = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        for (step in SetupStep.entries) {
+            val current = step == open
+            Box(
+                modifier =
+                    Modifier
+                        .width(if (current) 20.dp else 8.dp)
+                        .height(8.dp)
+                        .background(
+                            when {
+                                current -> palette.brand
+                                done[step] == true -> AppColors.green
+                                else -> palette.limited
+                            },
+                            RoundedCornerShape(4.dp),
+                        ),
+            )
         }
     }
 }
 
 private fun iconOf(step: SetupStep): ImageVector =
     when (step) {
-        SetupStep.VPN -> Icons.Filled.VpnKey
-        SetupStep.ALWAYS_ON -> Icons.Filled.Autorenew
-        SetupStep.USAGE -> Icons.Filled.BarChart
-        SetupStep.NOTIFICATIONS -> Icons.Filled.Notifications
-        SetupStep.ADMIN -> Icons.Filled.AdminPanelSettings
-        SetupStep.BATTERY -> Icons.Filled.BatteryChargingFull
+        SetupStep.VPN -> AppIcons.VpnKey
+        SetupStep.ALWAYS_ON -> AppIcons.Autorenew
+        SetupStep.USAGE -> AppIcons.BarChart
+        SetupStep.NOTIFICATIONS -> AppIcons.Notifications
+        SetupStep.ADMIN -> AppIcons.AdminPanelSettings
+        SetupStep.BATTERY -> AppIcons.BatteryChargingFull
     }
 
 // The six setup steps, in order. Each knows whether it is done and which Android screen grants it.

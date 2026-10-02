@@ -12,10 +12,11 @@ help:
 	@echo "Setup"
 	@echo "  make check         check this machine can build and run the project"
 	@echo "  make image         install the system image for the virtual phones"
-	@echo "  make phones        create and start the two virtual phones"
+	@echo "  make phones        create and start the virtual phone, both apps on it"
+	@echo "                     add TWO_PHONES=1 for a phone per app"
 	@echo "  make phones-stop   shut the virtual phones down"
 	@echo "Code"
-	@echo "  make presets       write the presets JSON from ../preset/"
+	@echo "  make icons         write AppIcons.kt from the Solar icon set"
 	@echo "  make format        format Kotlin, JSON and XML"
 	@echo "  make test          run the unit tests of both apps"
 	@echo "Build"
@@ -25,7 +26,7 @@ help:
 	@echo "  make run           build, install and open one app (ROLE=child or parent)"
 	@echo "  make run-both      the same for both apps"
 	@echo "                     add SERIAL=<serial> to use another device"
-	@echo "  make pair          pair the two virtual phones, in place of scanning the code"
+	@echo "  make pair          pair the apps by script, in place of scanning the code"
 	@echo "Release"
 	@echo "  make publish       bump the version, merge to main and tag it; GitHub builds the release"
 	@echo "Clean"
@@ -51,9 +52,9 @@ phones-stop:
 
 # --- Code ---
 
-.PHONY: presets
-presets:
-	@bash scripts/presets.sh
+.PHONY: icons
+icons:
+	@bash scripts/icons.sh
 
 .PHONY: format
 format:

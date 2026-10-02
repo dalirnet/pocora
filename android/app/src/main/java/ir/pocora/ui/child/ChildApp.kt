@@ -1,37 +1,32 @@
 package ir.pocora.ui.child
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.MarkEmailUnread
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import ir.pocora.PocoraApp
 import ir.pocora.R
 import ir.pocora.config.Look
 import ir.pocora.protocol.PairingCode
 import ir.pocora.transport.PairingResult
+import ir.pocora.ui.AppIcons
 import ir.pocora.ui.component.BarItem
 import ir.pocora.ui.component.BottomBar
 
-private val TABS = listOf(ChildStep.HOME, ChildStep.REQUESTS, ChildStep.SETTINGS)
+private val TABS = listOf(ChildStep.HOME, ChildStep.ACTIVITY, ChildStep.SETTINGS)
 
 // The child app's screens and the way between them, on the same plan as the parent app's.
-// First run: welcome, the scan, waiting for the parent, then the setup steps. Then Home, Requests and Settings are the bottom bar,
+// First run: welcome, the scan, waiting for the parent, then the setup steps. Then Home, Activity and Settings are the bottom bar,
 // and every other screen has a back arrow. A code handed in, instead of scanned, goes straight to waiting.
 @Composable
 fun ChildApp(
     handedCode: PairingCode?,
-    shownRequest: String?,
-    onRequestShown: () -> Unit,
     onLanguage: (String) -> Unit,
     onLook: (Look) -> Unit,
 ) {
@@ -55,12 +50,17 @@ fun ChildApp(
     // A parent this phone disconnected from, and not yet told, is tried again each time the app opens.
     LaunchedEffect(Unit) { app.agent.sendGoodbyes() }
 
-    // A request's notification, tapped without an answer, opens the requests.
-    LaunchedEffect(shownRequest) {
-        if (shownRequest != null && paired) {
-            step = ChildStep.REQUESTS
-            onRequestShown()
+    // The parent app on this phone may have paired this app in the background, while it was closed or
+    // on another screen. Coming back finds the pairing and goes on to setup, and the agent starts here
+    // if Android did not let it start from the background.
+    LifecycleResumeEffect(Unit) {
+        if (!paired && app.peerStore.all().isNotEmpty()) {
+            paired = true
+            failure = null
+            step = ChildStep.SETUP
         }
+        app.startServiceIfPaired()
+        onPauseOrDispose { }
     }
 
     fun open(next: ChildStep) {
@@ -77,26 +77,17 @@ fun ChildApp(
         step = parentStep
     }
     BackHandler(
-        enabled = step == ChildStep.REQUESTS || (step == ChildStep.SETTINGS && paired),
+        enabled = step == ChildStep.ACTIVITY || (step == ChildStep.SETTINGS && paired),
     ) { step = ChildStep.HOME }
     BackHandler(enabled = step == ChildStep.SETTINGS && !paired) { step = ChildStep.WELCOME }
 
-    val requests =
-        if (paired) {
-            app.agent.updates
-                .collectAsState()
-                .value
-                .let { app.agent.status.requests.size }
-        } else {
-            0
-        }
     val bottom: @Composable () -> Unit = {
         BottomBar(
             items =
                 listOf(
-                    BarItem(Icons.Filled.Home, stringResource(R.string.nav_home)),
-                    BarItem(Icons.Filled.MarkEmailUnread, stringResource(R.string.tile_requests), requests),
-                    BarItem(Icons.Filled.Settings, stringResource(R.string.settings)),
+                    BarItem(AppIcons.Home, stringResource(R.string.nav_home)),
+                    BarItem(AppIcons.Notifications, stringResource(R.string.nav_activity)),
+                    BarItem(AppIcons.Settings, stringResource(R.string.settings)),
                 ),
             selected = TABS.indexOf(step).coerceAtLeast(0),
             onSelect = { step = TABS[it] },
@@ -152,8 +143,8 @@ fun ChildApp(
             )
         }
 
-        ChildStep.REQUESTS -> {
-            RequestsScreen(bottom = bottom)
+        ChildStep.ACTIVITY -> {
+            ActivityScreen(bottom = bottom)
         }
 
         ChildStep.SETTINGS -> {
@@ -192,7 +183,7 @@ enum class ChildStep {
     WAITING,
     SETUP,
     HOME,
-    REQUESTS,
+    ACTIVITY,
     SETTINGS,
     TIMES,
     USAGE,

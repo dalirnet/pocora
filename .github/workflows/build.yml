@@ -1,10 +1,13 @@
-# Every push and pull request: the presets are up to date, the tests pass, and both apps build.
+# Every push and pull request: the tests pass, and both apps build.
+# A change to the landing page alone (docs/) builds nothing; GitHub Pages publishes it.
 name: Build
 
 on:
   push:
     branches: ["**"]
+    paths-ignore: ["docs/**"]
   pull_request:
+    paths-ignore: ["docs/**"]
 
 concurrency:
   group: build-${{ github.ref }}
@@ -25,12 +28,6 @@ jobs:
           java-version: "17"
 
       - uses: gradle/actions/setup-gradle@v4
-
-      # presets.json is written from preset/ by make presets. A change to preset/ must be followed by it.
-      - name: Presets are up to date
-        run: |
-          make presets
-          git diff --exit-code -- app/src/main/assets/presets.json
 
       - name: Test
         run: make test

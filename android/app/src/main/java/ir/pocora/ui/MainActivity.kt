@@ -7,7 +7,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import ir.pocora.PocoraApp
 import ir.pocora.Role
 import ir.pocora.config.ConfigStore
@@ -15,20 +19,13 @@ import ir.pocora.config.Language
 import ir.pocora.config.Look
 import ir.pocora.protocol.PairingCode
 import ir.pocora.ui.child.ChildApp
+import ir.pocora.ui.component.LocalLocked
 import ir.pocora.ui.component.WithToasts
 import ir.pocora.ui.parent.LockScreen
 import ir.pocora.ui.parent.ParentApp
 
 class MainActivity : ComponentActivity() {
     companion object {
-        // A pairing code handed in instead of scanned, for a virtual phone with no camera to point.
-        // Debug builds only: in a release build, only a person holding the phone can start pairing.
-        private const val EXTRA_PAIRING_CODE = "pairing_code"
-
-        // A parent's request, from its notification, and the child's answer when a button was tapped.
-        const val EXTRA_REQUEST = "request"
-        const val EXTRA_APPROVE = "approve"
-
         // A parent's notification: the child, and what to open on the child's page.
         const val EXTRA_CHILD = "child"
         const val EXTRA_OPEN = "open"
@@ -42,9 +39,6 @@ class MainActivity : ComponentActivity() {
     private val opened = mutableStateOf<Pair<String, String?>?>(null)
     private val look = mutableStateOf(Look.SYSTEM)
 
-    // The request to show on the Requests tab, when its notification was tapped without an answer.
-    private val shownRequest = mutableStateOf<String?>(null)
-
     // The parent app opens locked, and locks again each time it leaves the screen: the child may use the same phone.
     private val locked = mutableStateOf(Role.current == Role.PARENT)
 
@@ -56,8 +50,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         savedInstanceState?.let { locked.value = it.getBoolean(STATE_LOCKED, locked.value) }
-        val debugCode = if (isDebuggable()) intent.getStringExtra(EXTRA_PAIRING_CODE) else null
-        handleRequest(intent)
+        val handedCode = if (isHandedCode()) intent.getStringExtra(SamePhone.EXTRA_PAIRING_CODE) else null
         handleOpen(intent)
         look.value = (application as PocoraApp).configStore.look
         setContent {
@@ -65,21 +58,26 @@ class MainActivity : ComponentActivity() {
                 WithToasts {
                     if (Role.current == Role.CHILD) {
                         ChildApp(
-                            handedCode = debugCode?.let(PairingCode::parse),
-                            shownRequest = shownRequest.value,
-                            onRequestShown = { shownRequest.value = null },
+                            handedCode = handedCode?.let(PairingCode::parse),
                             onLanguage = ::setLanguage,
                             onLook = ::setLook,
                         )
-                    } else if (locked.value) {
-                        LockScreen(onUnlock = { locked.value = false })
                     } else {
-                        ParentApp(
-                            opened = opened.value,
-                            onOpened = { opened.value = null },
-                            onLanguage = ::setLanguage,
-                            onLook = ::setLook,
-                        )
+                        // The lock covers the screens instead of replacing them, so a pairing code left open
+                        // keeps waiting while the child app is opened on this same phone.
+                        Box {
+                            Box(modifier = if (locked.value) Modifier.clearAndSetSemantics {} else Modifier) {
+                                CompositionLocalProvider(LocalLocked provides locked.value) {
+                                    ParentApp(
+                                        opened = opened.value,
+                                        onOpened = { opened.value = null },
+                                        onLanguage = ::setLanguage,
+                                        onLook = ::setLook,
+                                    )
+                                }
+                            }
+                            if (locked.value) LockScreen(onUnlock = { locked.value = false })
+                        }
                     }
                 }
             }
@@ -99,7 +97,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        handleRequest(intent)
         handleOpen(intent)
     }
 
@@ -115,19 +112,6 @@ class MainActivity : ComponentActivity() {
         look.value = value
     }
 
-    private fun handleRequest(intent: Intent) {
-        if (Role.current != Role.CHILD) return
-        val id = intent.getStringExtra(EXTRA_REQUEST) ?: return
-        intent.removeExtra(EXTRA_REQUEST)
-        val agent = (application as PocoraApp).agent
-        val request = agent.requests.all().firstOrNull { it.id == id } ?: return
-        if (intent.hasExtra(EXTRA_APPROVE)) {
-            agent.answer(this, request, intent.getBooleanExtra(EXTRA_APPROVE, false))
-        } else {
-            shownRequest.value = id
-        }
-    }
-
     // The language is read when the activity is created, so switching it starts the activity again.
     private fun setLanguage(code: String) {
         val configStore = (application as PocoraApp).configStore
@@ -135,6 +119,10 @@ class MainActivity : ComponentActivity() {
         configStore.language = code
         recreate()
     }
+
+    // A code handed in instead of scanned, in a debug build only: by a script, for a virtual phone with no camera.
+    // In a release build only a person holding the phone can start pairing.
+    private fun isHandedCode(): Boolean = isDebuggable()
 
     private fun isDebuggable(): Boolean = applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
 }

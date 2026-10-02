@@ -5,10 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -29,6 +25,7 @@ import ir.pocora.R
 import ir.pocora.config.Look
 import ir.pocora.model.Suggested
 import ir.pocora.service.ParentNotifications
+import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.component.BarItem
 import ir.pocora.ui.component.BottomBar
@@ -70,9 +67,7 @@ fun ParentApp(
     fun model(id: String?): ChildModel? =
         id?.let(parent::child)?.let { child ->
             models.getOrPut(child.id) {
-                ChildModel(parent, child, scope) { request ->
-                    Toasts.show(if (request) context.getString(R.string.sent_to, child.name) else savedText)
-                }
+                ChildModel(parent, child, scope) { Toasts.show(savedText) }
             }
         }
 
@@ -126,13 +121,13 @@ fun ParentApp(
         BottomBar(
             items =
                 listOf(
-                    BarItem(Icons.Filled.Home, stringResource(R.string.nav_home)),
+                    BarItem(AppIcons.Home, stringResource(R.string.nav_home)),
                     BarItem(
-                        Icons.Filled.Notifications,
+                        AppIcons.Notifications,
                         stringResource(R.string.nav_activity),
                         selected?.unseenAlerts ?: 0,
                     ),
-                    BarItem(Icons.Filled.Settings, stringResource(R.string.settings)),
+                    BarItem(AppIcons.Settings, stringResource(R.string.settings)),
                 ),
             selected =
                 when (route) {

@@ -24,6 +24,15 @@ PHONE_CORES=2
 CHILD_PHONE_PORT=5554
 PARENT_PHONE_PORT=5556
 
+# One virtual phone holds both apps by default, as when a parent tries Pocora first: less memory, and pairing
+# runs through the app's own same-phone flow. TWO_PHONES=1 gives each app its own phone.
+TWO_PHONES=${TWO_PHONES:-}
+# Alone, the phone gets more of the computer: two apps and their services on 1.5 GB starve each other.
+if [ -z "$TWO_PHONES" ]; then
+    PHONE_MEMORY_MEGABYTES=3072
+    PHONE_CORES=4
+fi
+
 # The port the parent app listens on, as in Protocol.kt.
 PARENT_APP_PORT=47601
 
@@ -61,16 +70,28 @@ image_folder() {
     echo "$SDK/$(echo "$IMAGE_PACKAGE" | tr ';' '/')"
 }
 
-# phone_name <role>  Print the virtual phone's name.
-phone_name() {
-    echo "pocora-$1"
+# phone_roles  Print what each virtual phone is for: "both", or "child parent" with TWO_PHONES.
+phone_roles() {
+    if [ -n "$TWO_PHONES" ]; then echo "$ROLES"; else echo "both"; fi
 }
 
-# phone_serial <role>  Print the virtual phone's adb serial.
+# phone_name <role>  Print the virtual phone's name: pocora for both apps, pocora-<role> for one.
+phone_name() {
+    case "$1" in
+        both) echo "pocora" ;;
+        *) echo "pocora-$1" ;;
+    esac
+}
+
+# phone_serial <role>  Print the adb serial of the virtual phone that role's app runs on.
 phone_serial() {
     case "$1" in
-        child) echo "emulator-$CHILD_PHONE_PORT" ;;
-        parent) echo "emulator-$PARENT_PHONE_PORT" ;;
+        child | parent | both) ;;
         *) fail "unknown role: $1" ;;
     esac
+    if [ -z "$TWO_PHONES" ] || [ "$1" = "child" ] || [ "$1" = "both" ]; then
+        echo "emulator-$CHILD_PHONE_PORT"
+    else
+        echo "emulator-$PARENT_PHONE_PORT"
+    fi
 }
