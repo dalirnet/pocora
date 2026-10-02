@@ -341,16 +341,18 @@ fun ProgressLine(
     }
 }
 
-// A thin number over a small label.
+// A thin number over a small label, and a note under them when there is one.
 @Composable
 fun NumberPair(
     value: String,
     label: String,
     modifier: Modifier = Modifier,
     color: Color = LocalPalette.current.text,
+    note: String? = null,
 ) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = value, color = color, fontSize = 20.sp, fontWeight = FontWeight.Light)
         Text(text = label, color = LocalPalette.current.muted, fontSize = Dimens.label)
+        if (note != null) Text(text = note, color = LocalPalette.current.muted, fontSize = Dimens.caption)
     }
 }
