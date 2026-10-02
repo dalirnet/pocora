@@ -188,4 +188,6 @@
     <string name="child_turned_off_at">%1$s ساعت %2$s پوکورا را خاموش کرد</string>
     <string name="child_and_event">%1$s: %2$s</string>
     <string name="see_schedule">دیدن زمان‌بندی</string>
+    <string name="child_disconnected">%1$s از پوکورا جدا شد</string>
+    <string name="child_disconnected_text">برای وصل کردن دوباره، او را از نو اضافه کنید.</string>
 </resources>

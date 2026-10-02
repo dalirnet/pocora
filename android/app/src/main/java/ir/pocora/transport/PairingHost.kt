@@ -19,6 +19,8 @@ class PairingHost(
     private val identity: () -> Identity,
     private val peerStore: PeerStore,
     private val onRequest: (PairRequest) -> Unit,
+    // Runs on the connection's thread, just before the child is saved, for a phone paired before to start fresh.
+    private val onPairing: (Peer) -> Unit,
     private val onPaired: (Peer) -> Unit,
     private val onRequestGone: () -> Unit,
 ) {
@@ -75,6 +77,7 @@ class PairingHost(
                 decision.age,
                 Protocol.CHILD_PORT,
             )
+        onPairing(peer)
         peerStore.save(peer)
         FileLogger.i(TAG, "Paired with ${request.deviceName}")
         mainHandler.post { onPaired(peer) }

@@ -73,6 +73,7 @@ class Agent(
     val events = EventLog(app)
     private val days = DaysLog(app)
     val requests = RequestStore(app)
+    private val goodbyes = GoodbyeStore(app)
     val catalog = AppCatalog(app, presets)
     val usage = UsageReader(app)
     private val meter = TrafficMeter()
@@ -312,6 +313,7 @@ class Agent(
     // To every paired parent this phone can reach. A parent that cannot be reached is simply tried again next time.
     private fun syncNow() {
         lastSync = clock.now()
+        sendGoodbyes()
         val parents = app.peerStore.all()
         if (parents.isEmpty()) return
         val snapshot = snapshot(fresh = true)
@@ -424,10 +426,55 @@ class Agent(
 
     // The parent's yes: the agent starts with the rules that came with it, and the header shows the child's name.
     fun paired(answer: PairAnswer) {
+        goodbyes.remove(answer.id)
         answer.childName?.let { app.configStore.childName = it }
         answer.rules?.let {
             rulesStore.write(it)
             AgentService.start(app)
+        }
+    }
+
+    // The child disconnected, from its own Settings. Each parent is told, now or the next time it can be reached,
+    // and everything kept while paired goes, so this phone starts fresh with the next pairing.
+    fun disconnect() {
+        val parents = app.peerStore.all()
+        goodbyes.add(parents, System.currentTimeMillis())
+        parents.forEach { app.peerStore.remove(it.id) }
+        app.stopService(Intent(app, AgentService::class.java))
+        // On the agent's thread, so no tick writes a file back meanwhile.
+        handler.post { forgetPairing() }
+        sendGoodbyes()
+    }
+
+    // Every file, setting and notification from the pairing. The tick after finds no rules and turns the VPN off.
+    private fun forgetPairing() {
+        rulesStore.delete()
+        requests.delete()
+        events.delete()
+        days.delete()
+        app.configStore.forgetPairing()
+        notifications.cancelAll()
+        status = AgentStatus.EMPTY
+        cachedSnapshot = null
+        currentMark = null
+        quotaReached = false
+        quotaWarned = false
+        endingNotified = 0
+        wasAllowed = null
+        vpnDownSince = null
+        tick()
+    }
+
+    // Tells each parent left behind. Tried on disconnecting, on every sync, and when the app opens, until it answers.
+    fun sendGoodbyes() {
+        val parents = goodbyes.pending(System.currentTimeMillis())
+        if (parents.isEmpty()) return
+        thread(name = "pocora-goodbye") {
+            for (parent in parents) {
+                app.peerLink.call(parent, Unpair(app.identity.id), Protocol.PARENT_PORT) ?: continue
+                goodbyes.remove(parent.id)
+                FileLogger.i(TAG, "Told ${parent.deviceName} about the disconnect")
+            }
         }
     }
 

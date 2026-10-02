@@ -71,4 +71,8 @@
     <string name="parent_sees_admin_off">Your parent will see that this was turned off.</string>
     <string name="tile_internet">Internet on</string>
     <string name="tile_no_internet">No internet</string>
+    <string name="disconnect_from_parent">Disconnect from parent</string>
+    <string name="disconnect_title">Disconnect from your parent?</string>
+    <string name="disconnect_text">The rules stop on this phone, and your parent will see that you disconnected. You can scan a code again afterwards.</string>
+    <string name="disconnect">Disconnect</string>
 </resources>

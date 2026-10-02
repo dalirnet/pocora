@@ -93,7 +93,16 @@ class Parent(
         connection: Connection,
         child: Peer,
     ) {
-        val sync = connection.receive(Protocol.REQUEST_TIMEOUT_MILLISECONDS) as? Sync
+        val message = connection.receive(Protocol.REQUEST_TIMEOUT_MILLISECONDS)
+        // The child disconnected from its own phone, which is then ready to be paired again.
+        if (message is Unpair) {
+            connection.send(Applied())
+            FileLogger.i(TAG, "${child.name} disconnected")
+            drop(child)
+            notifications.disconnected(child)
+            return
+        }
+        val sync = message as? Sync
         if (sync == null || sync.snapshot.childId != child.id) {
             FileLogger.w(TAG, "Unexpected message from ${child.name}")
             return
@@ -196,12 +205,22 @@ class Parent(
     // Forgets a child: its fingerprint and every file about it. The child's phone is told, if it can be reached.
     fun forget(child: Peer) {
         app.peerLink.call(child, Unpair(app.identity.id), Protocol.CHILD_PORT)
+        drop(child)
+    }
+
+    private fun drop(child: Peer) {
         app.peerStore.remove(child.id)
+        clearData(child)
+        changed()
+    }
+
+    // Everything kept about a child but its pairing. Also cleared when a phone paired before pairs again, as after
+    // it disconnected while this app was closed, so it starts fresh.
+    fun clearData(child: Peer) {
         snapshots.delete(child.id)
         contacts.delete(child.id)
         alertMarks.delete(child.id)
         notifications.cancelChild(child)
-        changed()
     }
 
     // --- Each time the app opens: suggestions, holidays, and children gone missing ---

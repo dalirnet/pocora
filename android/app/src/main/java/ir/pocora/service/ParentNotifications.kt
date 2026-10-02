@@ -76,6 +76,15 @@ class ParentNotifications(
             tap = openChild(child, null),
         )
 
+    // The child is no longer on this phone, so the tap opens the app's start.
+    fun disconnected(child: Peer) =
+        show(
+            idOf(child, DISCONNECTED),
+            CHANNEL_ALERTS,
+            text.getString(R.string.child_disconnected, child.name),
+            text.getString(R.string.child_disconnected_text),
+        )
+
     fun season(
         child: Peer,
         preset: SchedulePreset,
@@ -119,3 +128,4 @@ class ParentNotifications(
 
 private const val HOLIDAY = "holiday"
 private const val MISSING = "missing"
+private const val DISCONNECTED = "disconnected"

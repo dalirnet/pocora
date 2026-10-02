@@ -101,6 +101,22 @@ class ConfigStore(
         get() = preferences.getBoolean(KEY_BATTERY_OPENED, false)
         set(value) = preferences.edit().putBoolean(KEY_BATTERY_OPENED, value).apply()
 
+    // The child's phone after disconnecting: everything learned while paired goes, so the next pairing starts fresh.
+    // The language, the look and this phone's id stay.
+    fun forgetPairing() {
+        preferences
+            .edit()
+            .remove(KEY_CHILD_NAME)
+            .remove(KEY_LAST_PARENT_CONTACT)
+            .remove(KEY_CLOCK_OFFSET)
+            .remove(KEY_CLOCK_BOOT)
+            .remove(KEY_SETUP_DONE)
+            .remove(KEY_ALWAYS_ON_OPENED)
+            .remove(KEY_BATTERY_OPENED)
+            .remove(KEY_DONE_ONCE)
+            .apply()
+    }
+
     // --- Parent ---
 
     // True the first time a key is given, false after: one notification per suggestion or holiday.
