@@ -51,9 +51,21 @@
     --blue: #3b82f6;
 
     /* Fills: the coral and each app's colour, light to deep, for tiles, tags and buttons */
-    --accent-fill: linear-gradient(135deg, var(--accent-light), var(--accent-deep));
-    --parent-fill: linear-gradient(135deg, var(--parent-light), var(--parent-deep));
-    --child-fill: linear-gradient(135deg, var(--child-light), var(--child-deep));
+    --accent-fill: linear-gradient(
+        135deg,
+        var(--accent-light),
+        var(--accent-deep)
+    );
+    --parent-fill: linear-gradient(
+        135deg,
+        var(--parent-light),
+        var(--parent-deep)
+    );
+    --child-fill: linear-gradient(
+        135deg,
+        var(--child-light),
+        var(--child-deep)
+    );
 
     /* Type */
     --text-xs: 12px;
@@ -159,7 +171,9 @@ summary {
     position: fixed;
     inset: 0 0 auto;
     z-index: 20;
-    transition: background 0.3s, box-shadow 0.3s;
+    transition:
+        background 0.3s,
+        box-shadow 0.3s;
 }
 
 .nav.solid {
@@ -375,7 +389,9 @@ h3 {
     width: var(--tick);
     height: var(--tick);
     border-radius: 7px;
-    background: var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / 14px no-repeat;
+    background: var(--accent)
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E")
+        center / 14px no-repeat;
 }
 
 /* A coloured square with a white icon: coral for the page, violet or cyan for an app. */
@@ -681,13 +697,23 @@ h3 {
     gap: var(--s4);
     padding: var(--s5);
     border-radius: var(--r-xl);
-    background: linear-gradient(180deg, rgba(123, 97, 255, 0.06), var(--card) 120px) var(--card);
+    background: linear-gradient(
+            180deg,
+            rgba(123, 97, 255, 0.06),
+            var(--card) 120px
+        )
+        var(--card);
     border: 1px solid rgba(123, 97, 255, 0.22);
     box-shadow: var(--shadow-md);
 }
 
 .side.child {
-    background: linear-gradient(180deg, rgba(34, 184, 240, 0.07), var(--card) 120px) var(--card);
+    background: linear-gradient(
+            180deg,
+            rgba(34, 184, 240, 0.07),
+            var(--card) 120px
+        )
+        var(--card);
     border-color: rgba(34, 184, 240, 0.28);
 }
 
@@ -1122,9 +1148,18 @@ h3 {
     height: 8px;
     margin: 0;
     background:
-        linear-gradient(90deg, transparent calc(25% - 1px), #fff calc(25% - 1px) 25%, transparent 25%,
-            transparent calc(50% - 1px), #fff calc(50% - 1px) 50%, transparent 50%,
-            transparent calc(75% - 1px), #fff calc(75% - 1px) 75%, transparent 75%),
+        linear-gradient(
+            90deg,
+            transparent calc(25% - 1px),
+            #fff calc(25% - 1px) 25%,
+            transparent 25%,
+            transparent calc(50% - 1px),
+            #fff calc(50% - 1px) 50%,
+            transparent 50%,
+            transparent calc(75% - 1px),
+            #fff calc(75% - 1px) 75%,
+            transparent 75%
+        ),
         var(--limited);
 }
 
@@ -1188,7 +1223,10 @@ h3 {
     color: inherit;
     background: transparent;
     cursor: pointer;
-    transition: background 0.2s, box-shadow 0.2s, border-color 0.2s;
+    transition:
+        background 0.2s,
+        box-shadow 0.2s,
+        border-color 0.2s;
 }
 
 .step:hover {
@@ -1213,8 +1251,12 @@ h3 {
     font-weight: 700;
     color: var(--muted);
     background: var(--card);
-    box-shadow: 0 0 0 1px var(--line), var(--shadow-sm);
-    transition: background 0.2s, color 0.2s;
+    box-shadow:
+        0 0 0 1px var(--line),
+        var(--shadow-sm);
+    transition:
+        background 0.2s,
+        color 0.2s;
 }
 
 .step.active .step-number {
@@ -1294,7 +1336,9 @@ details {
     background: var(--card);
     border: 1px solid var(--line);
     box-shadow: var(--shadow-sm);
-    transition: box-shadow 0.2s, border-color 0.2s;
+    transition:
+        box-shadow 0.2s,
+        border-color 0.2s;
 }
 
 /* The open question: a thin coral edge all round, on plain white. */
@@ -1332,7 +1376,9 @@ summary::-webkit-details-marker {
     font-size: 15px;
     color: var(--accent-deep);
     background: var(--accent-soft);
-    transition: background 0.2s, color 0.2s;
+    transition:
+        background 0.2s,
+        color 0.2s;
 }
 
 details[open] .q-icon {
@@ -1355,7 +1401,10 @@ details[open] .q-icon {
     border-radius: 50%;
     color: var(--muted);
     background: var(--paper);
-    transition: transform 0.25s, background 0.2s, color 0.2s;
+    transition:
+        transform 0.25s,
+        background 0.2s,
+        color 0.2s;
 }
 
 .q-toggle::before {
@@ -1384,7 +1433,8 @@ details[open] .q-toggle {
 details p {
     margin: 0;
     padding: 0 var(--s5) var(--s5);
-    padding-inline: calc(30px + var(--s4) + var(--s5)) calc(24px + var(--s4) + var(--s5));
+    padding-inline: calc(30px + var(--s4) + var(--s5))
+        calc(24px + var(--s4) + var(--s5));
     font-size: var(--text-sm);
     line-height: 2;
     color: var(--muted);
@@ -1426,13 +1476,23 @@ details p b {
     gap: var(--s4);
     padding: var(--s5);
     border-radius: var(--r-xl);
-    background: linear-gradient(180deg, rgba(123, 97, 255, 0.06), var(--card) 120px) var(--card);
+    background: linear-gradient(
+            180deg,
+            rgba(123, 97, 255, 0.06),
+            var(--card) 120px
+        )
+        var(--card);
     border: 1px solid rgba(123, 97, 255, 0.22);
     box-shadow: var(--shadow-lg);
 }
 
 .app-card.child {
-    background: linear-gradient(180deg, rgba(34, 184, 240, 0.07), var(--card) 120px) var(--card);
+    background: linear-gradient(
+            180deg,
+            rgba(34, 184, 240, 0.07),
+            var(--card) 120px
+        )
+        var(--card);
     border-color: rgba(34, 184, 240, 0.28);
 }
 
@@ -1545,7 +1605,6 @@ details p b {
     color: var(--muted);
 }
 
-
 /* --- Footer --- */
 .footer {
     padding: var(--s8) 0 var(--s5);
@@ -1598,7 +1657,9 @@ details p b {
 .reveal {
     opacity: 0;
     transform: translateY(var(--s8));
-    transition: opacity 0.8s ease, transform 0.8s ease;
+    transition:
+        opacity 0.8s ease,
+        transform 0.8s ease;
 }
 
 .reveal.shown {

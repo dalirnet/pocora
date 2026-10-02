@@ -22,7 +22,9 @@ const observer = new IntersectionObserver(
     },
     { threshold: 0.15 },
 );
-document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
+document
+    .querySelectorAll(".reveal")
+    .forEach((element) => observer.observe(element));
 
 // --- Top bar: clear over the hero, solid once the page scrolls ---
 
@@ -37,35 +39,72 @@ onScroll();
 // in the Iranian calendar, the presets it suggests, and how to say it.
 const SEASONS = [
     [[1, 1, 1, 13], ["holidays"], "نوروز و تعطیلات"],
-    [[1, 14, 2, 31], ["school-morning", "school-afternoon"], "مدرسه، نوبت صبح یا عصر"],
+    [
+        [1, 14, 2, 31],
+        ["school-morning", "school-afternoon"],
+        "مدرسه، نوبت صبح یا عصر",
+    ],
     [[3, 1, 3, 25], ["exams"], "فصل امتحانات"],
     [[3, 26, 6, 31], ["summer"], "تابستان"],
-    [[7, 1, 9, 30], ["school-morning", "school-afternoon"], "مدرسه، نوبت صبح یا عصر"],
+    [
+        [7, 1, 9, 30],
+        ["school-morning", "school-afternoon"],
+        "مدرسه، نوبت صبح یا عصر",
+    ],
     [[10, 1, 10, 20], ["exams"], "فصل امتحانات"],
-    [[10, 21, 12, 24], ["school-morning", "school-afternoon"], "مدرسه، نوبت صبح یا عصر"],
+    [
+        [10, 21, 12, 24],
+        ["school-morning", "school-afternoon"],
+        "مدرسه، نوبت صبح یا عصر",
+    ],
     [[12, 25, 12, 30], ["holidays"], "نوروز و تعطیلات"],
 ];
 
-const MONTHS = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
+const MONTHS = [
+    "فروردین",
+    "اردیبهشت",
+    "خرداد",
+    "تیر",
+    "مرداد",
+    "شهریور",
+    "مهر",
+    "آبان",
+    "آذر",
+    "دی",
+    "بهمن",
+    "اسفند",
+];
 
 function iranianToday() {
-    const parts = new Intl.DateTimeFormat("en-u-ca-persian-nu-latn", { month: "numeric", day: "numeric" }).formatToParts(new Date());
-    const value = (type) => Number(parts.find((part) => part.type === type).value);
+    const parts = new Intl.DateTimeFormat("en-u-ca-persian-nu-latn", {
+        month: "numeric",
+        day: "numeric",
+    }).formatToParts(new Date());
+    const value = (type) =>
+        Number(parts.find((part) => part.type === type).value);
     return [value("month"), value("day")];
 }
 
 function showSeason() {
     const [month, day] = iranianToday();
     const today = month * 100 + day;
-    const season = SEASONS.find(([[fromMonth, fromDay, toMonth, toDay]]) => today >= fromMonth * 100 + fromDay && today <= toMonth * 100 + toDay);
+    const season = SEASONS.find(
+        ([[fromMonth, fromDay, toMonth, toDay]]) =>
+            today >= fromMonth * 100 + fromDay &&
+            today <= toMonth * 100 + toDay,
+    );
     if (!season) return;
     const [[fromMonth, fromDay, toMonth, toDay], presets, text] = season;
     const date = (m, d) => `${persian(d)} ${MONTHS[m - 1]}`;
     document.getElementById("now-day").textContent = persian(day);
     document.getElementById("now-month").textContent = MONTHS[month - 1];
     document.getElementById("now-preset").textContent = text;
-    document.getElementById("now-range").textContent = `از ${date(fromMonth, fromDay)} تا ${date(toMonth, toDay)}`;
-    for (const id of presets) document.querySelector(`[data-preset="${id}"]`)?.classList.add("suggested");
+    document.getElementById("now-range").textContent =
+        `از ${date(fromMonth, fromDay)} تا ${date(toMonth, toDay)}`;
+    for (const id of presets)
+        document
+            .querySelector(`[data-preset="${id}"]`)
+            ?.classList.add("suggested");
 }
 
 showSeason();
@@ -90,7 +129,9 @@ function showStep(index) {
     const child = step.dataset.who === "child";
     stepPhone.classList.toggle("child", child);
     stepPhone.classList.toggle("parent", !child);
-    stepPhone.querySelector("figcaption").textContent = child ? "پوکورا فرزند" : "پوکورا والدین";
+    stepPhone.querySelector("figcaption").textContent = child
+        ? "پوکورا فرزند"
+        : "پوکورا والدین";
 }
 
 steps.forEach((step, index) =>
@@ -111,7 +152,10 @@ setInterval(() => {
 const questions = [...document.querySelectorAll(".questions details")];
 questions.forEach((question) =>
     question.addEventListener("toggle", () => {
-        if (question.open) questions.forEach((other) => other !== question && other.removeAttribute("open"));
+        if (question.open)
+            questions.forEach(
+                (other) => other !== question && other.removeAttribute("open"),
+            );
     }),
 );
 
@@ -123,8 +167,11 @@ fetch("https://api.github.com/repos/dalirnet/pocora/releases/latest")
     .then((release) => {
         if (!release) return;
         for (const line of document.querySelectorAll("[data-asset]")) {
-            const asset = release.assets?.find((file) => file.name === line.dataset.asset);
-            if (asset) line.textContent = `${persian((asset.size / 1048576).toFixed(1))} مگ`;
+            const asset = release.assets?.find(
+                (file) => file.name === line.dataset.asset,
+            );
+            if (asset)
+                line.textContent = `${persian((asset.size / 1048576).toFixed(1))} مگ`;
         }
     })
     .catch(() => {});
