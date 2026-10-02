@@ -2,10 +2,10 @@
    Colours follow android/app/src/main/java/ir/pocora/ui/AppColors.kt. The page has its own ink and coral;
    the parent app's violet and the child app's cyan appear only where something belongs to one of the apps.
    Every size comes from the tokens below: a type scale, a 4px spacing grid, radii and component sizes.
-   Small screens change the tokens and stack the columns; the rules stay the same.
+   Tablets, phones and the narrowest phones change the tokens and stack the columns; the rules stay the same.
    Icons: the Solar set, Bold style, by 480 Design, CC BY 4.0 (sprite.svg, written by tools/icons.sh).
    Sections, in page order: base, top bar, shared parts, hero, family, apps, presets, setup, questions,
-   download, footer, motion, small screens. */
+   download, footer, motion, tablets, phones, narrowest phones. */
 
 /* --- Fonts --- */
 @font-face {
@@ -1263,8 +1263,8 @@ h3 {
 .step-ring circle {
     stroke: var(--accent);
     stroke-width: 2.5;
-    stroke-linecap: round;
-    stroke-dasharray: 126;
+    /* The circle is 126 long; the gap after the dash is longer, so nothing shows until the ring starts. */
+    stroke-dasharray: 126 200;
     stroke-dashoffset: 126;
 }
 
@@ -1645,16 +1645,15 @@ details p b {
     }
 }
 
-/* --- Small screens: smaller tokens, and every row becomes one column --- */
+/* --- Tablets: smaller tokens; the hero stacks and centres, the rest keeps two columns where they fit --- */
 @media (max-width: 960px) {
     :root {
         --text-base: 14px;
-        --text-lg: 15px;
-        --title: 25px;
-        --display: 34px;
-        --gutter: 20px;
+        --text-lg: 16px;
+        --title: 28px;
+        --display: 40px;
         --phone: 220px;
-        --phone-pair: 46%;
+        --phone-pair: 180px;
         --stage: 480px;
     }
 
@@ -1662,51 +1661,154 @@ details p b {
         padding: calc(var(--nav) + var(--s6)) 0 var(--s12);
     }
 
-    .hero-grid,
-    .sides,
-    .trio,
-    .setup {
-        grid-template-columns: 1fr;
-    }
-
-    .trio {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .trio .stage {
-        --phone-pair: 46%;
-    }
-
+    /* Hero: the words centred above the two phones */
     .hero-grid {
+        grid-template-columns: minmax(0, 1fr);
         gap: var(--s10);
     }
 
-    .hero-grid > .stage,
-    .trio .stage {
-        order: 2;
+    .hero-grid > :first-child {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
     }
 
-    /* Hero: the parent's phone only, the toasts on its corners */
     .hero .phone.front {
-        transform: none;
+        transform: translateX(-48px);
     }
 
-    .hero .phone.behind,
+    .hero .phone.behind {
+        transform: translateX(96px) translateY(var(--s6));
+    }
+
     .scroll {
         display: none;
     }
 
+    /* Apps and data: the two cards side by side, the two screens under them */
+    .trio {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--s4);
+    }
+
+    .trio .stage {
+        grid-column: 1 / -1;
+        order: 2;
+        padding-top: var(--s6);
+    }
+
+    /* Setup: the steps beside a smaller phone */
+    .setup {
+        gap: var(--s6);
+    }
+
+    /* Presets: each group's name above its rows */
+    .timetable {
+        --timeline: 42%;
+    }
+
+    .preset-group {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .preset-group .group-head {
+        margin-bottom: var(--s1);
+    }
+}
+
+/* --- Phones: the smallest tokens, and every row becomes one column --- */
+@media (max-width: 640px) {
+    :root {
+        --title: 25px;
+        --display: 34px;
+        --gutter: 20px;
+        --text-lg: 15px;
+        --phone-pair: 46%;
+    }
+
+    .sides,
+    .trio,
+    .setup,
+    .apps,
+    .notes {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .trio .stage {
+        grid-column: auto;
+    }
+
+    /* Top bar: the logo and the download button only */
+    .links {
+        display: none;
+    }
+
+    .nav-cta {
+        margin-inline-start: auto;
+    }
+
+    /* Hero: one screen tall. The download button is in the top bar, so the words lead straight to the parent's
+       phone, a little smaller, with the toasts on its corners. */
+    .hero-grid {
+        gap: var(--s8);
+    }
+
+    .hero .lead {
+        margin-bottom: 0;
+    }
+
+    .hero .cta {
+        display: none;
+    }
+
+    .hero .stage {
+        min-height: 0;
+        padding-bottom: var(--s10);
+    }
+
+    /* The phone shrinks on short screens: what is left of the height after the words, over its 2.3 aspect. */
+    .hero .phone.front {
+        width: clamp(150px, calc((100svh - 360px) / 2.3), 200px);
+        transform: none;
+    }
+
+    .hero .phone.behind {
+        display: none;
+    }
+
+    .toast {
+        gap: var(--s2);
+        padding: 6px;
+        padding-inline-end: var(--s3);
+        font-size: var(--text-xs);
+    }
+
+    .toast .tile {
+        width: 30px;
+        height: 30px;
+        font-size: 15px;
+    }
+
+    .toast small {
+        font-size: 11px;
+    }
+
     .toast.lower {
-        bottom: 72px;
+        bottom: 96px;
         inset-inline-end: 0;
     }
 
     .toast.upper {
-        top: var(--s4);
+        top: var(--s6);
         inset-inline-start: 0;
     }
 
-    /* Family: the talk's words above the chat */
+    /* Family: each row's small line under its title, and the talk's words above the chat */
+    .row-body b {
+        display: block;
+    }
+
     .talk {
         flex-direction: column;
         align-items: stretch;
@@ -1718,8 +1820,26 @@ details p b {
         font-size: var(--text-base);
     }
 
+    /* Setup: the phone under the steps */
+    .setup .stage {
+        order: 2;
+    }
+
+    /* Presets: each preset's name above its day, and the ages under their title */
     .timetable {
         padding-inline: var(--s2);
+    }
+
+    .preset-group li {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: var(--s1);
+    }
+
+    .preset-name {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        line-height: 1.5;
     }
 
     .ages {
@@ -1740,28 +1860,6 @@ details p b {
         line-height: 1.5;
     }
 
-    /* Presets: each group's name above its rows, each preset's name above its day */
-    .preset-group,
-    .preset-group li {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-
-    .preset-group .group-head {
-        margin-bottom: var(--s1);
-    }
-
-    .preset-group li {
-        row-gap: var(--s1);
-    }
-
-    .preset-name {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0;
-        line-height: 1.5;
-    }
-
     /* Questions */
     summary {
         padding-inline: var(--s4);
@@ -1771,15 +1869,34 @@ details p b {
         padding-inline: var(--s4);
     }
 
-    /* Download and footer */
-    .apps,
-    .notes {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
+    /* Footer */
     .footer-row,
     .footer-bottom {
         flex-direction: column;
         align-items: flex-start;
+    }
+}
+
+/* --- The narrowest phones: slightly smaller type and edges, so every line still fits --- */
+@media (max-width: 380px) {
+    :root {
+        --text-lg: 14px;
+        --text-sm: 12px;
+        --gutter: 16px;
+        --badge: 30px;
+    }
+
+    .step {
+        gap: var(--s2);
+        padding-inline: var(--s2);
+    }
+
+    summary {
+        gap: var(--s2);
+        padding-inline: var(--s3);
+    }
+
+    details p {
+        padding-inline: var(--s3);
     }
 }
