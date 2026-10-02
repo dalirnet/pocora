@@ -29,6 +29,7 @@ class ConfigStore(
         private const val KEY_NOTIFY_SUGGESTIONS = "notify_suggestions"
         private const val KEY_SETUP_DONE = "setup_done"
         private const val KEY_ALWAYS_ON_OPENED = "always_on_opened"
+        private const val KEY_BATTERY_OPENED = "battery_opened"
         private const val KEY_DONE_ONCE = "done_once"
         private const val KEY_PASSWORD_SALT = "password_salt"
         private const val KEY_PASSWORD_HASH = "password_hash"
@@ -93,6 +94,12 @@ class ConfigStore(
     var alwaysOnOpened: Boolean
         get() = preferences.getBoolean(KEY_ALWAYS_ON_OPENED, false)
         set(value) = preferences.edit().putBoolean(KEY_ALWAYS_ON_OPENED, value).apply()
+
+    // Xiaomi phones answer the battery step with their own page, which Android's check cannot see, so there the step
+    // counts as done once its page was opened.
+    var batteryOpened: Boolean
+        get() = preferences.getBoolean(KEY_BATTERY_OPENED, false)
+        set(value) = preferences.edit().putBoolean(KEY_BATTERY_OPENED, value).apply()
 
     // --- Parent ---
 

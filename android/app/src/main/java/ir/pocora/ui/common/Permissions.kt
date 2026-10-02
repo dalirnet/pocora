@@ -25,6 +25,9 @@ object Permissions {
             ) as PowerManager
         ).isIgnoringBatteryOptimizations(context.packageName)
 
+    // Xiaomi phones show their own battery page in place of Android's dialog, and keep the choice to themselves.
+    fun hasOwnBatterySettings(): Boolean = Build.MANUFACTURER.equals("Xiaomi", ignoreCase = true)
+
     // Asks once, in Android's own dialog. The child's agent keeps running, which is what the exemption is for.
     @SuppressLint("BatteryLife")
     fun batteryExemptionIntent(context: Context): Intent =
