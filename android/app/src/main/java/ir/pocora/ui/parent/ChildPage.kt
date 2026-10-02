@@ -6,11 +6,6 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.CloudOff
-import androidx.compose.material.icons.filled.DataUsage
-import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -187,9 +182,8 @@ fun DataTab(
             tags =
                 listOfNotNull(
                     // Shown per hour, which reads more easily. The limit itself still applies to each half hour.
-                    level.megabytesPerMark?.let {
-                        Icons.Filled.Timer to
-                            stringResource(R.string.per_hour, format.number(it * Mark.PER_HOUR))
+                    level.bytesPerMark?.let {
+                        AppIcons.Timer to stringResource(R.string.per_hour, format.size(it * Mark.PER_HOUR))
                     },
                     schedule.monthlyCeilingBytes(rules.schedule, level.bytesPerMark)?.let {
                         AppIcons.CalendarMonth to stringResource(R.string.a_month_short, format.size(it))
@@ -206,8 +200,10 @@ private fun levelColor(megabytes: Int?) =
         megabytes == null -> AppColors.violet
         megabytes <= LIGHT_MEGABYTES -> AppColors.teal
         megabytes <= MEDIUM_MEGABYTES -> AppColors.green
-        else -> AppColors.orange
+        megabytes <= HIGH_MEGABYTES -> AppColors.orange
+        else -> AppColors.red
     }
 
 private const val LIGHT_MEGABYTES = 25
 private const val MEDIUM_MEGABYTES = 100
+private const val HIGH_MEGABYTES = 250

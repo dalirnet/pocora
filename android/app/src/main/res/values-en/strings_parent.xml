@@ -19,8 +19,8 @@
     <string name="fits_this_season">Fits this time of year</string>
     <string name="fits_age">Fits age %1$s</string>
     <string name="school_days_and_friday">School days: %1$s\nFriday: %2$s</string>
-    <string name="groups_with_internet">Internet for %1$s of %2$s kinds of apps</string>
-    <string name="per_hour">%1$s MB an hour</string>
+    <string name="groups_with_internet">Internet for %1$s of %2$s kinds</string>
+    <string name="per_hour">%1$s an hour</string>
     <string name="at_most_a_month">At most %1$s a month</string>
     <string name="no_monthly_limit">No monthly limit</string>
     <string name="has_internet_until">Has internet until %1$s</string>

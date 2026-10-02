@@ -2001,12 +2001,28 @@
     ],
     "quotas": [
         {
+            "id": "minimal",
+            "name": {
+                "en": "Minimal",
+                "fa": "خیلی کم"
+            },
+            "megabytesPerMark": 10
+        },
+        {
             "id": "light",
             "name": {
                 "en": "Light",
                 "fa": "کم"
             },
             "megabytesPerMark": 25
+        },
+        {
+            "id": "fairly-light",
+            "name": {
+                "en": "Fairly light",
+                "fa": "نسبتاً کم"
+            },
+            "megabytesPerMark": 50
         },
         {
             "id": "medium",
@@ -2017,12 +2033,28 @@
             "megabytesPerMark": 100
         },
         {
+            "id": "fairly-high",
+            "name": {
+                "en": "Fairly high",
+                "fa": "نسبتاً زیاد"
+            },
+            "megabytesPerMark": 150
+        },
+        {
             "id": "high",
             "name": {
                 "en": "High",
                 "fa": "زیاد"
             },
             "megabytesPerMark": 250
+        },
+        {
+            "id": "very-high",
+            "name": {
+                "en": "Very high",
+                "fa": "خیلی زیاد"
+            },
+            "megabytesPerMark": 500
         },
         {
             "id": "no-limit",

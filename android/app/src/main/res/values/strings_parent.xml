@@ -20,8 +20,8 @@
     <string name="fits_this_season">مناسب این موقع سال</string>
     <string name="fits_age">مناسب %1$s سال</string>
     <string name="school_days_and_friday">روزهای مدرسه: %1$s\nجمعه: %2$s</string>
-    <string name="groups_with_internet">اینترنت برای %1$s دسته از %2$s دسته برنامه</string>
-    <string name="per_hour">%1$s مگ در ساعت</string>
+    <string name="groups_with_internet">اینترنت برای %1$s از %2$s دسته</string>
+    <string name="per_hour">%1$s در ساعت</string>
     <string name="at_most_a_month">حداکثر %1$s در ماه</string>
     <string name="no_monthly_limit">بدون سقف ماهانه</string>
     <string name="has_internet_until">تا ساعت %1$s اینترنت دارد</string>
