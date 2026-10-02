@@ -16,9 +16,13 @@ How much data a child can use in one mark. Each file shows one level.
 
 | Preset | Persian | Per mark | Per hour | Most per month, School morning shift |
 | --- | --- | --- | --- | --- |
+| [Minimal](./minimal.md) | خیلی کم | 10 MB | 20 MB | about 2.6 GB |
 | [Light](./light.md) | کم | 25 MB | 50 MB | about 6.5 GB |
+| [Fairly light](./fairly-light.md) | نسبتاً کم | 50 MB | 100 MB | about 13 GB |
 | [Medium](./medium.md) | متوسط | 100 MB | 200 MB | about 26 GB |
+| [Fairly high](./fairly-high.md) | نسبتاً زیاد | 150 MB | 300 MB | about 39 GB |
 | [High](./high.md) | زیاد | 250 MB | 500 MB | about 65 GB |
+| [Very high](./very-high.md) | خیلی زیاد | 500 MB | 1 GB | about 131 GB |
 | [No limit](./no-limit.md) | بدون سقف | none | none | not limited |
 
 ## The month at a glance
