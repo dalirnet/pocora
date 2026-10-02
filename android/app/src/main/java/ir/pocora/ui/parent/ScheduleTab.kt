@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,7 +18,6 @@ import ir.pocora.model.Change
 import ir.pocora.model.Rules
 import ir.pocora.model.Schedule
 import ir.pocora.model.Week
-import ir.pocora.ui.AppColors
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.Format
 import ir.pocora.ui.LocalPalette
@@ -28,7 +25,6 @@ import ir.pocora.ui.common.TemplateCard
 import ir.pocora.ui.common.WeekCard
 import ir.pocora.ui.common.rememberPresets
 import ir.pocora.ui.component.Card
-import ir.pocora.ui.component.LinkRow
 import ir.pocora.ui.component.MainButton
 import ir.pocora.ui.component.SectionTitle
 import ir.pocora.ui.component.SmallButton
@@ -89,14 +85,7 @@ fun ScheduleTab(
         stringResource(R.string.tap_a_day),
         byParent = false,
         onDay = if (enabled) ({ date -> go(Route.EditDay(model.child.id, date.toEpochDay())) }) else null,
-    ) {
-        LinkRow(
-            title = stringResource(R.string.same_as_another_day),
-            icon = Icons.Filled.ContentCopy,
-            iconColor = AppColors.slate,
-            onClick = { if (enabled) SheetState.open = ChildSheet.Copy(today.toEpochDay(), null) },
-        )
-    }
+    )
 
     if (rules.changes.isNotEmpty()) {
         SectionTitle(stringResource(R.string.your_changes))

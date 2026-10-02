@@ -128,7 +128,6 @@ dependencies {
     implementation("androidx.compose.foundation:foundation")
     implementation("androidx.compose.material3:material3")
     // Icons for the feature tiles and the kinds of apps. R8 keeps only the ones used.
-    implementation("androidx.compose.material:material-icons-extended")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     // Draws the pairing code. The scanner below only reads codes.
     implementation("com.google.zxing:core:3.5.3")

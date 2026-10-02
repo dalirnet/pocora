@@ -167,6 +167,44 @@ fun SwitchRow(
     }
 }
 
+// One point in a card, as on a first-run screen: an icon tile, a title, and a line under it when there is one.
+@Composable
+fun PointRow(
+    icon: ImageVector,
+    color: Color,
+    title: String,
+    text: String? = null,
+) {
+    val palette = LocalPalette.current
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(Dimens.row),
+    ) {
+        IconTile(icon, color, Dimens.rowIcon)
+        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            // Bold only over a line of its own, as a heading; alone, it is a sentence. Each stays on one line.
+            Text(
+                text = title,
+                color = palette.text,
+                fontSize = Dimens.body,
+                fontWeight = if (text != null) FontWeight.Bold else FontWeight.Normal,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            if (text != null) {
+                Text(
+                    text = text,
+                    color = palette.muted,
+                    fontSize = Dimens.caption,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+        }
+    }
+}
+
 // A row that opens something: an icon tile or a colour mark, a title, a note, and an arrow.
 @Composable
 fun LinkRow(

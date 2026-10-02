@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="lock_create">Choose a password</string>
-    <string name="lock_create_text">Four digits. Pocora asks for it each time it opens, so only you can change the rules.</string>
+    <string name="lock_create_text">So only you can change the rules.</string>
     <string name="lock_repeat">Enter it again</string>
     <string name="lock_enter">Enter your password</string>
     <string name="lock_wrong">Wrong password</string>
@@ -13,8 +13,8 @@
     <string name="welcome_point_times">Choose when internet is on</string>
     <string name="welcome_point_apps">See which apps are used, and how long</string>
     <string name="welcome_point_alerts">Get alerts that matter</string>
-    <string name="welcome_point_private">No account, no server, nothing leaves home</string>
-    <string name="add_child_note">We\'ll set up internet times, apps and data for this age. You can change them anytime.</string>
+    <string name="welcome_point_private">No account, no server, all at home</string>
+    <string name="add_child_note">Settings are picked for this age.</string>
     <string name="card_data">Data limit</string>
     <string name="fits_this_season">Fits this time of year</string>
     <string name="fits_age">Fits age %1$s</string>
@@ -30,14 +30,14 @@
     <string name="pocora_off_on_phone">Pocora is off on this phone</string>
     <string name="last_update">Last update: %1$s</string>
     <string name="new_alerts">%1$s new alerts</string>
-    <string name="nothing_yet">Nothing from this phone yet. Open Pocora on both phones, on the same Wi-Fi.</string>
+    <string name="nothing_yet">Nothing from this phone yet.</string>
     <string name="starts_in_days">%1$s starts in %2$s days</string>
     <string name="for_child">For %1$s</string>
     <string name="see">See</string>
     <string name="tomorrow_is_holiday">Tomorrow is a holiday: %1$s</string>
     <string name="use_fridays_hours">Use Friday\'s hours</string>
     <string name="empty_nothing_title">Nothing from %1$s\'s phone yet</string>
-    <string name="empty_nothing_text">Open Pocora on both phones, on the same Wi-Fi. It shows up here within a minute.</string>
+    <string name="empty_nothing_text">Open Pocora on both phones.</string>
     <string name="all_quiet">All quiet</string>
     <string name="nothing_used_title">Nothing used</string>
     <string name="no_apps_in_group">No apps of this kind on the phone.</string>
@@ -53,7 +53,7 @@
     <string name="no_screen_time_yet">No screen time yet today.</string>
     <string name="not_connected_status">Not connected</string>
     <string name="alerts">Alerts</string>
-    <string name="offline_banner">Showing the last update, from %1$s. To change anything, both phones must be on the same Wi-Fi.</string>
+    <string name="offline_banner">Last update: %1$s</string>
     <string name="tab_apps">Apps</string>
     <string name="period_day">Day</string>
     <string name="period_week">Week</string>
@@ -92,7 +92,7 @@
     <string name="internet_times">Internet %1$s</string>
     <string name="no_internet_all_day">No internet all day</string>
     <string name="choose_a_schedule">Choose a schedule</string>
-    <string name="schedule_intro">A template sets the internet times for every day of the week. You can still change single days after.</string>
+    <string name="schedule_intro">You can change single days later.</string>
     <string name="what_changes">What changes</string>
     <string name="section_school_year">School year</string>
     <string name="section_holidays">Holidays</string>
@@ -121,7 +121,7 @@
     <string name="add_internet_time">Add internet time</string>
     <string name="add_a_break">Add a break</string>
     <string name="break_from">From</string>
-    <string name="no_internet_this_day">No internet on this day. Add internet time to give some.</string>
+    <string name="no_internet_this_day">No internet on this day.</string>
     <string name="use_hours_of">Use the hours of</string>
     <string name="use_these_hours">Use these hours</string>
     <string name="age_range">Age %1$s to %2$s</string>
@@ -132,7 +132,7 @@
     <string name="always_internet">Always internet</string>
     <string name="never_internet">Never internet</string>
     <string name="choose_apps_list">Choose an apps list</string>
-    <string name="apps_list_intro">The list decides which kinds of apps get internet in internet time. Coloured kinds get it.</string>
+    <string name="apps_list_intro">Coloured kinds get internet.</string>
     <string name="years_range">%1$s to %2$s years</string>
     <string name="kinds_short">%1$s of %2$s kinds</string>
     <string name="a_month_short">%1$s a month</string>
@@ -153,7 +153,7 @@
     <string name="used_this_month">Used this month</string>
     <string name="at_most">At most</string>
     <string name="change_the_limit">Change the limit</string>
-    <string name="data_limit_text">Each half hour may use half of the hourly amount. When it is used up, internet stops until the next half hour.</string>
+    <string name="data_limit_text">Each half hour gets half the hourly amount.</string>
     <string name="with_schedule">Monthly maximum with the schedule %1$s</string>
     <string name="alerts_of">%1$s\'s alerts</string>
     <string name="no_alerts">No alerts in the last 7 days.</string>
@@ -171,15 +171,15 @@
     <string name="event_request_ignored">Request declined</string>
     <string name="event_missing">Not connected for 7 days</string>
     <string name="cant_reach">Can\'t reach %1$s\'s phone</string>
-    <string name="cant_reach_text">Nothing was changed. Make sure both phones are on the same Wi-Fi, then try again.</string>
+    <string name="cant_reach_text">Both phones must be on the same Wi-Fi.</string>
     <string name="children">Children</string>
     <string name="show_notifications">Show notifications</string>
     <string name="remove_child">Remove %1$s from this phone?</string>
-    <string name="remove_child_text">%1$s\'s phone will stop sending updates here. You can connect it again later.</string>
+    <string name="remove_child_text">%1$s\'s phone will stop updating here.</string>
     <string name="notify_when_connects">When a child\'s phone connects</string>
     <string name="schedule_suggestions">Schedule suggestions</string>
     <string name="child_connected_title">%1$s\'s phone is connected</string>
-    <string name="child_connected_text">Today: %1$s on screen · %2$s new alerts</string>
+    <string name="child_connected_text">Today: %1$s on screen · %2$s alerts</string>
     <string name="child_turned_off_at">%1$s turned Pocora off at %2$s</string>
     <string name="child_and_event">%1$s: %2$s</string>
     <string name="see_schedule">See schedule</string>

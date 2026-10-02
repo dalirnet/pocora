@@ -2,23 +2,24 @@
 <resources>
     <string name="set_up_this_phone">Set up this phone</string>
     <string name="step_vpn">Allow the VPN</string>
-    <string name="step_vpn_why">Pocora uses it to turn internet on and off for apps.</string>
+    <string name="step_vpn_why">It turns apps\' internet on and off.</string>
     <string name="step_always_on">Keep the VPN always on</string>
-    <string name="step_always_on_why">In VPN settings, tap the gear next to Pocora Child and turn on Always-on VPN.</string>
+    <string name="step_always_on_why">Gear next to Pocora Child → Always-on</string>
     <string name="step_always_on_action">Open VPN settings</string>
     <string name="step_usage">Usage access</string>
-    <string name="step_usage_why">Find Pocora Child in the list and turn it on. Your parent sees screen time with it.</string>
+    <string name="step_usage_why">Turn on Pocora Child in the list.</string>
     <string name="step_usage_action">Open settings</string>
     <string name="step_notifications">Notifications</string>
-    <string name="step_notifications_why">So you know when internet starts and ends.</string>
+    <string name="step_notifications_why">So you know when internet is on.</string>
     <string name="step_admin">Device admin</string>
     <string name="step_admin_why">So Pocora isn\'t removed by mistake.</string>
     <string name="step_admin_action">Turn on</string>
     <string name="step_battery">Run in the background</string>
     <string name="step_battery_why">So Android doesn\'t close Pocora.</string>
     <string name="done">Done</string>
+    <string name="setup_title">Set up this phone</string>
     <string name="setup_all_done">All set</string>
-    <string name="setup_all_done_text">This phone is ready. You can close this screen.</string>
+    <string name="setup_all_done_text">This phone is ready.</string>
     <string name="finish_later">Finish later</string>
     <string name="setup_not_finished">Setup isn\'t finished</string>
     <string name="continue_setup">Continue</string>
@@ -28,7 +29,7 @@
     <string name="waiting_for_rules">Waiting for your parent\'s settings</string>
     <string name="data_this_half_hour">%1$s of %2$s MB used in this half hour</string>
     <string name="data_used_up">This half hour\'s data is used up</string>
-    <string name="offline_apps_work">Apps that don\'t need internet still work.</string>
+    <string name="offline_apps_work">Offline apps still work.</string>
     <string name="last_contact">Last contact with your parent: %1$s</string>
     <string name="no_contact_yet">No contact with your parent yet</string>
     <string name="child_connected">Connected to your parent</string>
@@ -59,14 +60,12 @@
     <string name="notify_internet_started_open">Internet is on</string>
     <string name="notify_ending">Internet stops in %1$s minutes</string>
     <string name="notify_data_left">Only %1$s left for this half hour</string>
-    <string name="notify_data_used">This half hour\'s data is used up. Internet is back in the next half hour.</string>
-    <string name="notify_parent_asks_remove">Your parent asks you to remove %1$s</string>
-    <string name="notify_parent_suggests">Your parent suggests %1$s</string>
-    <string name="parent_sees_admin_off">Your parent will see that this was turned off.</string>
+    <string name="notify_data_used">Data used up; back next half hour.</string>
+    <string name="parent_sees_admin_off">Your parent will see this.</string>
     <string name="tile_internet">Internet on</string>
     <string name="tile_no_internet">No internet</string>
     <string name="disconnect_from_parent">Disconnect from parent</string>
     <string name="disconnect_title">Disconnect from your parent?</string>
-    <string name="disconnect_text">The rules stop on this phone, and your parent will see that you disconnected. You can scan a code again afterwards.</string>
+    <string name="disconnect_text">Your parent will see you disconnected.</string>
     <string name="disconnect">Disconnect</string>
 </resources>
