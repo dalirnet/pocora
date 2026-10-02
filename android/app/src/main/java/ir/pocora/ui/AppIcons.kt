@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.PathParser
 import androidx.compose.ui.unit.dp
 
-// Written by scripts/icons.py, `make icons`. Do not edit by hand.
+// Written by scripts/icons.sh, `make icons`. Do not edit by hand.
 // The Solar icon set, Bold style, by 480 Design, under CC BY 4.0: https://icon-sets.iconify.design/solar/
 object AppIcons {
     // solar:clock-circle-bold

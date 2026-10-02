@@ -60,7 +60,7 @@ docs/           the Persian landing page, served by GitHub Pages from main; tool
 assets/         source artwork: fonts/ (Dana), icon/ (the app icon as SVG)
 android/        one Gradle project that builds both apps
   Makefile      check, image, phones, presets, icons, format, test, build, release, run, run-both, pair, publish, clean
-  scripts/      one shell script per Makefile target, with presets.py and icons.py behind two of them
+  scripts/      one shell script per Makefile target, with presets.py behind one of them
   version.properties  the released version, written by make publish
   app/src/main/java/ir/pocora/
     ui/         screens and drawn components; colours in AppColors, sizes in Dimens, icons in AppIcons

@@ -47,7 +47,7 @@ Every target runs one script from `scripts/`. The scripts share `scripts/common.
 | `image.sh` | Downloads and installs the system image, continuing after a failure |
 | `phones.sh` | Creates, starts and stops the two virtual phones |
 | `presets.sh` | Writes `presets.json` from `../preset/` through `presets.py` |
-| `icons.sh` | Writes `AppIcons.kt` from the Solar icon set through `icons.py`; the icons in use are listed there |
+| `icons.sh` | Writes `AppIcons.kt` from the Solar icon set with curl and jq; the icons in use are listed there |
 | `format.sh` | Formats Kotlin, JSON and XML |
 | `test.sh` | Runs the unit tests and counts them |
 | `compile.sh` | Builds both apps, debug or release |
