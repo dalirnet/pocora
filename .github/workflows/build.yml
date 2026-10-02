@@ -1,10 +1,13 @@
 # Every push and pull request: the presets are up to date, the tests pass, and both apps build.
+# A change to the landing page alone (docs/) builds nothing; GitHub Pages publishes it.
 name: Build
 
 on:
   push:
     branches: ["**"]
+    paths-ignore: ["docs/**"]
   pull_request:
+    paths-ignore: ["docs/**"]
 
 concurrency:
   group: build-${{ github.ref }}

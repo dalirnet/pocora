@@ -61,6 +61,9 @@ jobs:
           mkdir -p "$RUNNER_TEMP/out"
           for role in child parent; do
             cp app/build/outputs/apk/$role/release/*.apk "$RUNNER_TEMP/out/pocora-$role-$VERSION.apk"
+            # The same file under a name without the version, so the landing page in docs/ can link straight to the newest one:
+            # https://github.com/<repo>/releases/latest/download/pocora-<role>.apk
+            cp app/build/outputs/apk/$role/release/*.apk "$RUNNER_TEMP/out/pocora-$role.apk"
           done
           (cd "$RUNNER_TEMP/out" && sha256sum *.apk > SHA256SUMS.txt)
           ls -l "$RUNNER_TEMP/out"
