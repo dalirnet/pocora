@@ -35,20 +35,20 @@ Made for children aged 8 to 16. Outside Iran, Google Family Link already does th
 
 Each child has three settings, all picked from [presets](./preset/README.md):
 
-| Setting | What it says |
-| --- | --- |
-| **Schedule** | When the internet is on. One week from Saturday, each day 48 half-hour marks, each **Allowed** or **Limited** (the default). Presets fit the Iranian year: school shifts, exams, Ramadan, summer. The app suggests the one for the time of year and the day before a holiday. |
-| **Apps** | Which apps have internet in an Allowed mark. Lists are built from groups (School, Games, Video, Messaging…), by age (Kids, Everyday, Teen) or purpose. Single apps can be always in or always out. System apps always have internet, VPN apps never. |
-| **Quota** | How much data the child may use: Light, Medium, High or No limit. Shown per hour, applied per half hour: when a half hour's share is used up, internet stops until the next one. The app also shows the most it can add up to in a month. |
+| Setting      | What it says                                                                                                                                                                                                                                                                                                                    |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Schedule** | When the internet is on. One week from Saturday, each day 48 half-hour marks, each **Allowed** or **Limited** (the default). Presets fit the Iranian year: school shifts, exams, Ramadan, summer. The app suggests the one for the time of year and the day before a holiday.                                                   |
+| **Apps**     | Which apps have internet in an Allowed mark. Lists are built from groups (School, Games, Video, Messaging…), by age (Kids, Everyday, Teen) or purpose. Single apps can be always in or always out. System apps always have internet, VPN apps never.                                                                            |
+| **Quota**    | How much data the child may use: seven levels from 20 MB to 1 GB an hour, or No limit. The parent can also give more data for the internet time on now. Shown per hour, applied per half hour: when a half hour's share is used up, internet stops until the next one. The app also shows the most it can add up to in a month. |
 
-On top of the preset the parent changes single days, for this week or every week, or with one tap: 30 more minutes, stop internet, allow internet. Apps can be marked **watched**: using one raises an alert.
+On top of the preset the parent changes single days, for this week or every week, or with one tap: 30 more minutes, more data, stop internet, allow internet. Apps can be marked **watched**: using one raises an alert.
 
-**Alerts** reach the parent as local notifications when the phones meet: Pocora stopped, VPN turned off, another VPN app, a VPN app installed, device admin off, a watched app used, a child missing for 7 days.
+**Alerts** reach the parent as local notifications when the phones meet: Pocora stopped, VPN turned off, another VPN app, a VPN app installed, device admin off, a watched app used, a child missing for 7 days. The child sees the same list on the Activity tab of its own app.
 
 ## Connection and security
 
 - **Discovery:** both apps announce `_pocora._tcp` with Android's NSD, carrying only a random id and a port (parent 47601, child 47602). On a hotspot, where discovery is unreliable, the child tries the gateway address; with both apps on one phone, loopback.
-- **Pairing:** the parent app shows a QR code with its id, certificate fingerprint and port. The child scans it and asks; the parent accepts. Both keep the other's fingerprint. A leaked code pairs nothing without the parent's approval.
+- **Pairing:** the parent app shows a QR code with its id, certificate fingerprint and port. The child scans it and asks; the parent accepts. Both keep the other's fingerprint. A leaked code pairs nothing without the parent's approval. With both apps on one phone, no camera can scan its own screen: the parent app hands its code and a one-time token to the child app, through a receiver only an app signed with Pocora's key may reach, and accepts the request that brings the token back.
 - **Security:** every connection is TLS in both directions, each side pinned to the other's certificate fingerprint, kept in Android's Keystore. Another device on the Wi-Fi cannot read or change anything.
 - **Parent app password:** a 4-digit PIN, asked every time the app comes back to the screen, since the child may use the same phone. Only a salted hash is stored.
 
@@ -58,11 +58,11 @@ On top of the preset the parent changes single days, for this week or every week
 preset/         presets and app groups as markdown, the source of truth (make presets writes the app's JSON)
 assets/         source artwork: fonts/ (Dana), icon/ (the app icon as SVG)
 android/        one Gradle project that builds both apps
-  Makefile      check, image, phones, presets, format, test, build, release, run, pair, publish, clean
-  scripts/      one shell script per Makefile target, publish.sh included
+  Makefile      check, image, phones, presets, icons, format, test, build, release, run, run-both, pair, publish, clean
+  scripts/      one shell script per Makefile target, with presets.py and icons.py behind two of them
   version.properties  the released version, written by make publish
   app/src/main/java/ir/pocora/
-    ui/         screens and drawn components; colours in AppColors, sizes in Dimens
+    ui/         screens and drawn components; colours in AppColors, sizes in Dimens, icons in AppIcons
     agent/      the child's phone at work: clock, rules, data per mark, events, sync
     parent/     the parent's phone at work: snapshots, contact, alerts, actions
     service/    agent, listener and tunnel services, notifications, receivers, tile
@@ -76,7 +76,7 @@ android/        one Gradle project that builds both apps
 
 **Two apps, one codebase.** Product flavors `child` and `parent` differ only in application id, app name, a small manifest each, and one generated constant read through `Role.current`. Both can be installed side by side. The parent build never asks for VPN, usage or device-admin access.
 
-**Stack.** Kotlin only (no Java sources), Jetpack Compose with Material 3, kotlinx.serialization, the platform's TLS sockets with length-prefixed JSON, `NsdManager`, `VpnService` with no core, ML Kit to read QR codes and ZXing to draw them. No database: JSON files, SharedPreferences and the Keystore. Android 9 (API 28) and up.
+**Stack.** Kotlin only (no Java sources), Jetpack Compose with Material 3, the [Solar](https://icon-sets.iconify.design/solar/) icon set by 480 Design (CC BY 4.0, written into `ui/AppIcons.kt` by `make icons`), kotlinx.serialization, the platform's TLS sockets with length-prefixed JSON, `NsdManager`, `VpnService` with no core, ML Kit to read QR codes and ZXing to draw them. No database: JSON files, SharedPreferences and the Keystore. Android 9 (API 28) and up.
 
 ```bash
 cd android
@@ -118,15 +118,15 @@ gh secret set POCORA_KEY_PASSWORD
 
 ## Limitations
 
-| Case | Result |
-| --- | --- |
-| App swiped away, force-stopped, phone rebooted | Always-on VPN brings it back; stops and reboots are logged |
-| Child turns Always-on VPN off | Internet is open, the parent gets an alert, usage is still recorded |
-| Child installs another VPN app | Refused while Always-on is on; installing it is an alert |
-| Offline apps | Cannot be blocked; their time is recorded |
-| Phones apart | Nothing is seen or changed until they meet; after 7 days the oldest record is gone |
-| Child clears Pocora's data | The record is lost; the child shows as missing |
-| Router isolates Wi-Fi devices | Use a phone's hotspot |
-| Parent has an iPhone | Not supported |
+| Case                                           | Result                                                                             |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------- |
+| App swiped away, force-stopped, phone rebooted | Always-on VPN brings it back; stops and reboots are logged                         |
+| Child turns Always-on VPN off                  | Internet is open, the parent gets an alert, usage is still recorded                |
+| Child installs another VPN app                 | Refused while Always-on is on; installing it is an alert                           |
+| Offline apps                                   | Cannot be blocked; their time is recorded                                          |
+| Phones apart                                   | Nothing is seen or changed until they meet; after 7 days the oldest record is gone |
+| Child clears Pocora's data                     | The record is lost; the child shows as missing                                     |
+| Router isolates Wi-Fi devices                  | Use a phone's hotspot                                                              |
+| Parent has an iPhone                           | Not supported                                                                      |
 
 A child who truly wants to get around Pocora probably will. That is a conversation worth having.
