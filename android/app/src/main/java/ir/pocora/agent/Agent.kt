@@ -275,12 +275,16 @@ class Agent(
         rules: Rules,
         now: Long,
     ) {
-        val since = if (lastWatchCheck == 0L) now - TICK_MILLISECONDS else lastWatchCheck
-        lastWatchCheck = now
+        // Android stamps app events with the phone's own clock, which may differ from the agent's,
+        // so the window is asked for in phone time and each event moved onto the agent's clock.
+        val phoneNow = System.currentTimeMillis()
+        val since = if (lastWatchCheck == 0L) phoneNow - TICK_MILLISECONDS else lastWatchCheck
+        lastWatchCheck = phoneNow
         if (rules.watch.isEmpty()) return
         var added = false
-        for ((packageName, time) in usage.opened(since, now)) {
+        for ((packageName, phoneTime) in usage.opened(since, phoneNow)) {
             if (packageName !in rules.watch) continue
+            val time = phoneTime + (now - phoneNow)
             val last = events.lastOf(EventKind.WATCHED_APP, packageName)
             if (last != null && time - last.start < WATCH_SESSION_MILLISECONDS) continue
             events.add(EventKind.WATCHED_APP, time, app = packageName, appName = catalog.find(packageName)?.name)
