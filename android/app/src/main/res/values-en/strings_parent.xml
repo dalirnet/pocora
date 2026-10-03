@@ -179,6 +179,8 @@
     <string name="event_request_ignored">Request declined</string>
     <string name="event_paired">Phones paired</string>
     <string name="event_parent_added">Another parent connected</string>
+    <string name="event_paused">Paused by a parent</string>
+    <string name="pocora_here">Pocora Child on this phone</string>
     <string name="has_another_parent">Already with another parent as %1$s</string>
     <string name="has_another_parent_text">Its name and rules stay the same</string>
     <string name="event_rules_changed">Rules changed</string>

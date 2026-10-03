@@ -174,6 +174,10 @@ class Agent(
             TunnelService.apply(app, null)
             return
         }
+        if (paused) {
+            workPaused(rules, nowTime, date, mark, bytes)
+            return
+        }
 
         if (currentMark != date to mark) {
             currentMark = date to mark
@@ -232,7 +236,44 @@ class Agent(
                 rules = rules,
             )
         notifications.status(status)
+        keepUp(rules, nowTime, date)
+    }
 
+    // Paused: every app has internet and nothing is watched. The VPN stays up, blocking nothing,
+    // so pausing is not mistaken for Pocora being turned off.
+    private fun workPaused(
+        rules: Rules,
+        nowTime: Long,
+        date: LocalDate,
+        mark: Int,
+        bytes: Long,
+    ) {
+        days.record(date, mark, true, bytes)
+        TunnelService.apply(app, emptyList())
+        watchContact(nowTime)
+        status =
+            AgentStatus(
+                allowed = true,
+                until = null,
+                markBytes = days.markBytes(date, mark),
+                bytesPerMark = null,
+                quotaReached = false,
+                today = schedule.day(rules, date),
+                lastParentContact = app.configStore.lastParentContact,
+                childName = app.configStore.childName,
+                rules = rules,
+                paused = true,
+            )
+        notifications.status(status)
+        keepUp(rules, nowTime, date)
+    }
+
+    // Old records pruned now and then, and the parents synced every minute.
+    private fun keepUp(
+        rules: Rules,
+        nowTime: Long,
+        date: LocalDate,
+    ) {
         if (nowTime - lastPrune > TICK_MILLISECONDS * 60) {
             lastPrune = nowTime
             events.prune(nowTime)
@@ -241,7 +282,23 @@ class Agent(
         if (nowTime - lastSync >= Protocol.SYNC_INTERVAL_MILLISECONDS - 1_000) syncNow()
     }
 
-    // Once a day at most, so a day of used-up half hours is one line in Activity.
+    // --- Paused from the parent app on this phone ---
+
+    val paused: Boolean
+        get() = app.configStore.paused
+
+    // Waits until it is applied, so the parent app's switch shows what is really in force. Kept in Events.
+    fun setPaused(pause: Boolean) {
+        if (pause == paused) return
+        runOnAgent {
+            app.configStore.paused = pause
+            if (pause) events.open(EventKind.PAUSED, clock.now()) else events.close(EventKind.PAUSED, clock.now())
+            tick()
+        }
+        syncSoon()
+    }
+
+    // Once a day at most, so a day of used-up half hours is one line in Events.
     private fun noteQuotaUsed(
         now: Long,
         date: LocalDate,
@@ -409,6 +466,7 @@ class Agent(
                         usageAccess = usage.hasAccess(),
                         markBytes = status.markBytes,
                         quotaReached = status.quotaReached,
+                        paused = status.paused,
                     ),
                 days = days.all(),
                 apps = catalog.installed(),

@@ -38,6 +38,7 @@ data class AgentState(
     val usageAccess: Boolean = false,
     val markBytes: Long = 0,
     val quotaReached: Boolean = false,
+    val paused: Boolean = false,
 )
 
 // One day on the child's phone as it really ran: each mark's label as applied, and the data each mark used.
@@ -112,6 +113,7 @@ enum class EventKind(
     APP_REMOVED(false),
     PAIRED(false),
     PARENT_ADDED(false),
+    PAUSED(false),
     RULES_CHANGED(false),
     NO_CONTACT(false),
     QUOTA_USED(false),

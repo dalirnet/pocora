@@ -14,7 +14,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -23,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import ir.pocora.PocoraApp
 import ir.pocora.R
 import ir.pocora.model.EventKind
@@ -35,6 +40,7 @@ import ir.pocora.ui.AppColors
 import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
+import ir.pocora.ui.SamePhone
 import ir.pocora.ui.common.LayeredHome
 import ir.pocora.ui.common.LocalSheetSpace
 import ir.pocora.ui.common.ScreenTimeSection
@@ -43,8 +49,10 @@ import ir.pocora.ui.common.Tile
 import ir.pocora.ui.common.TileGrid
 import ir.pocora.ui.common.internetSentence
 import ir.pocora.ui.component.ActionButton
+import ir.pocora.ui.component.Card
 import ir.pocora.ui.component.EmptyState
 import ir.pocora.ui.component.LoadingCards
+import ir.pocora.ui.component.SwitchRow
 import ir.pocora.ui.rememberFormat
 import ir.pocora.ui.text
 import java.time.LocalDate
@@ -71,6 +79,7 @@ fun HomeScreen(
         top = {
             ChildRow(children, id, online, onChooseChild, onAddChild)
             Status(parent, model, snapshot, tick)
+            PauseHere(model)
             TileGrid(
                 listOf(
                     Tile(
@@ -131,6 +140,38 @@ fun HomeScreen(
     )
 }
 
+// With the child app on this same phone: one switch to pause it, for the parent's own use, and to turn it back on
+// before handing the phone over. Shown only for the child that is really here.
+@Composable
+private fun PauseHere(model: ChildModel) {
+    val context = LocalContext.current
+    var here by remember { mutableStateOf<SamePhone.Here?>(null) }
+    var checks by remember { mutableIntStateOf(0) }
+    LifecycleResumeEffect(Unit) {
+        checks++
+        onPauseOrDispose { }
+    }
+    LaunchedEffect(checks, model.child.id) {
+        if (SamePhone.hasChildApp(context)) SamePhone.pauseHere(context, null) { here = it }
+    }
+    val current = here?.takeIf { it.childId == model.child.id } ?: return
+    Card {
+        SwitchRow(
+            title = stringResource(R.string.pocora_here),
+            checked = !current.paused,
+            onChange = { on ->
+                here = current.copy(paused = !on)
+                SamePhone.pauseHere(context, !on) { answer ->
+                    here = answer
+                    model.refresh()
+                }
+            },
+            icon = AppIcons.PhonelinkRing,
+            iconColor = AppColors.green,
+        )
+    }
+}
+
 // How the child is now: one sentence, the schedule's name, and today's internet times.
 @Composable
 private fun Status(
@@ -167,6 +208,16 @@ private fun Status(
             scheduleName,
             plan,
             changes,
+        )
+        return
+    }
+    if (snapshot.state.paused) {
+        StatusPanel(
+            AppIcons.PowerSettingsNew,
+            palette.muted,
+            stringResource(R.string.pocora_paused),
+            scheduleName,
+            null,
         )
         return
     }

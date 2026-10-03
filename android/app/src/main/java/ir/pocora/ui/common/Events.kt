@@ -76,6 +76,7 @@ private fun look(kind: EventKind): Pair<ImageVector, Color> =
         EventKind.REQUEST_IGNORED -> AppIcons.HighlightOff to AppColors.slate
         EventKind.PAIRED -> AppIcons.PhonelinkRing to AppColors.green
         EventKind.PARENT_ADDED -> AppIcons.FamilyRestroom to AppColors.green
+        EventKind.PAUSED -> AppIcons.PowerSettingsNew to AppColors.slate
         EventKind.RULES_CHANGED -> AppIcons.Tune to AppColors.violet
         EventKind.NO_CONTACT -> AppIcons.WifiOff to AppColors.slate
         EventKind.QUOTA_USED -> AppIcons.DataUsage to AppColors.orange
@@ -106,7 +107,7 @@ private fun detail(
             stringResource(R.string.reconnected_at, format.time(end))
         }
 
-        event.kind == EventKind.VPN_OFF -> {
+        event.kind == EventKind.VPN_OFF || event.kind == EventKind.PAUSED -> {
             stringResource(R.string.back_on_at, format.time(end))
         }
 

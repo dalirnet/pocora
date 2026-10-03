@@ -17,6 +17,8 @@ data class AgentStatus(
     val childName: String? = null,
     // The rules in force, for the child's own view of the schedule.
     val rules: Rules? = null,
+    // Paused by the parent on this same phone: nothing is limited.
+    val paused: Boolean = false,
 ) {
     val hasRules: Boolean
         get() = rules != null

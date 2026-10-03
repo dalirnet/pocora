@@ -162,6 +162,16 @@ private fun Status(
             )
         }
 
+        status.paused -> {
+            StatusPanel(
+                AppIcons.PowerSettingsNew,
+                palette.muted,
+                stringResource(R.string.pocora_paused),
+                scheduleName,
+                null,
+            )
+        }
+
         else -> {
             StatusPanel(
                 if (status.allowed) AppIcons.Wifi else AppIcons.WifiOff,

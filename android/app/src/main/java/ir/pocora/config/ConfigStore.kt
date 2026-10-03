@@ -31,6 +31,7 @@ class ConfigStore(
         private const val KEY_ALWAYS_ON_OPENED = "always_on_opened"
         private const val KEY_BATTERY_OPENED = "battery_opened"
         private const val KEY_PAIRED_AT = "paired_at"
+        private const val KEY_PAUSED = "paused"
         private const val KEY_DONE_ONCE = "done_once"
         private const val KEY_PASSWORD_SALT = "password_salt"
         private const val KEY_PASSWORD_HASH = "password_hash"
@@ -107,6 +108,11 @@ class ConfigStore(
         get() = preferences.getLong(KEY_PAIRED_AT, 0)
         set(value) = preferences.edit().putLong(KEY_PAIRED_AT, value).apply()
 
+    // With both apps on one phone: the parent paused Pocora to use the phone itself.
+    var paused: Boolean
+        get() = preferences.getBoolean(KEY_PAUSED, false)
+        set(value) = preferences.edit().putBoolean(KEY_PAUSED, value).apply()
+
     // The child's phone after disconnecting: everything learned while paired goes, so the next pairing starts fresh.
     // The language, the look and this phone's id stay.
     fun forgetPairing() {
@@ -120,6 +126,7 @@ class ConfigStore(
             .remove(KEY_ALWAYS_ON_OPENED)
             .remove(KEY_BATTERY_OPENED)
             .remove(KEY_PAIRED_AT)
+            .remove(KEY_PAUSED)
             .remove(KEY_DONE_ONCE)
             .apply()
     }

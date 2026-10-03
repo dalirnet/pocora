@@ -52,6 +52,10 @@ class AgentNotifications(
                 builder.setContentTitle(text.getString(R.string.waiting_for_rules))
             }
 
+            status.paused -> {
+                builder.setContentTitle(text.getString(R.string.pocora_paused))
+            }
+
             status.allowed -> {
                 builder.setContentTitle(
                     status.until?.let { text.getString(R.string.notify_internet_until, format.time(it)) }

@@ -34,6 +34,8 @@
         </service>
         <!-- The parent app on this phone hands over its pairing code. Only an app signed with Pocora's key may send it. -->
         <receiver android:name=".service.PairHereReceiver" android:exported="true" android:permission="ir.pocora.permission.PAIR_HERE"/>
+        <!-- The parent app on this phone pauses this one, to use the phone itself, and turns it back on. Guarded the same way. -->
+        <receiver android:name=".service.PauseHereReceiver" android:exported="true" android:permission="ir.pocora.permission.PAIR_HERE"/>
         <receiver android:name=".service.AdminReceiver" android:exported="true" android:permission="android.permission.BIND_DEVICE_ADMIN">
             <meta-data android:name="android.app.device_admin" android:resource="@xml/device_admin"/>
             <intent-filter>
