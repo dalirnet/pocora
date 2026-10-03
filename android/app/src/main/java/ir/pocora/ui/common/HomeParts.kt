@@ -386,7 +386,12 @@ private fun ScreenTotal(
             fontWeight = FontWeight.Bold,
         )
         Text(
-            text = stringResource(R.string.data_used_amount, format.size(bytes)),
+            text =
+                if (bytes > 0) {
+                    stringResource(R.string.data_used_amount, format.size(bytes))
+                } else {
+                    stringResource(R.string.without_internet)
+                },
             color = palette.muted,
             fontSize = Dimens.caption,
             modifier = Modifier.padding(bottom = 6.dp),

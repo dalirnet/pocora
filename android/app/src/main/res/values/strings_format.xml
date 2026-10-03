@@ -34,6 +34,7 @@
     <string name="day_short_4">چ</string>
     <string name="day_short_5">پ</string>
     <string name="day_short_6">ج</string>
+    <string name="none">هیچ</string>
     <string name="duration_minutes">%1$d دقیقه</string>
     <string name="duration_hours">%1$d ساعت</string>
     <string name="duration_hours_short">%1$s ساعت</string>

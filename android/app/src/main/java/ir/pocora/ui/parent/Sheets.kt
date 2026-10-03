@@ -236,15 +236,9 @@ fun OneAppSheet(
         subtitle =
             listOfNotNull(
                 app?.let { presets.group(it.group).name.text() },
-                stringResource(
-                    R.string.app_week_use,
-                    format.duration(
-                        usage.sumOf {
-                            it.screenMilliseconds
-                        },
-                    ),
-                    format.size(usage.sumOf { it.bytes }),
-                ),
+                format.use(usage.sumOf { it.screenMilliseconds }, usage.sumOf { it.bytes })?.let {
+                    stringResource(R.string.app_week_use, it)
+                } ?: stringResource(R.string.app_week_not_used),
             ).joinToString("\n"),
     ) {
         Text(

@@ -136,6 +136,7 @@
     <string name="age_range">سن %1$s تا %2$s</string>
     <string name="kinds_of_apps">دسته‌های برنامه</string>
     <string name="apps_count">%1$s برنامه</string>
+    <string name="no_apps">بدون برنامه</string>
     <string name="show_all_kinds">نمایش همه (%1$s)</string>
     <string name="your_choices">انتخاب‌های شما</string>
     <string name="always_internet">همیشه وصل</string>
@@ -158,7 +159,9 @@
     <string name="choice_never">هیچ‌وقت</string>
     <string name="watch_this_app">وقتی باز شد، خبرم کن</string>
     <string name="watched">زیر نظر</string>
-    <string name="app_week_use">این هفته: %1$s استفاده، %2$s</string>
+    <string name="app_week_use">این هفته: %1$s</string>
+    <string name="app_week_not_used">این هفته استفاده نشده</string>
+    <string name="screen_time_amount">%1$s استفاده</string>
     <string name="used_this_month">مصرف این ماه</string>
     <string name="at_most">سقف</string>
     <string name="change_the_limit">تغییر حجم مجاز</string>
@@ -203,7 +206,7 @@
     <string name="notify_when_connects">وقتی موبایل فرزند در دسترس شد</string>
     <string name="schedule_suggestions">پیشنهاد زمان‌بندی</string>
     <string name="child_connected_title">موبایل %1$s در دسترس است</string>
-    <string name="child_connected_text">امروز: %1$s استفاده، %2$s هشدار تازه</string>
+    <string name="child_connected_text">امروز: %1$s</string>
     <string name="child_turned_off_at">%1$s ساعت %2$s پوکورا را خاموش کرد</string>
     <string name="child_and_event">%1$s: %2$s</string>
     <string name="see_schedule">مشاهدهٔ زمان‌بندی</string>

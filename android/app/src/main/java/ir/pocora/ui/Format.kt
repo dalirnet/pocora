@@ -105,12 +105,13 @@ class Format(
     // A mark index as the time it starts: 35 is 17:30. 48 is the end of the day, 24:00.
     fun mark(mark: Int): String = String.format(locale, "%02d:%02d", mark / 2, mark % 2 * 30)
 
-    // "2h 10m", "40m", "3h". Never seconds.
+    // "2h 10m", "40m", "3h". Never seconds, and nothing is a word, not "0m".
     fun duration(milliseconds: Long): String {
         val minutes = milliseconds / MINUTE_MILLISECONDS
         val hours = minutes / MINUTES_PER_HOUR
         val rest = minutes % MINUTES_PER_HOUR
         return when {
+            minutes == 0L -> context.getString(R.string.none)
             hours == 0L -> context.getString(R.string.duration_minutes, rest)
             rest == 0L -> context.getString(R.string.duration_hours, hours)
             else -> context.getString(R.string.duration_hours_minutes, hours, rest)
@@ -127,10 +128,14 @@ class Format(
             else -> context.getString(R.string.duration_hours_short, decimal(marks / 2.0))
         }
 
-    // "62 MB", "2.1 GB", "26 GB".
+    // "62 MB", "2.1 GB", "26 GB". Nothing is a word, not "0 MB".
     fun size(bytes: Long): String =
         when {
-            bytes in 1 until MEGABYTE -> {
+            bytes <= 0 -> {
+                context.getString(R.string.none)
+            }
+
+            bytes < MEGABYTE -> {
                 context.getString(R.string.size_under_megabyte)
             }
 
@@ -152,6 +157,24 @@ class Format(
 
     // Just the number, for "62 of 100 MB".
     fun megabytes(bytes: Long): String = number(bytes / MEGABYTE)
+
+    // "2h on screen". Null for none, so the line can leave it out.
+    fun screenTime(milliseconds: Long): String? =
+        milliseconds.takeIf { it > 0 }?.let { context.getString(R.string.screen_time_amount, duration(it)) }
+
+    // "2h on screen, 62 MB": only what there is. Null when nothing was used.
+    fun use(
+        screenMilliseconds: Long,
+        bytes: Long,
+    ): String? = listed(screenTime(screenMilliseconds), bytes.takeIf { it > 0 }?.let { size(it) })
+
+    // "3 apps", or that there are none. Never "0 apps".
+    fun appsCount(count: Int): String =
+        if (count == 0) context.getString(R.string.no_apps) else context.getString(R.string.apps_count, number(count))
+
+    // The parts there are, in one line: "2h on screen, 3 new alerts". Null when there is none.
+    fun listed(vararg parts: String?): String? =
+        parts.filterNotNull().takeIf { it.isNotEmpty() }?.joinToString(context.getString(R.string.list_separator))
 
     private fun monthName(month: Int): String = context.getString(MONTHS[month - 1])
 
