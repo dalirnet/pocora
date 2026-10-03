@@ -49,7 +49,7 @@ class PresetsTest {
 
     @Test
     fun quota_bytesPerMark() {
-        assertEquals(100_000_000L, presets.quota("medium").bytesPerMark)
+        assertEquals(200_000_000L, presets.quota("medium").bytesPerMark)
         assertNull(presets.quota("no-limit").bytesPerMark)
     }
 
