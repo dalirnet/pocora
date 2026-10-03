@@ -34,6 +34,36 @@ data class Rules(
         )
 }
 
+// The parts of the rules a parent can change, as the Activity list names them.
+enum class RulePart {
+    TIMES,
+    APPS,
+    QUOTA,
+    EXTRA_DATA,
+    WATCH,
+    ;
+
+    companion object {
+        // What new rules change, past this-week changes left out on both sides. Nothing for the first rules.
+        fun changed(
+            old: Rules?,
+            new: Rules,
+            thisWeek: Long,
+        ): List<RulePart> {
+            if (old == null) return emptyList()
+            val before = old.withoutPastChanges(thisWeek)
+            val after = new.withoutPastChanges(thisWeek)
+            return buildList {
+                if (before.schedule != after.schedule || before.changes != after.changes) add(TIMES)
+                if (before.appsList != after.appsList || before.apps != after.apps) add(APPS)
+                if (before.quota != after.quota) add(QUOTA)
+                if ((after.extraData - before.extraData.toSet()).isNotEmpty()) add(EXTRA_DATA)
+                if (before.watch != after.watch) add(WATCH)
+            }
+        }
+    }
+}
+
 // A custom block: one weekday's Allowed times, replacing the preset's.
 // With a week it is for that week only, the epoch day of its Saturday. Without one it is for that weekday every week.
 @Serializable

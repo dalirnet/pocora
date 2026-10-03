@@ -8,6 +8,7 @@ import ir.pocora.model.Event
 import ir.pocora.model.EventKind
 import ir.pocora.model.Mark
 import ir.pocora.model.Peer
+import ir.pocora.model.RulePart
 import ir.pocora.model.Rules
 import ir.pocora.model.Snapshot
 import kotlinx.serialization.Serializable
@@ -82,8 +83,9 @@ class EventLog(
         end: Long? = null,
         app: String? = null,
         appName: String? = null,
+        parts: List<RulePart> = emptyList(),
     ): Event {
-        val event = Event(UUID.randomUUID().toString(), kind, start, end, app, appName)
+        val event = Event(UUID.randomUUID().toString(), kind, start, end, app, appName, parts)
         file.update(emptyList()) { it + event }
         return event
     }

@@ -163,8 +163,8 @@
     <string name="change_the_limit">Change the limit</string>
     <string name="data_limit_text">Each half hour gets half the hourly amount.</string>
     <string name="with_schedule">Monthly maximum with the schedule %1$s</string>
-    <string name="alerts_of">%1$s\'s alerts</string>
-    <string name="no_alerts">No alerts in the last 7 days.</string>
+    <string name="alerts_of">%1$s\'s activity</string>
+    <string name="no_alerts">Nothing in the last 7 days.</string>
     <string name="back_on_at">Back on at %1$s</string>
     <string name="until_capital">Until %1$s</string>
     <string name="event_pocora_stopped">Pocora stopped</string>
@@ -177,6 +177,16 @@
     <string name="event_app_installed">App installed</string>
     <string name="event_app_removed">App removed</string>
     <string name="event_request_ignored">Request declined</string>
+    <string name="event_paired">Phones paired</string>
+    <string name="event_rules_changed">Rules changed</string>
+    <string name="event_no_contact">Phones out of touch</string>
+    <string name="event_quota_used">Data quota used up</string>
+    <string name="reconnected_at">Back in touch at %1$s</string>
+    <string name="part_times">Times</string>
+    <string name="part_apps">Apps</string>
+    <string name="part_quota">Data</string>
+    <string name="part_extra_data">Extra data</string>
+    <string name="part_watch">Watched apps</string>
     <string name="event_missing">Not connected for 7 days</string>
     <string name="cant_reach">Can\'t reach %1$s\'s phone</string>
     <string name="cant_reach_text">Both phones must be on the same Wi-Fi.</string>

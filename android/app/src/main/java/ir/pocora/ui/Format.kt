@@ -7,13 +7,15 @@ import androidx.compose.ui.platform.LocalContext
 import ir.pocora.R
 import ir.pocora.model.EventKind
 import ir.pocora.model.IranianDate
+import ir.pocora.model.RulePart
 import ir.pocora.model.Week
+import ir.pocora.model.localDateOf
 import ir.pocora.preset.Names
+import java.text.DecimalFormatSymbols
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
-import java.text.DecimalFormatSymbols
 import java.time.ZoneId
 import java.util.Locale
 
@@ -232,9 +234,18 @@ object Labels {
             EventKind.APP_INSTALLED -> R.string.event_app_installed
             EventKind.APP_REMOVED -> R.string.event_app_removed
             EventKind.REQUEST_IGNORED -> R.string.event_request_ignored
+            EventKind.PAIRED -> R.string.event_paired
+            EventKind.RULES_CHANGED -> R.string.event_rules_changed
+            EventKind.NO_CONTACT -> R.string.event_no_contact
+            EventKind.QUOTA_USED -> R.string.event_quota_used
+        }
+
+    fun part(part: RulePart): Int =
+        when (part) {
+            RulePart.TIMES -> R.string.part_times
+            RulePart.APPS -> R.string.part_apps
+            RulePart.QUOTA -> R.string.part_quota
+            RulePart.EXTRA_DATA -> R.string.part_extra_data
+            RulePart.WATCH -> R.string.part_watch
         }
 }
-
-// The phone's own date at a moment.
-fun localDateOf(epochMilliseconds: Long): LocalDate =
-    Instant.ofEpochMilli(epochMilliseconds).atZone(ZoneId.systemDefault()).toLocalDate()

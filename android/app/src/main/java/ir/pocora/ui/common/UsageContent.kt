@@ -31,6 +31,7 @@ import ir.pocora.model.Schedule
 import ir.pocora.model.Snapshot
 import ir.pocora.model.Week
 import ir.pocora.model.alerts
+import ir.pocora.model.localDateOf
 import ir.pocora.preset.AppGroup
 import ir.pocora.preset.Presets
 import ir.pocora.ui.AppIcons
@@ -47,7 +48,6 @@ import ir.pocora.ui.component.HourAxis
 import ir.pocora.ui.component.NumberPair
 import ir.pocora.ui.component.PeriodStepper
 import ir.pocora.ui.component.Segmented
-import ir.pocora.ui.localDateOf
 import ir.pocora.ui.rememberFormat
 import java.time.Instant
 import java.time.LocalDate

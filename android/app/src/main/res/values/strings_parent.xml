@@ -164,8 +164,8 @@
     <string name="change_the_limit">تغییر حجم مجاز</string>
     <string name="data_limit_text">سهم هر نیم‌ساعت، نصف حجم ساعتی است.</string>
     <string name="with_schedule">سقف ماهانه با زمان‌بندی «%1$s»</string>
-    <string name="alerts_of">هشدارهای %1$s</string>
-    <string name="no_alerts">در این یک هفته هشداری نبوده.</string>
+    <string name="alerts_of">فعالیت‌های %1$s</string>
+    <string name="no_alerts">در این یک هفته خبری نبوده.</string>
     <string name="back_on_at">ساعت %1$s دوباره روشن شد</string>
     <string name="until_capital">تا ساعت %1$s</string>
     <string name="event_pocora_stopped">پوکورا متوقف شد</string>
@@ -178,6 +178,16 @@
     <string name="event_app_installed">برنامه نصب شد</string>
     <string name="event_app_removed">برنامه حذف شد</string>
     <string name="event_request_ignored">درخواست رد شد</string>
+    <string name="event_paired">دو گوشی به هم وصل شدند</string>
+    <string name="event_rules_changed">قوانین تغییر کرد</string>
+    <string name="event_no_contact">ارتباط دو گوشی قطع شد</string>
+    <string name="event_quota_used">سهم حجم تمام شد</string>
+    <string name="reconnected_at">ساعت %1$s دوباره وصل شد</string>
+    <string name="part_times">ساعت‌ها</string>
+    <string name="part_apps">برنامه‌ها</string>
+    <string name="part_quota">حجم</string>
+    <string name="part_extra_data">حجم اضافه</string>
+    <string name="part_watch">برنامه‌های زیر نظر</string>
     <string name="event_missing">یک هفته است خبری نیست</string>
     <string name="cant_reach">گوشی %1$s در دسترس نیست</string>
     <string name="cant_reach_text">هر دو گوشی باید روی یک وای‌فای باشند.</string>
