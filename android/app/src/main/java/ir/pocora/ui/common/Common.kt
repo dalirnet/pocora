@@ -3,6 +3,7 @@ package ir.pocora.ui.common
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -24,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ir.pocora.PocoraApp
 import ir.pocora.R
+import ir.pocora.Role
 import ir.pocora.config.Language
 import ir.pocora.config.Look
 import ir.pocora.model.Rules
@@ -36,6 +38,7 @@ import ir.pocora.ui.AppColors
 import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
+import ir.pocora.ui.component.AppIcon
 import ir.pocora.ui.component.Card
 import ir.pocora.ui.component.CardTitle
 import ir.pocora.ui.component.Chip
@@ -115,6 +118,33 @@ fun LanguageAndLook(
                 onLook(look)
             },
         )
+    }
+}
+
+// The app, its name and installed version, as the last card of the settings.
+@Composable
+fun AppVersion() {
+    val context = LocalContext.current
+    val version =
+        remember {
+            context.packageManager
+                .getPackageInfo(context.packageName, 0)
+                .versionName
+                .orEmpty()
+        }
+    val name = if (Role.current == Role.PARENT) R.string.app_name_parent else R.string.app_name_child
+    Card {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Dimens.row)) {
+            AppIcon(Dimens.rowIcon)
+            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                CardTitle(stringResource(name))
+                Text(
+                    text = stringResource(R.string.version, version),
+                    color = LocalPalette.current.muted,
+                    fontSize = Dimens.caption,
+                )
+            }
+        }
     }
 }
 

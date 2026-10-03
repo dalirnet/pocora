@@ -30,6 +30,7 @@ import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
 import ir.pocora.ui.common.AlertList
+import ir.pocora.ui.common.AppVersion
 import ir.pocora.ui.common.LanguageAndLook
 import ir.pocora.ui.common.TemplateCard
 import ir.pocora.ui.common.UsageContent
@@ -189,6 +190,7 @@ fun SettingsScreen(
                     )
                 }
             }
+            AppVersion()
         }
         if (disconnecting) {
             Sheet(

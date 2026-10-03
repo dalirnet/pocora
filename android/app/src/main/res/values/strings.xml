@@ -25,6 +25,7 @@
     <string name="look_system">هماهنگ با سیستم</string>
     <string name="look_light">روشن</string>
     <string name="look_dark">تیره</string>
+    <string name="version">نسخهٔ %1$s</string>
     <string name="notifications">اعلان‌ها</string>
     <string name="time_range">%1$s تا %2$s</string>
     <string name="list_separator">"، "</string>

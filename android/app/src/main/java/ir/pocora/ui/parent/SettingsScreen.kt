@@ -34,6 +34,7 @@ import ir.pocora.ui.AppColors
 import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
+import ir.pocora.ui.common.AppVersion
 import ir.pocora.ui.common.LanguageAndLook
 import ir.pocora.ui.common.Permissions
 import ir.pocora.ui.component.Avatar
@@ -47,7 +48,7 @@ import ir.pocora.ui.component.Sheet
 import ir.pocora.ui.component.SmallButton
 import ir.pocora.ui.component.SwitchRow
 
-// Children, notifications, language and theme.
+// Children, notifications, language and theme, and the version at the foot.
 @Composable
 fun SettingsScreen(
     children: List<Peer>,
@@ -128,6 +129,7 @@ fun SettingsScreen(
             }
 
             LanguageAndLook(onLanguage, onLook)
+            AppVersion()
         }
         removing?.let { child ->
             Sheet(
