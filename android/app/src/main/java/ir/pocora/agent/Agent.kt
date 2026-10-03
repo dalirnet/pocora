@@ -330,10 +330,9 @@ class Agent(
         appsList: String,
     ): List<String> {
         val withInternet = catalog.withInternet().toSet()
-        if (!allowed) return withInternet.sorted()
         return catalog
             .installed()
-            .filter { it.`package` in withInternet && !AppAccess.hasInternet(presets, rules, it, appsList) }
+            .filter { it.`package` in withInternet && !AppAccess.hasInternet(presets, rules, it, appsList, allowed) }
             .map { it.`package` }
             .sorted()
     }

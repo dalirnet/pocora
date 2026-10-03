@@ -988,7 +988,8 @@
                     "name": {
                         "en": "Shad",
                         "fa": "شاد"
-                    }
+                    },
+                    "always": true
                 },
                 {
                     "package": "com.google.android.apps.tachyon",

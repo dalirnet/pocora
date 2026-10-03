@@ -188,11 +188,12 @@ fun GroupScreen(
             if (apps.isNotEmpty()) {
                 Card {
                     for ((app, screen, bytes) in apps) {
+                        val choice = AppAccess.choiceOf(presets, rules, app.`package`)
                         val chip =
                             when {
                                 app.`package` in rules.watch -> stringResource(R.string.watched)
-                                rules.apps[app.`package`] == AppChoice.IN -> stringResource(R.string.always_internet)
-                                rules.apps[app.`package`] == AppChoice.OUT -> stringResource(R.string.never_internet)
+                                choice == AppChoice.IN -> stringResource(R.string.always_internet)
+                                choice == AppChoice.OUT -> stringResource(R.string.never_internet)
                                 else -> null
                             }
                         AppRow(
