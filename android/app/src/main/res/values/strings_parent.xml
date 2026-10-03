@@ -43,7 +43,7 @@
     <string name="nothing_used_title">استفاده‌ای نبوده</string>
     <string name="no_apps_in_group">برنامه‌ای از این دسته روی موبایل نیست.</string>
     <string name="nav_home">خانه</string>
-    <string name="nav_activity">فعالیت‌ها</string>
+    <string name="nav_events">رویدادها</string>
     <string name="tile_stop">قطع اینترنت</string>
     <string name="tile_allow">اتصال اینترنت</string>
     <string name="tile_times">زمان اینترنت</string>
@@ -164,7 +164,7 @@
     <string name="change_the_limit">تغییر حجم مجاز</string>
     <string name="data_limit_text">سهم هر نیم‌ساعت، نصف حجم ساعتی است.</string>
     <string name="with_schedule">سقف ماهانه با زمان‌بندی «%1$s»</string>
-    <string name="alerts_of">فعالیت‌های %1$s</string>
+    <string name="events_of">رویدادهای %1$s</string>
     <string name="no_alerts">در این یک هفته خبری نبوده.</string>
     <string name="back_on_at">ساعت %1$s دوباره روشن شد</string>
     <string name="until_capital">تا ساعت %1$s</string>

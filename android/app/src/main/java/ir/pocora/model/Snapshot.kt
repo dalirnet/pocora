@@ -92,7 +92,7 @@ data class Event(
 // The alerts among a child's events, newest first: what the parent is notified about.
 fun List<Event>.alerts(): List<Event> = filter { it.kind.alert }.sortedByDescending { it.start }
 
-// Every event worth showing, newest first: the Activity list in both apps.
+// Every event worth showing, newest first: the Events list in both apps.
 fun List<Event>.timeline(): List<Event> =
     filter {
         it.kind != EventKind.REQUEST_IGNORED

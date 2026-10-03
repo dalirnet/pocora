@@ -29,7 +29,7 @@ import ir.pocora.ui.component.SectionTitle
 import ir.pocora.ui.rememberFormat
 
 // What happened on a child's phone, newest first, grouped by day, each with the time it happened.
-// The parent sees it on the Activity tab, and the child sees the very same list on its own. Alerts are in bold.
+// The parent sees it on the Events tab, and the child sees the very same list on its own. Alerts are in bold.
 @Composable
 fun EventList(events: List<Event>) {
     val format = rememberFormat()

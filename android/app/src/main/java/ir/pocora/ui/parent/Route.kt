@@ -33,7 +33,7 @@ sealed interface Route {
     data object Home : Route
 
     @Serializable
-    data object Activity : Route
+    data object Events : Route
 
     @Serializable
     data object Settings : Route

@@ -84,11 +84,11 @@ fun UsageScreen(onBack: () -> Unit) {
 
 // The second tab: the same list the parent sees about this phone, so nothing about the child is hidden from them.
 @Composable
-fun ActivityScreen(bottom: @Composable () -> Unit) {
+fun EventsScreen(bottom: @Composable () -> Unit) {
     val agent = (LocalContext.current.applicationContext as PocoraApp).agent
     val updates by agent.updates.collectAsState()
     val events = remember(updates) { agent.events.all().timeline() }
-    Screen(title = stringResource(R.string.my_activity), bottom = bottom, centered = events.isEmpty()) {
+    Screen(title = stringResource(R.string.events_title), bottom = bottom, centered = events.isEmpty()) {
         if (events.isEmpty()) {
             EmptyState(
                 AppIcons.CheckCircle,

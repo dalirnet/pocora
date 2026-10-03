@@ -35,7 +35,7 @@
     <string name="child_connected">Connected to your parent</string>
     <string name="tile_parent_sees">Parent\'s view</string>
     <string name="only_parent_changes">Only your parent sets these times.</string>
-    <string name="my_activity">My activity</string>
+    <string name="events_title">Events</string>
     <string name="parent_sees_these">Your parent sees the same list.</string>
     <string name="what_my_parent_sees">What my parent can see</string>
     <string name="parent_sees">Your parent sees</string>

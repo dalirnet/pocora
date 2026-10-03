@@ -42,7 +42,7 @@
     <string name="nothing_used_title">Nothing used</string>
     <string name="no_apps_in_group">No apps of this kind on the phone.</string>
     <string name="nav_home">Home</string>
-    <string name="nav_activity">Activity</string>
+    <string name="nav_events">Events</string>
     <string name="tile_stop">Stop internet</string>
     <string name="tile_allow">Allow internet</string>
     <string name="tile_times">Internet times</string>
@@ -163,7 +163,7 @@
     <string name="change_the_limit">Change the limit</string>
     <string name="data_limit_text">Each half hour gets half the hourly amount.</string>
     <string name="with_schedule">Monthly maximum with the schedule %1$s</string>
-    <string name="alerts_of">%1$s\'s activity</string>
+    <string name="events_of">%1$s\'s events</string>
     <string name="no_alerts">Nothing in the last 7 days.</string>
     <string name="back_on_at">Back on at %1$s</string>
     <string name="until_capital">Until %1$s</string>

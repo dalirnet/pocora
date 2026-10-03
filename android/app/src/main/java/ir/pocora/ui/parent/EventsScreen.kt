@@ -18,7 +18,7 @@ import ir.pocora.ui.rememberFormat
 
 // The second tab: what happened on the child's phone, newest first, grouped by day. The badge counts new alerts.
 @Composable
-fun ActivityScreen(
+fun EventsScreen(
     model: ChildModel,
     bottom: @Composable () -> Unit,
 ) {
@@ -28,7 +28,7 @@ fun ActivityScreen(
     LaunchedEffect(model.child.id) { model.markAlertsSeen() }
 
     Screen(
-        title = stringResource(R.string.alerts_of, model.child.name),
+        title = stringResource(R.string.events_of, model.child.name),
         trailing = { if (unseen > 0) Chip(stringResource(R.string.new_alerts, format.number(unseen))) },
         bottom = bottom,
         centered = events.isEmpty(),

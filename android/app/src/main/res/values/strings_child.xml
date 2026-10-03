@@ -36,7 +36,7 @@
     <string name="child_connected">به موبایل والدین وصل است</string>
     <string name="tile_parent_sees">والدین چه می‌بینند</string>
     <string name="only_parent_changes">این زمان‌ها را والدینت تعیین می‌کنند.</string>
-    <string name="my_activity">فعالیت‌های من</string>
+    <string name="events_title">رویدادها</string>
     <string name="parent_sees_these">والدینت هم همین‌ها را می‌بینند.</string>
     <string name="what_my_parent_sees">والدینم چه چیزهایی می‌بینند؟</string>
     <string name="parent_sees">والدینت می‌بینند</string>

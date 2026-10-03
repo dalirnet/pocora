@@ -19,10 +19,10 @@ import ir.pocora.ui.AppIcons
 import ir.pocora.ui.component.BarItem
 import ir.pocora.ui.component.BottomBar
 
-private val TABS = listOf(ChildStep.HOME, ChildStep.ACTIVITY, ChildStep.SETTINGS)
+private val TABS = listOf(ChildStep.HOME, ChildStep.EVENTS, ChildStep.SETTINGS)
 
 // The child app's screens and the way between them, on the same plan as the parent app's.
-// First run: welcome, the scan, waiting for the parent, then the setup steps. Then Home, Activity and Settings are the bottom bar,
+// First run: welcome, the scan, waiting for the parent, then the setup steps. Then Home, Events and Settings are the bottom bar,
 // and every other screen has a back arrow. A code handed in, instead of scanned, goes straight to waiting.
 @Composable
 fun ChildApp(
@@ -77,7 +77,7 @@ fun ChildApp(
         step = parentStep
     }
     BackHandler(
-        enabled = step == ChildStep.ACTIVITY || (step == ChildStep.SETTINGS && paired),
+        enabled = step == ChildStep.EVENTS || (step == ChildStep.SETTINGS && paired),
     ) { step = ChildStep.HOME }
     BackHandler(enabled = step == ChildStep.SETTINGS && !paired) { step = ChildStep.WELCOME }
 
@@ -86,7 +86,7 @@ fun ChildApp(
             items =
                 listOf(
                     BarItem(AppIcons.Home, stringResource(R.string.nav_home)),
-                    BarItem(AppIcons.Notifications, stringResource(R.string.nav_activity)),
+                    BarItem(AppIcons.Notifications, stringResource(R.string.nav_events)),
                     BarItem(AppIcons.Settings, stringResource(R.string.settings)),
                 ),
             selected = TABS.indexOf(step).coerceAtLeast(0),
@@ -143,8 +143,8 @@ fun ChildApp(
             )
         }
 
-        ChildStep.ACTIVITY -> {
-            ActivityScreen(bottom = bottom)
+        ChildStep.EVENTS -> {
+            EventsScreen(bottom = bottom)
         }
 
         ChildStep.SETTINGS -> {
@@ -183,7 +183,7 @@ enum class ChildStep {
     WAITING,
     SETUP,
     HOME,
-    ACTIVITY,
+    EVENTS,
     SETTINGS,
     TIMES,
     USAGE,

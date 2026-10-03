@@ -34,7 +34,7 @@ data class Rules(
         )
 }
 
-// The parts of the rules a parent can change, as the Activity list names them.
+// The parts of the rules a parent can change, as the Events list names them.
 enum class RulePart {
     TIMES,
     APPS,
