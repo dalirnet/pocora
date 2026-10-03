@@ -1,16 +1,17 @@
-# Every push and pull request: the tests pass, and both apps build.
+# Every push to dev and every pull request: the tests pass, and both apps build.
+# main is skipped: only make publish pushes to it, and the tag it pushes right after runs release.yml, which tests and builds too.
 # A change to the landing page alone (docs/) builds nothing; GitHub Pages publishes it.
 name: Build
 
 on:
   push:
-    branches: ["**"]
+    branches: [dev]
     paths-ignore: ["docs/**"]
   pull_request:
     paths-ignore: ["docs/**"]
 
 concurrency:
-  group: build-${{ github.ref }}
+  group: build-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 jobs:

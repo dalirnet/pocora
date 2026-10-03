@@ -1003,6 +1003,27 @@
                         "en": "Adobe Connect",
                         "fa": "ادوبی کانکت"
                     }
+                },
+                {
+                    "package": "com.google.android.apps.classroom",
+                    "name": {
+                        "en": "Google Classroom",
+                        "fa": "گوگل کلاس‌روم"
+                    }
+                },
+                {
+                    "package": "us.zoom.videomeetings",
+                    "name": {
+                        "en": "Zoom",
+                        "fa": "زوم"
+                    }
+                },
+                {
+                    "package": "com.microsoft.teams",
+                    "name": {
+                        "en": "Microsoft Teams",
+                        "fa": "مایکروسافت تیمز"
+                    }
                 }
             ]
         },
@@ -1187,6 +1208,48 @@
                         "en": "Sololearn",
                         "fa": "سولولرن"
                     }
+                },
+                {
+                    "package": "org.khanacademy.android",
+                    "name": {
+                        "en": "Khan Academy",
+                        "fa": "خان آکادمی"
+                    }
+                },
+                {
+                    "package": "com.microblink.photomath",
+                    "name": {
+                        "en": "Photomath",
+                        "fa": "فوتومث"
+                    }
+                },
+                {
+                    "package": "co.brainly",
+                    "name": {
+                        "en": "Brainly",
+                        "fa": "برینلی"
+                    }
+                },
+                {
+                    "package": "com.quizlet.quizletandroid",
+                    "name": {
+                        "en": "Quizlet",
+                        "fa": "کوئیزلت"
+                    }
+                },
+                {
+                    "package": "org.wikipedia",
+                    "name": {
+                        "en": "Wikipedia",
+                        "fa": "ویکی‌پدیا"
+                    }
+                },
+                {
+                    "package": "com.busuu.android.enc",
+                    "name": {
+                        "en": "Busuu",
+                        "fa": "بوسو"
+                    }
                 }
             ]
         },
@@ -1301,6 +1364,20 @@
                         "en": "First Class",
                         "fa": "کلاس اولی"
                     }
+                },
+                {
+                    "package": "com.google.android.apps.youtube.kids",
+                    "name": {
+                        "en": "YouTube Kids",
+                        "fa": "یوتیوب کیدز"
+                    }
+                },
+                {
+                    "package": "com.outfit7.mytalkingtomfree",
+                    "name": {
+                        "en": "My Talking Tom",
+                        "fa": "تام سخنگو"
+                    }
                 }
             ]
         },
@@ -1351,6 +1428,62 @@
                     "name": {
                         "en": "Soroush Plus",
                         "fa": "سروش پلاس"
+                    }
+                },
+                {
+                    "package": "org.telegram.messenger",
+                    "name": {
+                        "en": "Telegram",
+                        "fa": "تلگرام"
+                    }
+                },
+                {
+                    "package": "org.thunderdog.challegram",
+                    "name": {
+                        "en": "Telegram X",
+                        "fa": "تلگرام ایکس"
+                    }
+                },
+                {
+                    "package": "org.telegram.plus",
+                    "name": {
+                        "en": "Plus Messenger",
+                        "fa": "پلاس مسنجر"
+                    }
+                },
+                {
+                    "package": "org.thoughtcrime.securesms",
+                    "name": {
+                        "en": "Signal",
+                        "fa": "سیگنال"
+                    }
+                },
+                {
+                    "package": "com.viber.voip",
+                    "name": {
+                        "en": "Viber",
+                        "fa": "وایبر"
+                    }
+                },
+                {
+                    "package": "com.imo.android.imoim",
+                    "name": {
+                        "en": "imo",
+                        "fa": "ایمو"
+                    }
+                },
+                {
+                    "package": "com.skype.raider",
+                    "name": {
+                        "en": "Skype",
+                        "fa": "اسکایپ"
+                    }
+                },
+                {
+                    "package": "com.facebook.orca",
+                    "name": {
+                        "en": "Messenger",
+                        "fa": "مسنجر"
                     }
                 }
             ]
@@ -1431,6 +1564,27 @@
                         "en": "Gmail",
                         "fa": "جیمیل"
                     }
+                },
+                {
+                    "package": "com.google.android.calendar",
+                    "name": {
+                        "en": "Google Calendar",
+                        "fa": "تقویم گوگل"
+                    }
+                },
+                {
+                    "package": "com.google.android.apps.docs",
+                    "name": {
+                        "en": "Google Drive",
+                        "fa": "گوگل درایو"
+                    }
+                },
+                {
+                    "package": "com.google.android.keep",
+                    "name": {
+                        "en": "Google Keep",
+                        "fa": "گوگل کیپ"
+                    }
                 }
             ]
         },
@@ -1488,6 +1642,55 @@
                     "name": {
                         "en": "Samsung Music",
                         "fa": "Samsung Music"
+                    }
+                },
+                {
+                    "package": "com.spotify.music",
+                    "name": {
+                        "en": "Spotify",
+                        "fa": "اسپاتیفای"
+                    }
+                },
+                {
+                    "package": "com.soundcloud.android",
+                    "name": {
+                        "en": "SoundCloud",
+                        "fa": "ساندکلاد"
+                    }
+                },
+                {
+                    "package": "com.google.android.apps.youtube.music",
+                    "name": {
+                        "en": "YouTube Music",
+                        "fa": "یوتیوب موزیک"
+                    }
+                },
+                {
+                    "package": "com.apple.android.music",
+                    "name": {
+                        "en": "Apple Music",
+                        "fa": "اپل موزیک"
+                    }
+                },
+                {
+                    "package": "deezer.android.app",
+                    "name": {
+                        "en": "Deezer",
+                        "fa": "دیزر"
+                    }
+                },
+                {
+                    "package": "com.shazam.android",
+                    "name": {
+                        "en": "Shazam",
+                        "fa": "شازم"
+                    }
+                },
+                {
+                    "package": "com.radiojavan.androidradio",
+                    "name": {
+                        "en": "Radio Javan",
+                        "fa": "رادیو جوان"
                     }
                 }
             ]
@@ -1560,6 +1763,41 @@
                     "name": {
                         "en": "Filmnet",
                         "fa": "فیلم‌نت"
+                    }
+                },
+                {
+                    "package": "com.google.android.youtube",
+                    "name": {
+                        "en": "YouTube",
+                        "fa": "یوتیوب"
+                    }
+                },
+                {
+                    "package": "com.netflix.mediaclient",
+                    "name": {
+                        "en": "Netflix",
+                        "fa": "نتفلیکس"
+                    }
+                },
+                {
+                    "package": "tv.twitch.android.app",
+                    "name": {
+                        "en": "Twitch",
+                        "fa": "توییچ"
+                    }
+                },
+                {
+                    "package": "org.videolan.vlc",
+                    "name": {
+                        "en": "VLC",
+                        "fa": "وی‌ال‌سی"
+                    }
+                },
+                {
+                    "package": "com.mxtech.videoplayer.ad",
+                    "name": {
+                        "en": "MX Player",
+                        "fa": "ام‌ایکس پلیر"
                     }
                 }
             ]
@@ -1780,6 +2018,132 @@
                         "en": "Temple Run 2",
                         "fa": "تمپل ران"
                     }
+                },
+                {
+                    "package": "com.tencent.ig",
+                    "name": {
+                        "en": "PUBG Mobile",
+                        "fa": "پابجی"
+                    }
+                },
+                {
+                    "package": "com.activision.callofduty.shooter",
+                    "name": {
+                        "en": "Call of Duty: Mobile",
+                        "fa": "کالاف دیوتی"
+                    }
+                },
+                {
+                    "package": "com.dts.freefireth",
+                    "name": {
+                        "en": "Free Fire",
+                        "fa": "فری فایر"
+                    }
+                },
+                {
+                    "package": "com.roblox.client",
+                    "name": {
+                        "en": "Roblox",
+                        "fa": "روبلاکس"
+                    }
+                },
+                {
+                    "package": "com.innersloth.spacemafia",
+                    "name": {
+                        "en": "Among Us",
+                        "fa": "امانگ آس"
+                    }
+                },
+                {
+                    "package": "com.kitkagames.fallbuddies",
+                    "name": {
+                        "en": "Stumble Guys",
+                        "fa": "استامبل گایز"
+                    }
+                },
+                {
+                    "package": "com.king.candycrushsaga",
+                    "name": {
+                        "en": "Candy Crush Saga",
+                        "fa": "کندی کراش"
+                    }
+                },
+                {
+                    "package": "com.fingersoft.hillclimb",
+                    "name": {
+                        "en": "Hill Climb Racing",
+                        "fa": "هیل کلایمب"
+                    }
+                },
+                {
+                    "package": "com.robtopx.geometryjump",
+                    "name": {
+                        "en": "Geometry Dash",
+                        "fa": "جئومتری دش"
+                    }
+                },
+                {
+                    "package": "com.supercell.hayday",
+                    "name": {
+                        "en": "Hay Day",
+                        "fa": "هی دی"
+                    }
+                },
+                {
+                    "package": "com.miHoYo.GenshinImpact",
+                    "name": {
+                        "en": "Genshin Impact",
+                        "fa": "گنشین ایمپکت"
+                    }
+                },
+                {
+                    "package": "jp.konami.pesam",
+                    "name": {
+                        "en": "eFootball",
+                        "fa": "ای‌فوتبال"
+                    }
+                },
+                {
+                    "package": "com.ea.gp.fifamobile",
+                    "name": {
+                        "en": "EA SPORTS FC Mobile",
+                        "fa": "اف‌سی موبایل"
+                    }
+                },
+                {
+                    "package": "com.nianticlabs.pokemongo",
+                    "name": {
+                        "en": "Pokémon GO",
+                        "fa": "پوکمون گو"
+                    }
+                },
+                {
+                    "package": "com.chess",
+                    "name": {
+                        "en": "Chess.com",
+                        "fa": "چس دات کام"
+                    }
+                },
+                {
+                    "package": "com.ludo.king",
+                    "name": {
+                        "en": "Ludo King",
+                        "fa": "لودو کینگ"
+                    }
+                },
+                {
+                    "package": "com.halfbrick.fruitninjafree",
+                    "name": {
+                        "en": "Fruit Ninja",
+                        "fa": "فروت نینجا"
+                    }
+                },
+                {
+                    "package": "com.rovio.baba",
+                    "name": {
+                        "en": "Angry Birds 2",
+                        "fa": "انگری بردز ۲"
+                    }
                 }
             ]
         },
@@ -1809,6 +2173,20 @@
                     "name": {
                         "en": "Google Play",
                         "fa": "گوگل پلی"
+                    }
+                },
+                {
+                    "package": "com.sec.android.app.samsungapps",
+                    "name": {
+                        "en": "Galaxy Store",
+                        "fa": "گلکسی استور"
+                    }
+                },
+                {
+                    "package": "com.xiaomi.mipicks",
+                    "name": {
+                        "en": "GetApps",
+                        "fa": "گت‌اپس"
                     }
                 }
             ]
@@ -1854,6 +2232,41 @@
                         "en": "Edge",
                         "fa": "اج"
                     }
+                },
+                {
+                    "package": "com.opera.browser",
+                    "name": {
+                        "en": "Opera",
+                        "fa": "اپرا"
+                    }
+                },
+                {
+                    "package": "com.opera.mini.native",
+                    "name": {
+                        "en": "Opera Mini",
+                        "fa": "اپرا مینی"
+                    }
+                },
+                {
+                    "package": "com.brave.browser",
+                    "name": {
+                        "en": "Brave",
+                        "fa": "بریو"
+                    }
+                },
+                {
+                    "package": "com.duckduckgo.mobile.android",
+                    "name": {
+                        "en": "DuckDuckGo",
+                        "fa": "داک‌داک‌گو"
+                    }
+                },
+                {
+                    "package": "com.UCMobile.intl",
+                    "name": {
+                        "en": "UC Browser",
+                        "fa": "یوسی براوزر"
+                    }
                 }
             ]
         },
@@ -1897,6 +2310,83 @@
                     "name": {
                         "en": "Virasty",
                         "fa": "ویراستی"
+                    }
+                },
+                {
+                    "package": "com.instagram.android",
+                    "name": {
+                        "en": "Instagram",
+                        "fa": "اینستاگرام"
+                    }
+                },
+                {
+                    "package": "com.instagram.barcelona",
+                    "name": {
+                        "en": "Threads",
+                        "fa": "تردز"
+                    }
+                },
+                {
+                    "package": "com.zhiliaoapp.musically",
+                    "name": {
+                        "en": "TikTok",
+                        "fa": "تیک‌تاک"
+                    }
+                },
+                {
+                    "package": "com.ss.android.ugc.trill",
+                    "name": {
+                        "en": "TikTok",
+                        "fa": "تیک‌تاک"
+                    }
+                },
+                {
+                    "package": "com.snapchat.android",
+                    "name": {
+                        "en": "Snapchat",
+                        "fa": "اسنپ‌چت"
+                    }
+                },
+                {
+                    "package": "com.twitter.android",
+                    "name": {
+                        "en": "X",
+                        "fa": "ایکس"
+                    }
+                },
+                {
+                    "package": "com.facebook.katana",
+                    "name": {
+                        "en": "Facebook",
+                        "fa": "فیسبوک"
+                    }
+                },
+                {
+                    "package": "com.pinterest",
+                    "name": {
+                        "en": "Pinterest",
+                        "fa": "پینترست"
+                    }
+                },
+                {
+                    "package": "com.reddit.frontpage",
+                    "name": {
+                        "en": "Reddit",
+                        "fa": "ردیت"
+                    }
+                },
+                {
+                    "package": "com.discord",
+                    "name": {
+                        "en": "Discord",
+                        "fa": "دیسکورد"
+                    }
+                },
+                {
+                    "package": "video.like",
+                    "name": {
+                        "en": "Likee",
+                        "fa": "لایکی"
                     }
                 }
             ]
@@ -1997,6 +2487,13 @@
                     "name": {
                         "en": "Vira",
                         "fa": "ویرا"
+                    }
+                },
+                {
+                    "package": "com.lemon.lvoverseas",
+                    "name": {
+                        "en": "CapCut",
+                        "fa": "کپ‌کات"
                     }
                 }
             ]

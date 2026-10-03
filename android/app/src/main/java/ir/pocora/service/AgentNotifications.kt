@@ -92,12 +92,14 @@ class AgentNotifications(
                 data = data,
             )
         } else {
+            // No internet, no half hour's data to follow, unless running out of it is the reason.
+            val outOfData = data?.takeIf { status.quotaReached }
             StatusLook(
                 status.until?.let { text.getString(R.string.notify_no_internet_until, format.time(it)) }
                     ?: text.getString(R.string.no_internet_now),
-                detail = if (status.quotaReached) data?.text else scheduleName,
+                detail = outOfData?.text ?: scheduleName,
                 subtitle = scheduleName,
-                data = data,
+                data = outOfData,
             )
         }
     }
