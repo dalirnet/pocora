@@ -115,7 +115,22 @@ fun ScanScreen(
     val permission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted = it }
     LaunchedEffect(Unit) { if (!granted) permission.launch(Manifest.permission.CAMERA) }
 
-    Screen(title = stringResource(R.string.scan_the_code), onBack = onBack) {
+    // Without the camera there is nothing to scan: the screen says so in the middle, with the ask at the bottom.
+    val ask: @Composable () -> Unit = {
+        BottomAction {
+            MainButton(
+                text = stringResource(R.string.allow_camera),
+                onClick = { permission.launch(Manifest.permission.CAMERA) },
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    }
+    Screen(
+        title = stringResource(R.string.scan_the_code),
+        onBack = onBack,
+        bottom = if (granted) null else ask,
+        centered = !granted,
+    ) {
         if (granted) {
             var found by remember { mutableStateOf(false) }
             CameraPreview { text ->
@@ -127,13 +142,11 @@ fun ScanScreen(
             }
             ConnectSteps()
         } else {
-            Card {
-                Text(text = stringResource(R.string.camera_needed), color = palette.text, fontSize = Dimens.body)
-                MainButton(
-                    text = stringResource(R.string.allow_camera),
-                    onClick = { permission.launch(Manifest.permission.CAMERA) },
-                )
-            }
+            EmptyState(
+                icon = AppIcons.QrCodeScanner,
+                color = palette.brand,
+                title = stringResource(R.string.camera_needed),
+            )
         }
     }
 }
