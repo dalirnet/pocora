@@ -18,6 +18,8 @@ import ir.pocora.transport.PairingResult
 import ir.pocora.ui.AppIcons
 import ir.pocora.ui.component.BarItem
 import ir.pocora.ui.component.BottomBar
+import ir.pocora.ui.component.ToastMessage
+import ir.pocora.ui.component.Toasts
 
 private val TABS = listOf(ChildStep.HOME, ChildStep.EVENTS, ChildStep.SETTINGS)
 
@@ -45,6 +47,7 @@ fun ChildApp(
         )
     }
     var failure by rememberSaveable { mutableStateOf<PairingResult?>(null) }
+    val otherVersionText = stringResource(R.string.versions_differ)
     // Where a screen with a back arrow returns to.
     var parentStep by rememberSaveable { mutableStateOf(ChildStep.HOME) }
 
@@ -124,8 +127,10 @@ fun ChildApp(
             WaitingScreen(
                 code = code?.let(PairingCode::parse),
                 onResult = { result ->
-                    val accepted = result == PairingResult.ACCEPTED
-                    failure = if (accepted) null else result
+                    val accepted = result == PairingResult.Accepted
+                    // Another version on the parent's phone is said once, as a toast, not kept as a failure card.
+                    if (result == PairingResult.OtherVersion) Toasts.show(otherVersionText, ToastMessage.Kind.PROBLEM)
+                    failure = result.takeUnless { accepted || it == PairingResult.OtherVersion }
                     step =
                         when {
                             paired -> ChildStep.SETTINGS

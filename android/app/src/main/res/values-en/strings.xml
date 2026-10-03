@@ -25,6 +25,7 @@
     <string name="look_light">Light</string>
     <string name="look_dark">Dark</string>
     <string name="version">Version %1$s</string>
+    <string name="versions_differ">The two apps are not the same version; update both</string>
     <string name="notifications">Notifications</string>
     <string name="time_range">%1$s to %2$s</string>
     <string name="list_separator">", "</string>

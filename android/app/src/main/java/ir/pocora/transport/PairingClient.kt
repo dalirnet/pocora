@@ -10,6 +10,7 @@ import ir.pocora.protocol.PairAnswer
 import ir.pocora.protocol.PairRequest
 import ir.pocora.protocol.PairingCode
 import ir.pocora.protocol.Protocol
+import java.io.Serializable
 import kotlin.concurrent.thread
 
 // The child's side of pairing: finds the parent named in the code, asks to pair, and waits for the answer.
@@ -19,6 +20,7 @@ class PairingClient(
     private val peerStore: PeerStore,
     private val discovery: Discovery,
     private val code: PairingCode,
+    private val version: String,
     // Takes the parent's yes, with the first rules and the child's name, on the pairing thread, before the parent is saved.
     private val onAccepted: (PairAnswer) -> Unit,
     // Handed over by the parent app on this same phone, which then accepts without asking. See SamePhone.
@@ -53,22 +55,26 @@ class PairingClient(
     }
 
     private fun pair(): PairingResult {
-        val opened = connect() ?: return PairingResult.NOT_REACHABLE
+        val opened = connect() ?: return PairingResult.NotReachable
         connection = opened
         return opened.use {
             if (cancelled ||
-                !it.send(PairRequest(identity().id, Device.name, Device.androidVersion, token, childName))
+                !it.send(PairRequest(identity().id, Device.name, Device.androidVersion, token, childName, version))
             ) {
-                return@use PairingResult.NOT_REACHABLE
+                return@use PairingResult.NotReachable
             }
             val answer = it.receive(Protocol.PAIR_ANSWER_TIMEOUT_MILLISECONDS) as? PairAnswer
             when {
                 answer == null -> {
-                    PairingResult.NOT_REACHABLE
+                    PairingResult.NotReachable
                 }
 
                 !answer.accepted -> {
-                    PairingResult.REJECTED
+                    if (answer.version != null && answer.version != version) {
+                        PairingResult.OtherVersion
+                    } else {
+                        PairingResult.Rejected
+                    }
                 }
 
                 else -> {
@@ -77,7 +83,7 @@ class PairingClient(
                         Peer(answer.id, code.fingerprint, answer.deviceName, answer.deviceName, port = code.port),
                     )
                     FileLogger.i(TAG, "Paired with ${answer.deviceName}")
-                    PairingResult.ACCEPTED
+                    PairingResult.Accepted
                 }
             }
         }
@@ -92,8 +98,14 @@ class PairingClient(
     }
 }
 
-enum class PairingResult {
-    ACCEPTED,
-    REJECTED,
-    NOT_REACHABLE,
+// How pairing ended. Serializable, so a screen can keep it across a restart.
+sealed interface PairingResult : Serializable {
+    data object Accepted : PairingResult
+
+    data object Rejected : PairingResult
+
+    data object NotReachable : PairingResult
+
+    // The parent's phone runs another version of Pocora. Both apps must be the same version.
+    data object OtherVersion : PairingResult
 }

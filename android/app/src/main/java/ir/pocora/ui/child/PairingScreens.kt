@@ -32,6 +32,7 @@ import androidx.core.content.ContextCompat
 import ir.pocora.PocoraApp
 import ir.pocora.R
 import ir.pocora.protocol.PairingCode
+import ir.pocora.transport.Device
 import ir.pocora.transport.PairingClient
 import ir.pocora.transport.PairingResult
 import ir.pocora.ui.AppColors
@@ -53,7 +54,7 @@ import ir.pocora.ui.component.Screen
 fun PairingFailure(failure: PairingResult) {
     val reason =
         when (failure) {
-            PairingResult.REJECTED -> R.string.parent_did_not_accept
+            PairingResult.Rejected -> R.string.parent_did_not_accept
             else -> R.string.could_not_reach_parent
         }
     Card { PointRow(AppIcons.LinkOff, AppColors.orange, stringResource(reason)) }
@@ -205,11 +206,12 @@ fun WaitingScreen(
                     peerStore = app.peerStore,
                     discovery = app.discovery,
                     code = it,
+                    version = Device.appVersion(app),
                     onAccepted = app.agent::paired,
                     childName = app.configStore.childName.takeIf { app.peerStore.all().isNotEmpty() },
                 ) { result -> currentOnResult(result) }
             }
-        if (client == null) currentOnResult(PairingResult.NOT_REACHABLE) else client.start()
+        if (client == null) currentOnResult(PairingResult.NotReachable) else client.start()
         onDispose { client?.cancel() }
     }
 

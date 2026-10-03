@@ -26,6 +26,7 @@
     <string name="look_light">روشن</string>
     <string name="look_dark">تیره</string>
     <string name="version">نسخهٔ %1$s</string>
+    <string name="versions_differ">نسخهٔ دو برنامه یکی نیست؛ هر دو را به‌روز کنید</string>
     <string name="notifications">اعلان‌ها</string>
     <string name="time_range">%1$s تا %2$s</string>
     <string name="list_separator">"، "</string>

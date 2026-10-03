@@ -92,6 +92,8 @@ More, including virtual phones and pairing without a camera: [`android/README.md
 
 The apps are on the [Releases](https://github.com/dalirnet/pocora/releases) page: `pocora-parent-<version>.apk` for the parent's phone and `pocora-child-<version>.apk` for the child's, with their SHA-256 sums. Each release also carries `pocora-parent.apk` and `pocora-child.apk`, the same files without the version, so `releases/latest/download/pocora-parent.apk` always downloads the newest; the landing page links there.
 
+The two apps are released together and must be the same version: when pairing, each tells the other its version, and a pairing between different versions is refused, with both phones saying so.
+
 - **Every push** runs `.github/workflows/build.yml`: tests, debug APKs kept as a run artifact for 14 days.
 - **A version tag** runs `.github/workflows/release.yml`: tests, signed and minified APKs, and a GitHub Release with generated notes.
 

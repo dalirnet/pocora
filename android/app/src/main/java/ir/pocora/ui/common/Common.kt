@@ -34,6 +34,7 @@ import ir.pocora.model.Seasons
 import ir.pocora.model.Week
 import ir.pocora.preset.PresetStore
 import ir.pocora.preset.Presets
+import ir.pocora.transport.Device
 import ir.pocora.ui.AppColors
 import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
@@ -125,13 +126,7 @@ fun LanguageAndLook(
 @Composable
 fun AppVersion() {
     val context = LocalContext.current
-    val version =
-        remember {
-            context.packageManager
-                .getPackageInfo(context.packageName, 0)
-                .versionName
-                .orEmpty()
-        }
+    val version = remember { Device.appVersion(context) }
     val name = if (Role.current == Role.PARENT) R.string.app_name_parent else R.string.app_name_child
     Card {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Dimens.row)) {
