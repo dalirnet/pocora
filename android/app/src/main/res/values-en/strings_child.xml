@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="set_up_this_phone">Set up this phone</string>
+    <string name="add_another_parent">Connect another parent</string>
+    <string name="add_another_parent_text">Your rules and name stay the same</string>
     <string name="step_vpn">Allow the VPN</string>
     <string name="step_vpn_why">It turns apps\' internet on and off.</string>
     <string name="step_always_on">Keep the VPN always on</string>
@@ -29,13 +31,15 @@
     <string name="waiting_for_rules">Waiting for your parent\'s settings</string>
     <string name="data_this_half_hour">%1$s of %2$s MB used in this half hour</string>
     <string name="data_used_up">This half hour\'s data is used up</string>
+    <string name="data_share_used">%1$s%% of this half hour\'s data used</string>
+    <string name="paused_everything_open">Every app has internet</string>
     <string name="offline_apps_work">Offline apps still work.</string>
     <string name="last_contact">Last contact with your parent: %1$s</string>
     <string name="no_contact_yet">No contact with your parent yet</string>
     <string name="child_connected">Connected to your parent</string>
     <string name="tile_parent_sees">Parent\'s view</string>
     <string name="only_parent_changes">Only your parent sets these times.</string>
-    <string name="my_activity">My activity</string>
+    <string name="events_title">Events</string>
     <string name="parent_sees_these">Your parent sees the same list.</string>
     <string name="what_my_parent_sees">What my parent can see</string>
     <string name="parent_sees">Your parent sees</string>

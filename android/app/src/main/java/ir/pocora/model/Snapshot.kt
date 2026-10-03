@@ -38,6 +38,7 @@ data class AgentState(
     val usageAccess: Boolean = false,
     val markBytes: Long = 0,
     val quotaReached: Boolean = false,
+    val paused: Boolean = false,
 )
 
 // One day on the child's phone as it really ran: each mark's label as applied, and the data each mark used.
@@ -84,11 +85,19 @@ data class Event(
     val end: Long? = null,
     val app: String? = null,
     val appName: String? = null,
+    // For changed rules: which parts changed.
+    val parts: List<RulePart> = emptyList(),
 )
 
 // What can happen on the child's phone. Alert marks the ones the parent is notified about.
-// The alerts among a child's events, newest first: what both apps show.
+// The alerts among a child's events, newest first: what the parent is notified about.
 fun List<Event>.alerts(): List<Event> = filter { it.kind.alert }.sortedByDescending { it.start }
+
+// Every event worth showing, newest first: the Events list in both apps.
+fun List<Event>.timeline(): List<Event> =
+    filter {
+        it.kind != EventKind.REQUEST_IGNORED
+    }.sortedByDescending { it.start }
 
 enum class EventKind(
     val alert: Boolean,
@@ -102,6 +111,12 @@ enum class EventKind(
     REBOOT(false),
     APP_INSTALLED(false),
     APP_REMOVED(false),
+    PAIRED(false),
+    PARENT_ADDED(false),
+    PAUSED(false),
+    RULES_CHANGED(false),
+    NO_CONTACT(false),
+    QUOTA_USED(false),
 
     // No longer recorded. Kept so events from an older child app can still be read.
     REQUEST_IGNORED(false),

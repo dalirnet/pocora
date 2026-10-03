@@ -1,15 +1,8 @@
-// Pocora's landing page: the few things that move. Each part works on its own and leaves the page usable without it.
-
 const DIGITS = "۰۱۲۳۴۵۶۷۸۹";
 
-// Persian digits, and the Persian decimal mark.
 function persian(text) {
-    return String(text)
-        .replace(/\d/g, (digit) => DIGITS[digit])
-        .replaceAll(".", "٫");
+    return String(text).replace(/\d/g, (digit) => DIGITS[digit]);
 }
-
-// --- Entrance: sections rise in as they reach the screen ---
 
 const observer = new IntersectionObserver(
     (entries) => {
@@ -26,17 +19,11 @@ document
     .querySelectorAll(".reveal")
     .forEach((element) => observer.observe(element));
 
-// --- Top bar: clear over the hero, solid once the page scrolls ---
-
 const nav = document.querySelector(".nav");
 const onScroll = () => nav.classList.toggle("solid", window.scrollY > 40);
 window.addEventListener("scroll", onScroll, { passive: true });
 onScroll();
 
-// --- Presets: this season's suggestion, as the app makes it ---
-
-// The schedule seasons in android/app/src/main/assets/presets.json. Each: [from month, from day, to month, to day]
-// in the Iranian calendar, the presets it suggests, and how to say it.
 const SEASONS = [
     [[1, 1, 1, 13], ["holidays"], "نوروز و تعطیلات"],
     [
@@ -109,9 +96,6 @@ function showSeason() {
 
 showSeason();
 
-// --- Setup: the phone shows the chosen step; the steps play through by themselves until one is clicked ---
-
-// The same length as the ring's animation in style.css.
 const STEP_MILLISECONDS = 4000;
 const stepList = document.getElementById("steps");
 const steps = [...stepList.querySelectorAll(".step")];
@@ -146,9 +130,6 @@ setInterval(() => {
     if (playing) showStep((currentStep + 1) % steps.length);
 }, STEP_MILLISECONDS);
 
-// --- Questions: one answer open at a time ---
-
-// The shared name attribute does this in new browsers; this covers the rest.
 const questions = [...document.querySelectorAll(".questions details")];
 questions.forEach((question) =>
     question.addEventListener("toggle", () => {
@@ -159,9 +140,6 @@ questions.forEach((question) =>
     }),
 );
 
-// --- Download: each file's size, from the newest release on GitHub ---
-
-// If GitHub cannot be reached, the lines keep their general wording.
 fetch("https://api.github.com/repos/dalirnet/pocora/releases/latest")
     .then((response) => (response.ok ? response.json() : null))
     .then((release) => {
@@ -171,7 +149,7 @@ fetch("https://api.github.com/repos/dalirnet/pocora/releases/latest")
                 (file) => file.name === line.dataset.asset,
             );
             if (asset)
-                line.textContent = `${persian((asset.size / 1048576).toFixed(1))} مگ`;
+                line.textContent = `${persian(Number((asset.size / 1048576).toFixed(1)))} مگ`;
         }
     })
     .catch(() => {});

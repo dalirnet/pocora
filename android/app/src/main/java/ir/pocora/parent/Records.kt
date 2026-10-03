@@ -22,7 +22,7 @@ class SnapshotStore(
     fun delete(childId: String) = file(childId).delete()
 }
 
-// Which of a child's alerts were already notified, and which the parent has seen on the Activity tab. One file per child.
+// Which of a child's alerts were already notified, and which the parent has seen on the Events tab. One file per child.
 class AlertMarks(
     private val context: Context,
 ) {

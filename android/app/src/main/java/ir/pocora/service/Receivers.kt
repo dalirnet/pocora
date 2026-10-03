@@ -1,14 +1,17 @@
 package ir.pocora.service
 
+import android.app.Activity
 import android.app.admin.DeviceAdminReceiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import ir.pocora.PocoraApp
 import ir.pocora.R
 import ir.pocora.protocol.PairingCode
 import ir.pocora.transport.PairingClient
 import ir.pocora.ui.SamePhone
+import kotlin.concurrent.thread
 
 // The broadcast receivers.
 
@@ -41,6 +44,32 @@ class PairHereReceiver : BroadcastReceiver() {
             onAccepted = app.agent::paired,
             token = token,
         ) { pending.finish() }.start()
+    }
+}
+
+// The parent app on this same phone, asking whether this phone is paired with it and paused, or pausing and resuming it.
+// The answer carries this phone's id, so the parent app shows its switch only for the child really here. See SamePhone.
+class PauseHereReceiver : BroadcastReceiver() {
+    override fun onReceive(
+        context: Context,
+        intent: Intent,
+    ) {
+        val app = context.applicationContext as PocoraApp
+        if (app.peerStore.all().isEmpty()) return
+        val pending = goAsync()
+        thread(name = "pocora-pause-here") {
+            if (intent.hasExtra(SamePhone.EXTRA_PAUSED)) {
+                app.agent.setPaused(intent.getBooleanExtra(SamePhone.EXTRA_PAUSED, false))
+            }
+            pending.resultCode = Activity.RESULT_OK
+            pending.setResultExtras(
+                Bundle().apply {
+                    putString(SamePhone.EXTRA_CHILD_ID, app.identity.id)
+                    putBoolean(SamePhone.EXTRA_PAUSED, app.agent.paused)
+                },
+            )
+            pending.finish()
+        }
     }
 }
 

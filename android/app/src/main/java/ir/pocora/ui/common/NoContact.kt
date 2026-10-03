@@ -6,11 +6,11 @@ import androidx.compose.ui.res.stringResource
 import ir.pocora.R
 import ir.pocora.model.Contact
 import ir.pocora.model.Mark
+import ir.pocora.model.localDateOf
 import ir.pocora.parent.ContactLog
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.Format
 import ir.pocora.ui.LocalPalette
-import ir.pocora.ui.localDateOf
 import java.time.LocalDate
 import java.time.ZoneId
 

@@ -24,6 +24,7 @@
     <string name="look_system">Like the phone</string>
     <string name="look_light">Light</string>
     <string name="look_dark">Dark</string>
+    <string name="version">Version %1$s</string>
     <string name="notifications">Notifications</string>
     <string name="time_range">%1$s to %2$s</string>
     <string name="list_separator">", "</string>
@@ -37,6 +38,9 @@
     <string name="how_old_plain">How old?</string>
     <string name="years_old">%1$s years</string>
     <string name="connect_childs_phone">Connect %1$s\'s phone</string>
+    <string name="reconnect_childs_phone">Reconnect %1$s\'s phone</string>
+    <string name="connect_again">Connect again</string>
+    <string name="pocora_paused">Pocora is paused</string>
     <string name="pair_step_install">Open Pocora Child on %1$s\'s phone</string>
     <string name="pair_step_wifi">Connect both phones to the same Wi-Fi</string>
     <string name="pair_step_scan">On %1$s\'s phone, tap Scan the code</string>

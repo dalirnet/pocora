@@ -49,14 +49,17 @@ class ChildModel(
 
     // A live read, when the child's page opens.
     fun refresh() {
-        scope.launch {
-            loading = true
-            val fresh = withContext(Dispatchers.IO) { parent.read(child) }
-            loading = false
-            if (fresh != null) snapshot = fresh
-            online = fresh != null || parent.isOnline(child.id)
-            unseenAlerts = parent.unseenAlerts(child.id)
-        }
+        scope.launch { read() }
+    }
+
+    // The same, waited for: Home pulled down.
+    suspend fun read() {
+        loading = true
+        val fresh = withContext(Dispatchers.IO) { parent.read(child) }
+        loading = false
+        if (fresh != null) snapshot = fresh
+        online = fresh != null || parent.isOnline(child.id)
+        unseenAlerts = parent.unseenAlerts(child.id)
     }
 
     fun apply(

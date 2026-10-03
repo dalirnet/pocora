@@ -7,8 +7,11 @@ import androidx.compose.ui.platform.LocalContext
 import ir.pocora.R
 import ir.pocora.model.EventKind
 import ir.pocora.model.IranianDate
+import ir.pocora.model.RulePart
 import ir.pocora.model.Week
+import ir.pocora.model.localDateOf
 import ir.pocora.preset.Names
+import java.text.DecimalFormatSymbols
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -80,6 +83,16 @@ class Format(
 
     fun number(value: Number): String = String.format(locale, "%d", value.toLong())
 
+    // One decimal place with "." as the mark in every language, and none when it is zero: "1.5", "5".
+    fun decimal(value: Double): String {
+        val zero = DecimalFormatSymbols.getInstance(locale).zeroDigit
+        return String
+            .format(Locale.ROOT, "%.1f", value)
+            .removeSuffix(".0")
+            .map { if (it.isDigit()) zero + (it - '0') else it }
+            .joinToString("")
+    }
+
     fun time(time: LocalTime): String = String.format(locale, "%02d:%02d", time.hour, time.minute)
 
     fun time(time: LocalDateTime): String = time(time.toLocalTime())
@@ -109,7 +122,7 @@ class Format(
         when {
             marks < 2 -> context.getString(R.string.duration_minutes, marks * 30)
             marks % 2 == 0 -> context.getString(R.string.duration_hours, marks / 2)
-            else -> context.getString(R.string.duration_hours_short, String.format(locale, "%.1f", marks / 2.0))
+            else -> context.getString(R.string.duration_hours_short, decimal(marks / 2.0))
         }
 
     // "62 MB", "2.1 GB", "26 GB".
@@ -126,11 +139,7 @@ class Format(
             bytes < TEN_GIGABYTES -> {
                 context.getString(
                     R.string.size_gigabytes,
-                    String.format(
-                        locale,
-                        "%.1f",
-                        bytes.toDouble() / GIGABYTE,
-                    ),
+                    decimal(bytes.toDouble() / GIGABYTE),
                 )
             }
 
@@ -225,9 +234,20 @@ object Labels {
             EventKind.APP_INSTALLED -> R.string.event_app_installed
             EventKind.APP_REMOVED -> R.string.event_app_removed
             EventKind.REQUEST_IGNORED -> R.string.event_request_ignored
+            EventKind.PAIRED -> R.string.event_paired
+            EventKind.PARENT_ADDED -> R.string.event_parent_added
+            EventKind.PAUSED -> R.string.event_paused
+            EventKind.RULES_CHANGED -> R.string.event_rules_changed
+            EventKind.NO_CONTACT -> R.string.event_no_contact
+            EventKind.QUOTA_USED -> R.string.event_quota_used
+        }
+
+    fun part(part: RulePart): Int =
+        when (part) {
+            RulePart.TIMES -> R.string.part_times
+            RulePart.APPS -> R.string.part_apps
+            RulePart.QUOTA -> R.string.part_quota
+            RulePart.EXTRA_DATA -> R.string.part_extra_data
+            RulePart.WATCH -> R.string.part_watch
         }
 }
-
-// The phone's own date at a moment.
-fun localDateOf(epochMilliseconds: Long): LocalDate =
-    Instant.ofEpochMilli(epochMilliseconds).atZone(ZoneId.systemDefault()).toLocalDate()

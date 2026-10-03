@@ -14,11 +14,13 @@ import ir.pocora.model.AppAccess
 import ir.pocora.model.EventKind
 import ir.pocora.model.Mark
 import ir.pocora.model.Peer
+import ir.pocora.model.RulePart
 import ir.pocora.model.Rules
 import ir.pocora.model.Schedule
 import ir.pocora.model.Snapshot
 import ir.pocora.model.Suggested
 import ir.pocora.model.Week
+import ir.pocora.model.localDateOf
 import ir.pocora.preset.PresetStore
 import ir.pocora.protocol.Applied
 import ir.pocora.protocol.PairAnswer
@@ -61,6 +63,9 @@ class Agent(
         private const val QUOTA_WARNING_SHARE = 0.9
         private const val SNAPSHOT_CACHE_MILLISECONDS = 60_000L
         private const val VPN_DOWN_MILLISECONDS = 2 * 60_000L
+
+        // Longer than a phone asleep or a walk out of the house, so only a real absence is noted.
+        private const val NO_CONTACT_MILLISECONDS = 15 * 60_000L
     }
 
     private val presets = PresetStore.get(app)
@@ -129,6 +134,18 @@ class Agent(
 
     fun refresh() = handler.post { tick() }
 
+    // Home pulled down: every parent this phone can reach synced now, then a tick for what the answers changed.
+    // done runs once the sync has its answers, or has given up.
+    fun pull(done: () -> Unit) =
+        handler.post {
+            val sync = syncNow()
+            thread(name = "pocora-pull") {
+                sync?.join()
+                refresh()
+                done()
+            }
+        }
+
     // --- The tick ---
 
     private fun tick() {
@@ -157,6 +174,10 @@ class Agent(
             TunnelService.apply(app, null)
             return
         }
+        if (paused) {
+            workPaused(rules, nowTime, date, mark, bytes)
+            return
+        }
 
         if (currentMark != date to mark) {
             currentMark = date to mark
@@ -180,6 +201,7 @@ class Agent(
             if (!quotaReached && markBytes >= perMark) {
                 quotaReached = true
                 notifications.quotaUsed()
+                noteQuotaUsed(nowTime, date)
             } else if (!quotaWarned && markBytes >= perMark * QUOTA_WARNING_SHARE) {
                 quotaWarned = true
                 notifications.quotaLeft(perMark - markBytes)
@@ -190,6 +212,7 @@ class Agent(
         TunnelService.apply(app, blockedApps(rules, allowedNow, state.appsList))
         watchVpn(nowTime)
         watchApps(rules, nowTime)
+        watchContact(nowTime)
         notifyChanges(allowedNow, state.until, now)
 
         status =
@@ -213,13 +236,89 @@ class Agent(
                 rules = rules,
             )
         notifications.status(status)
+        keepUp(rules, nowTime, date)
+    }
 
+    // Paused: every app has internet and nothing is watched. The VPN stays up, blocking nothing,
+    // so pausing is not mistaken for Pocora being turned off.
+    private fun workPaused(
+        rules: Rules,
+        nowTime: Long,
+        date: LocalDate,
+        mark: Int,
+        bytes: Long,
+    ) {
+        days.record(date, mark, true, bytes)
+        TunnelService.apply(app, emptyList())
+        watchContact(nowTime)
+        status =
+            AgentStatus(
+                allowed = true,
+                until = null,
+                markBytes = days.markBytes(date, mark),
+                bytesPerMark = null,
+                quotaReached = false,
+                today = schedule.day(rules, date),
+                lastParentContact = app.configStore.lastParentContact,
+                childName = app.configStore.childName,
+                rules = rules,
+                paused = true,
+            )
+        notifications.status(status)
+        keepUp(rules, nowTime, date)
+    }
+
+    // Old records pruned now and then, and the parents synced every minute.
+    private fun keepUp(
+        rules: Rules,
+        nowTime: Long,
+        date: LocalDate,
+    ) {
         if (nowTime - lastPrune > TICK_MILLISECONDS * 60) {
             lastPrune = nowTime
             events.prune(nowTime)
             rulesStore.write(rules.withoutPastChanges(Week.startOf(date).toEpochDay()))
         }
         if (nowTime - lastSync >= Protocol.SYNC_INTERVAL_MILLISECONDS - 1_000) syncNow()
+    }
+
+    // --- Paused from the parent app on this phone ---
+
+    val paused: Boolean
+        get() = app.configStore.paused
+
+    // Waits until it is applied, so the parent app's switch shows what is really in force. Kept in Events.
+    fun setPaused(pause: Boolean) {
+        if (pause == paused) return
+        runOnAgent {
+            app.configStore.paused = pause
+            if (pause) events.open(EventKind.PAUSED, clock.now()) else events.close(EventKind.PAUSED, clock.now())
+            tick()
+        }
+        syncSoon()
+    }
+
+    // Once a day at most, so a day of used-up half hours is one line in Events.
+    private fun noteQuotaUsed(
+        now: Long,
+        date: LocalDate,
+    ) {
+        val last = events.lastOf(EventKind.QUOTA_USED, null)
+        if (last == null || localDateOf(last.start) != date) {
+            events.add(EventKind.QUOTA_USED, now)
+        }
+    }
+
+    // No parent reached for a while: an episode from the last contact, closed by the next one.
+    private fun watchContact(now: Long) {
+        val last = app.configStore.lastParentContact
+        if (last != 0L && now - last > NO_CONTACT_MILLISECONDS) events.open(EventKind.NO_CONTACT, last)
+    }
+
+    private fun contacted() {
+        val now = clock.now()
+        app.configStore.lastParentContact = now
+        events.close(EventKind.NO_CONTACT, now)
     }
 
     // The packages that must not have internet now. In a Limited mark that is every app that could use it.
@@ -321,19 +420,20 @@ class Agent(
     fun syncSoon() = handler.post { syncNow() }
 
     // To every paired parent this phone can reach. A parent that cannot be reached is simply tried again next time.
-    private fun syncNow() {
+    // Returns the thread doing it, if any.
+    private fun syncNow(): Thread? {
         lastSync = clock.now()
         sendGoodbyes()
         val parents = app.peerStore.all()
-        if (parents.isEmpty()) return
+        if (parents.isEmpty()) return null
         val snapshot = snapshot(fresh = true)
         val port = app.endpoint.port
-        thread(name = "pocora-sync") {
+        return thread(name = "pocora-sync") {
             for (parent in parents) {
                 val answer =
                     app.peerLink.call(parent, Sync(snapshot, port), Protocol.PARENT_PORT) as? SyncAnswer ?: continue
                 clock.setFromParent(answer.time)
-                app.configStore.lastParentContact = clock.now()
+                contacted()
                 val name = answer.childName
                 if (name != null && name != app.configStore.childName) {
                     app.configStore.childName = name
@@ -366,6 +466,7 @@ class Agent(
                         usageAccess = usage.hasAccess(),
                         markBytes = status.markBytes,
                         quotaReached = status.quotaReached,
+                        paused = status.paused,
                     ),
                 days = days.all(),
                 apps = catalog.installed(),
@@ -384,7 +485,7 @@ class Agent(
         parent: Peer,
     ) {
         app.peerLink.remember(parent.id, InetSocketAddress(connection.peerAddress, parent.port ?: Protocol.PARENT_PORT))
-        app.configStore.lastParentContact = clock.now()
+        contacted()
         when (val message = connection.receive(Protocol.REQUEST_TIMEOUT_MILLISECONDS)) {
             is Read -> {
                 clock.setFromParent(message.time)
@@ -393,7 +494,10 @@ class Agent(
 
             is SetRules -> {
                 clock.setFromParent(message.time)
+                val thisWeek = Week.startOf(clock.localNow().toLocalDate()).toEpochDay()
+                val parts = RulePart.changed(rulesStore.read(), message.rules, thisWeek)
                 rulesStore.write(message.rules)
+                if (parts.isNotEmpty()) events.add(EventKind.RULES_CHANGED, clock.now(), parts = parts)
                 FileLogger.i(TAG, "New rules from ${parent.deviceName}")
                 runOnAgent { work() }
                 connection.send(Applied(snapshot(fresh = true)))
@@ -427,9 +531,17 @@ class Agent(
     // --- The child's own actions ---
 
     // The parent's yes: the agent starts with the rules that came with it, and the header shows the child's name.
+    // Runs before the parent is saved. A phone that already has a parent keeps its rules and name; the new parent
+    // reads them as soon as its Home opens.
     fun paired(answer: PairAnswer) {
         goodbyes.remove(answer.id)
+        val parents = app.peerStore.all()
+        if (parents.isNotEmpty()) {
+            if (parents.none { it.id == answer.id }) events.add(EventKind.PARENT_ADDED, clock.now())
+            return
+        }
         app.configStore.pairedAt = System.currentTimeMillis()
+        events.add(EventKind.PAIRED, clock.now())
         answer.childName?.let { app.configStore.childName = it }
         answer.rules?.let {
             rulesStore.write(it)

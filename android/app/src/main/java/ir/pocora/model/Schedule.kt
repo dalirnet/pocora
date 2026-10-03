@@ -2,8 +2,10 @@ package ir.pocora.model
 
 import ir.pocora.preset.Presets
 import java.time.DayOfWeek
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.temporal.TemporalAdjusters
 
 // The schedule's arithmetic: which marks are Allowed on a date, and the edits the parent makes.
@@ -365,3 +367,7 @@ object Week {
     // The Saturday that starts the week of this date.
     fun startOf(date: LocalDate): LocalDate = date.with(TemporalAdjusters.previousOrSame(DayOfWeek.SATURDAY))
 }
+
+// The phone's own date at a moment.
+fun localDateOf(epochMilliseconds: Long): LocalDate =
+    Instant.ofEpochMilli(epochMilliseconds).atZone(ZoneId.systemDefault()).toLocalDate()

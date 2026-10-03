@@ -28,10 +28,17 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,6 +62,8 @@ import ir.pocora.ui.AppColors
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
 import ir.pocora.ui.rememberFormat
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 // The frames every screen is built from: the screen, the hero, the card, the sheet, the bottom bar.
 
@@ -465,3 +474,48 @@ private fun Modifier.topHairline(
             }
         drawPath(path, color, style = Stroke(stroke))
     }
+
+// Pulled down, runs onRefresh once, with the spinner in the app's colours until it ends.
+// The spinner stays a moment even when the answer is instant, so the pull is seen to have done something.
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Refreshable(
+    onRefresh: suspend () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable BoxScope.() -> Unit,
+) {
+    val palette = LocalPalette.current
+    val scope = rememberCoroutineScope()
+    val state = rememberPullToRefreshState()
+    var refreshing by remember { mutableStateOf(false) }
+    PullToRefreshBox(
+        isRefreshing = refreshing,
+        onRefresh = {
+            if (refreshing) return@PullToRefreshBox
+            refreshing = true
+            scope.launch {
+                val started = System.currentTimeMillis()
+                try {
+                    onRefresh()
+                } finally {
+                    delay(MIN_REFRESH_MILLISECONDS - (System.currentTimeMillis() - started))
+                    refreshing = false
+                }
+            }
+        },
+        modifier = modifier,
+        state = state,
+        indicator = {
+            PullToRefreshDefaults.Indicator(
+                state = state,
+                isRefreshing = refreshing,
+                modifier = Modifier.align(Alignment.TopCenter).statusBarsPadding(),
+                containerColor = palette.card,
+                color = palette.brand,
+            )
+        },
+        content = content,
+    )
+}
+
+private const val MIN_REFRESH_MILLISECONDS = 600L

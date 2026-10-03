@@ -24,12 +24,14 @@ import ir.pocora.PocoraApp
 import ir.pocora.R
 import ir.pocora.config.Look
 import ir.pocora.model.Snapshot
-import ir.pocora.model.alerts
+import ir.pocora.model.timeline
+import ir.pocora.transport.PairingResult
 import ir.pocora.ui.AppColors
 import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
-import ir.pocora.ui.common.AlertList
+import ir.pocora.ui.common.AppVersion
+import ir.pocora.ui.common.EventList
 import ir.pocora.ui.common.LanguageAndLook
 import ir.pocora.ui.common.TemplateCard
 import ir.pocora.ui.common.UsageContent
@@ -81,14 +83,14 @@ fun UsageScreen(onBack: () -> Unit) {
     }
 }
 
-// The second tab: the same alerts the parent sees about this phone, so nothing about the child is hidden from them.
+// The second tab: the same list the parent sees about this phone, so nothing about the child is hidden from them.
 @Composable
-fun ActivityScreen(bottom: @Composable () -> Unit) {
+fun EventsScreen(bottom: @Composable () -> Unit) {
     val agent = (LocalContext.current.applicationContext as PocoraApp).agent
     val updates by agent.updates.collectAsState()
-    val alerts = remember(updates) { agent.events.all().alerts() }
-    Screen(title = stringResource(R.string.my_activity), bottom = bottom, centered = alerts.isEmpty()) {
-        if (alerts.isEmpty()) {
+    val events = remember(updates) { agent.events.all().timeline() }
+    Screen(title = stringResource(R.string.events_title), bottom = bottom, centered = events.isEmpty()) {
+        if (events.isEmpty()) {
             EmptyState(
                 AppIcons.CheckCircle,
                 AppColors.green,
@@ -101,7 +103,7 @@ fun ActivityScreen(bottom: @Composable () -> Unit) {
                 color = LocalPalette.current.muted,
                 fontSize = Dimens.caption,
             )
-            AlertList(alerts)
+            EventList(events)
         }
     }
 }
@@ -153,13 +155,15 @@ private fun Line(
     }
 }
 
-// Language and theme for everyone, and setting up the phone once paired.
+// Language and theme for everyone. Once paired: setting up the phone, connecting another parent, and disconnecting.
 // There is no button to turn Pocora off: a child can still stop the VPN in Android's settings, and the parent sees that.
 @Composable
 fun SettingsScreen(
     paired: Boolean,
+    failure: PairingResult?,
     onBack: (() -> Unit)?,
     onSetup: () -> Unit,
+    onAddParent: () -> Unit,
     onLanguage: (String) -> Unit,
     onLook: (Look) -> Unit,
     onDisconnect: () -> Unit,
@@ -168,6 +172,7 @@ fun SettingsScreen(
     var disconnecting by remember { mutableStateOf(false) }
     Box(modifier = Modifier.fillMaxSize()) {
         Screen(title = stringResource(R.string.settings), onBack = onBack, bottom = bottom) {
+            failure?.let { PairingFailure(it) }
             if (paired) {
                 Card {
                     LinkRow(
@@ -175,6 +180,13 @@ fun SettingsScreen(
                         icon = AppIcons.Tune,
                         iconColor = AppColors.blue,
                         onClick = onSetup,
+                    )
+                    LinkRow(
+                        title = stringResource(R.string.add_another_parent),
+                        subtitle = stringResource(R.string.add_another_parent_text),
+                        icon = AppIcons.FamilyRestroom,
+                        iconColor = AppColors.violet,
+                        onClick = onAddParent,
                     )
                 }
             }
@@ -189,6 +201,7 @@ fun SettingsScreen(
                     )
                 }
             }
+            AppVersion()
         }
         if (disconnecting) {
             Sheet(

@@ -48,6 +48,17 @@ import ir.pocora.ui.component.Screen
 
 // Connecting to the parent's phone: welcome, scan, and waiting for the parent.
 
+// Why connecting to a parent did not work, in its own card: on Welcome, or on Settings when adding another parent.
+@Composable
+fun PairingFailure(failure: PairingResult) {
+    val reason =
+        when (failure) {
+            PairingResult.REJECTED -> R.string.parent_did_not_accept
+            else -> R.string.could_not_reach_parent
+        }
+    Card { PointRow(AppIcons.LinkOff, AppColors.orange, stringResource(reason)) }
+}
+
 // The child's welcome. Also where the child lands when connecting did not work, with the reason in its own card.
 @Composable
 fun WelcomeScreen(
@@ -68,17 +79,7 @@ fun WelcomeScreen(
             }
         },
     ) {
-        if (failure != null) {
-            val reason =
-                if (failure ==
-                    PairingResult.REJECTED
-                ) {
-                    R.string.parent_did_not_accept
-                } else {
-                    R.string.could_not_reach_parent
-                }
-            Card { PointRow(AppIcons.LinkOff, AppColors.orange, stringResource(reason)) }
-        }
+        failure?.let { PairingFailure(it) }
         EmptyState(
             icon = AppIcons.QrCodeScanner,
             color = AppColors.violet,
@@ -199,9 +200,14 @@ fun WaitingScreen(
     DisposableEffect(code) {
         val client =
             code?.let {
-                PairingClient({
-                    app.identity
-                }, app.peerStore, app.discovery, it, app.agent::paired) { result -> currentOnResult(result) }
+                PairingClient(
+                    identity = { app.identity },
+                    peerStore = app.peerStore,
+                    discovery = app.discovery,
+                    code = it,
+                    onAccepted = app.agent::paired,
+                    childName = app.configStore.childName.takeIf { app.peerStore.all().isNotEmpty() },
+                ) { result -> currentOnResult(result) }
             }
         if (client == null) currentOnResult(PairingResult.NOT_REACHABLE) else client.start()
         onDispose { client?.cancel() }

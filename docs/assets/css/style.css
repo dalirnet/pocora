@@ -1,13 +1,3 @@
-/* Pocora's landing page.
-   Colours follow android/app/src/main/java/ir/pocora/ui/AppColors.kt. The page has its own ink and coral;
-   the parent app's violet and the child app's cyan appear only where something belongs to one of the apps.
-   Every size comes from the tokens below: a type scale, a 4px spacing grid, radii and component sizes.
-   Tablets, phones and the narrowest phones change the tokens and stack the columns; the rules stay the same.
-   Icons: the Solar set, Bold style, by 480 Design, CC BY 4.0 (sprite.svg, written by tools/icons.sh).
-   Sections, in page order: base, top bar, shared parts, hero, family, apps, presets, setup, questions,
-   download, footer, motion, tablets, phones, narrowest phones. */
-
-/* --- Fonts --- */
 @font-face {
     font-family: Dana;
     src: url("../fonts/dana-regular.woff2") format("woff2");
@@ -22,9 +12,7 @@
     font-display: swap;
 }
 
-/* --- Tokens --- */
 :root {
-    /* The page */
     --paper: #f8f7fc;
     --card: #ffffff;
     --text: #1e1b2e;
@@ -38,7 +26,6 @@
     --shadow-md: 0 10px 30px rgba(30, 27, 46, 0.07);
     --shadow-lg: 0 24px 60px rgba(30, 27, 46, 0.1);
 
-    /* The apps, and the colours copied from their screens */
     --parent: #7b61ff;
     --parent-light: #9b87ff;
     --parent-deep: #6a4ff0;
@@ -50,7 +37,6 @@
     --green: #22c55e;
     --blue: #3b82f6;
 
-    /* Fills: the coral and each app's colour, light to deep, for tiles, tags and buttons */
     --accent-fill: linear-gradient(
         135deg,
         var(--accent-light),
@@ -67,7 +53,6 @@
         var(--child-deep)
     );
 
-    /* Type */
     --text-xs: 12px;
     --text-sm: 13px;
     --text-base: 15px;
@@ -77,7 +62,6 @@
     --leading: 1.75;
     --leading-title: 1.3;
 
-    /* Space: a 4px grid */
     --s1: 4px;
     --s2: 8px;
     --s3: 12px;
@@ -89,14 +73,12 @@
     --s12: 48px;
     --s16: 64px;
 
-    /* Radius */
     --r-sm: 10px;
     --r-md: 14px;
     --r-lg: 20px;
     --r-xl: 28px;
     --r-pill: 999px;
 
-    /* Components */
     --content: 1080px;
     --gutter: 24px;
     --nav: 64px;
@@ -109,7 +91,6 @@
     --stage: 520px;
 }
 
-/* --- Base --- */
 * {
     box-sizing: border-box;
 }
@@ -153,7 +134,6 @@ svg {
     padding: 0 var(--gutter);
 }
 
-/* Every sentence stays on one line; only the answers to the questions may wrap. */
 h1,
 h2,
 h3,
@@ -166,7 +146,6 @@ summary {
     white-space: nowrap;
 }
 
-/* --- Top bar: clear over the hero, solid once the page scrolls --- */
 .nav {
     position: fixed;
     inset: 0 0 auto;
@@ -197,7 +176,6 @@ summary {
     font-weight: 700;
 }
 
-/* Pocora's mark: the shield-P from the app icon on its own, 40.23 wide by 46.99 high. */
 .mark {
     display: inline-flex;
     color: var(--text);
@@ -242,8 +220,6 @@ summary {
     font-size: 18px;
 }
 
-/* --- Shared: sections --- */
-/* Each section fills the screen. Plain ones sit on the paper; tinted ones get a soft colour of their own. */
 .screen {
     position: relative;
     min-height: 100vh;
@@ -267,7 +243,6 @@ summary {
     background: linear-gradient(160deg, #fff3ec, #fdfaf6 60%, var(--paper));
 }
 
-/* Setup is where the two apps meet: a wash from the parent's violet to the child's cyan. */
 #start.tint {
     background: linear-gradient(150deg, #e9e3ff, #f3f1fd 45%, #def4fd);
 }
@@ -310,7 +285,6 @@ summary {
     inset-inline-start: -200px;
 }
 
-/* A section's label, title and one line, centred. */
 .section-head {
     display: flex;
     flex-direction: column;
@@ -318,7 +292,6 @@ summary {
     text-align: center;
 }
 
-/* --- Shared: type --- */
 h1 {
     margin: var(--s4) 0 var(--s3);
     font-size: var(--display);
@@ -368,7 +341,6 @@ h3 {
     box-shadow: var(--shadow-sm);
 }
 
-/* --- Shared: lists and small parts --- */
 .checks {
     display: grid;
     gap: var(--s3);
@@ -394,7 +366,6 @@ h3 {
         center / 14px no-repeat;
 }
 
-/* A coloured square with a white icon: coral for the page, violet or cyan for an app. */
 .group-icon,
 .tile {
     flex: none;
@@ -417,7 +388,6 @@ h3 {
     background: var(--child-fill);
 }
 
-/* An icon, then a bold title over a small line. */
 .group-head {
     display: flex;
     align-items: center;
@@ -437,7 +407,6 @@ h3 {
     color: var(--muted);
 }
 
-/* A day's internet in blue, on its 24 hours, as on the app's screens. Hours run left to right in both languages. */
 .bar,
 .dayline {
     position: relative;
@@ -464,8 +433,6 @@ h3 {
     background: var(--allowed);
 }
 
-/* --- Shared: phones --- */
-/* One model for both apps: edge-to-edge, a thin black bezel, a punch-hole camera, buttons on the right. */
 .stage {
     position: relative;
     display: flex;
@@ -516,8 +483,6 @@ h3 {
     background: #26242f;
 }
 
-/* Under each phone, which app it shows: a caption rather than a control, the app's name in its colour on a
-   faint tint of it, with no shadow. */
 .phone figcaption {
     position: absolute;
     left: 50%;
@@ -537,7 +502,6 @@ h3 {
     background: rgba(34, 184, 240, 0.12);
 }
 
-/* Two phones side by side, the second a little lower. */
 .stage.pair {
     gap: var(--s5);
 }
@@ -550,7 +514,6 @@ h3 {
     transform: translateY(var(--s10));
 }
 
-/* --- 1. Hero --- */
 .hero-grid {
     position: relative;
     display: grid;
@@ -559,7 +522,6 @@ h3 {
     align-items: center;
 }
 
-/* A small filled tag, then one plain sentence. */
 .pill {
     display: inline-flex;
     align-items: center;
@@ -581,7 +543,6 @@ h3 {
     background: linear-gradient(135deg, #34d399, var(--green));
 }
 
-/* One way forward: down to the download section. */
 .cta {
     display: inline-flex;
     align-items: center;
@@ -591,7 +552,6 @@ h3 {
     border-radius: var(--r-md);
     font-weight: 700;
     color: #fff;
-    /* The coral drifts slowly through the page's orange and back, so the one button draws the eye. */
     background: linear-gradient(
         110deg,
         var(--accent-deep),
@@ -625,7 +585,6 @@ h3 {
     transform: translateX(116px) translateY(var(--s6));
 }
 
-/* A notification floating over the phones. */
 .toast {
     position: absolute;
     z-index: 3;
@@ -684,7 +643,6 @@ h3 {
     animation: wheel 1.6s ease-in-out infinite;
 }
 
-/* --- 2. Family: two matching cards, the parent's and the child's, each edged and washed in its app's colour --- */
 .sides {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -717,7 +675,6 @@ h3 {
     border-color: rgba(34, 184, 240, 0.28);
 }
 
-/* The app's icon, whose phone it is in the app's colour, and what that side is about. */
 .side-head {
     display: flex;
     align-items: center;
@@ -746,7 +703,6 @@ h3 {
     font-size: var(--text-lg);
 }
 
-/* A short list as the app shows it: each child's day on one side, the child's alerts on the other. */
 .rows {
     display: grid;
     gap: var(--s2);
@@ -820,7 +776,6 @@ h3 {
     font-size: var(--text-sm);
 }
 
-/* The section's last word: Pocora starts a talk, shown as one. The parent asks, the child answers. */
 .talk {
     display: flex;
     align-items: center;
@@ -875,7 +830,6 @@ h3 {
     background: var(--child-fill);
 }
 
-/* --- 3. Apps and data: a card on each side, the parent's two screens between them --- */
 .trio {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
@@ -889,7 +843,6 @@ h3 {
     padding-bottom: var(--s16);
 }
 
-/* The two cards match: title, a picture of the choice, and two lines at the foot. */
 .feature-card {
     display: flex;
     flex-direction: column;
@@ -923,7 +876,6 @@ h3 {
     background: var(--paper);
 }
 
-/* The eight data levels as plain badges, like the app chips beside them, from the start of the line. */
 .levels {
     display: flex;
     flex-wrap: wrap;
@@ -938,8 +890,6 @@ h3 {
     background: var(--paper);
 }
 
-/* --- 4. Presets: today's suggestion, every preset on one timetable, then the app lists by age --- */
-/* This season's suggestion: today's date as a tear-off calendar leaf, then what Pocora suggests and for how long. */
 .now {
     display: flex;
     align-items: center;
@@ -1002,7 +952,6 @@ h3 {
     font-size: var(--text-lg);
 }
 
-/* The same coral dot as the suggested rows below, so the two read as one. */
 .now-text b::before,
 .preset-group li.suggested b::before {
     content: "";
@@ -1015,7 +964,6 @@ h3 {
     background: var(--accent);
 }
 
-/* App lists by age: a slim strip under the timetable, its title on one side and the three ages as pills. */
 .ages {
     display: flex;
     align-items: center;
@@ -1063,7 +1011,6 @@ h3 {
     color: var(--muted);
 }
 
-/* Every preset on one line, its group beside it: name and hours, then its day. */
 .timetable {
     --group: 150px;
     --timeline: 340px;
@@ -1143,7 +1090,6 @@ h3 {
     color: var(--muted);
 }
 
-/* Each bar is a whole day, marked faintly every six hours. */
 .timetable .dayline {
     height: 8px;
     margin: 0;
@@ -1163,12 +1109,10 @@ h3 {
         var(--limited);
 }
 
-/* This season's preset, marked as the app marks it: a tinted row, and the coral dot set with .now-text above. */
 .preset-group li.suggested {
     background: rgba(255, 107, 61, 0.08);
 }
 
-/* --- 5. Setup: the steps on one side, one phone showing the chosen step on the other --- */
 .setup {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -1188,7 +1132,6 @@ h3 {
     object-fit: cover;
 }
 
-/* The steps on one line: numbered dots joined by a thread, the chosen step lifted onto a white card. */
 .steps {
     position: relative;
     display: grid;
@@ -1279,7 +1222,6 @@ h3 {
     color: var(--muted);
 }
 
-/* Which app the step happens in, in that app's colour. */
 .step-text .step-app {
     display: block;
     font-size: var(--text-xs);
@@ -1291,7 +1233,6 @@ h3 {
     color: var(--child-deep);
 }
 
-/* While the steps play by themselves, a thin ring around the chosen step's number fills up until the next. */
 .step-ring {
     display: none;
     position: absolute;
@@ -1305,7 +1246,6 @@ h3 {
 .step-ring circle {
     stroke: var(--accent);
     stroke-width: 2.5;
-    /* The circle is 126 long; the gap after the dash is longer, so nothing shows until the ring starts. */
     stroke-dasharray: 126 200;
     stroke-dashoffset: 126;
 }
@@ -1322,8 +1262,6 @@ h3 {
     display: none;
 }
 
-/* --- 6. Questions: the title centred, the questions as cards under it --- */
-/* The questions as a column of cards. */
 .questions {
     display: grid;
     gap: var(--s2);
@@ -1341,7 +1279,6 @@ details {
         border-color 0.2s;
 }
 
-/* The open question: a thin coral edge all round, on plain white. */
 details[open] {
     border-color: rgba(255, 107, 61, 0.3);
     box-shadow: var(--shadow-md);
@@ -1390,7 +1327,6 @@ details[open] .q-icon {
     flex: 1;
 }
 
-/* A thin chevron in a soft circle that turns to point up when the answer is open. */
 .q-toggle {
     flex: none;
     display: flex;
@@ -1428,8 +1364,6 @@ details[open] .q-toggle {
     background: var(--accent-soft);
 }
 
-/* The one place a sentence may wrap: an answer explains. It sits under the question, clear of the icon and the
-   toggle. */
 details p {
     margin: 0;
     padding: 0 var(--s5) var(--s5);
@@ -1440,19 +1374,16 @@ details p {
     color: var(--muted);
 }
 
-/* The words to catch at a glance, in the text colour. */
 details p b {
     font-weight: 700;
     color: var(--text);
 }
 
-/* --- 7. Download: a card per app in its own colour, then two notes on where to get them and how to install --- */
 #download {
     justify-content: space-between;
     padding-bottom: 0;
 }
 
-/* The content sits centred between the top bar and the footer, with as much room under it as over it. */
 .download-body {
     flex: 1;
     display: flex;
@@ -1461,8 +1392,6 @@ details p b {
     padding-bottom: var(--s12);
 }
 
-/* A card per app, edged and washed in its colour as the family cards are: what it is, what it does, and the
-   newest file in one tap. */
 .apps {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 360px));
@@ -1558,8 +1487,6 @@ details p b {
     font-size: 20px;
 }
 
-/* The file's size as a light badge at the end of the button, filled in by page.js from the newest release;
-   hidden until it is known. */
 .get-size {
     padding: 1px var(--s2);
     border-radius: var(--r-pill);
@@ -1572,8 +1499,6 @@ details p b {
     display: none;
 }
 
-/* Two things to know before installing, as a matching pair of notes: where the apps come from, so a copy in a
-   store is not mistaken for them, and the one permission Android asks for. */
 .notes {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 360px));
@@ -1605,7 +1530,6 @@ details p b {
     color: var(--muted);
 }
 
-/* --- Footer --- */
 .footer {
     padding: var(--s8) 0 var(--s5);
     border-top: 1px solid var(--line);
@@ -1634,7 +1558,6 @@ details p b {
     color: var(--muted);
 }
 
-/* Its line spans the content only, not the page's side padding. */
 .footer-bottom {
     display: flex;
     justify-content: space-between;
@@ -1652,8 +1575,6 @@ details p b {
     color: var(--accent-deep);
 }
 
-/* --- Motion --- */
-/* Sections rise in as they reach the screen; page.js adds "shown". */
 .reveal {
     opacity: 0;
     transform: translateY(var(--s8));
@@ -1706,7 +1627,6 @@ details p b {
     }
 }
 
-/* --- Tablets: smaller tokens; the hero stacks and centres, the rest keeps two columns where they fit --- */
 @media (max-width: 960px) {
     :root {
         --text-base: 14px;
@@ -1722,7 +1642,6 @@ details p b {
         padding: calc(var(--nav) + var(--s6)) 0 var(--s12);
     }
 
-    /* Hero: the words centred above the two phones */
     .hero-grid {
         grid-template-columns: minmax(0, 1fr);
         gap: var(--s10);
@@ -1747,7 +1666,6 @@ details p b {
         display: none;
     }
 
-    /* Apps and data: the two cards side by side, the two screens under them */
     .trio {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: var(--s4);
@@ -1759,12 +1677,10 @@ details p b {
         padding-top: var(--s6);
     }
 
-    /* Setup: the steps beside a smaller phone */
     .setup {
         gap: var(--s6);
     }
 
-    /* Presets: each group's name above its rows */
     .timetable {
         --timeline: 42%;
     }
@@ -1778,7 +1694,6 @@ details p b {
     }
 }
 
-/* --- Phones: the smallest tokens, and every row becomes one column --- */
 @media (max-width: 640px) {
     :root {
         --title: 25px;
@@ -1800,7 +1715,6 @@ details p b {
         grid-column: auto;
     }
 
-    /* Top bar: the logo and the download button only */
     .links {
         display: none;
     }
@@ -1809,8 +1723,6 @@ details p b {
         margin-inline-start: auto;
     }
 
-    /* Hero: one screen tall. The download button is in the top bar, so the words lead straight to the parent's
-       phone, a little smaller, with the toasts on its corners. */
     .hero-grid {
         gap: var(--s8);
     }
@@ -1828,7 +1740,6 @@ details p b {
         padding-bottom: var(--s10);
     }
 
-    /* The phone shrinks on short screens: what is left of the height after the words, over its 2.3 aspect. */
     .hero .phone.front {
         width: clamp(150px, calc((100svh - 360px) / 2.3), 200px);
         transform: none;
@@ -1865,7 +1776,6 @@ details p b {
         inset-inline-start: 0;
     }
 
-    /* Family: each row's small line under its title, and the talk's words above the chat */
     .row-body b {
         display: block;
     }
@@ -1881,12 +1791,10 @@ details p b {
         font-size: var(--text-base);
     }
 
-    /* Setup: the phone under the steps */
     .setup .stage {
         order: 2;
     }
 
-    /* Presets: each preset's name above its day, and the ages under their title */
     .timetable {
         padding-inline: var(--s2);
     }
@@ -1921,7 +1829,6 @@ details p b {
         line-height: 1.5;
     }
 
-    /* Questions */
     summary {
         padding-inline: var(--s4);
     }
@@ -1930,7 +1837,6 @@ details p b {
         padding-inline: var(--s4);
     }
 
-    /* Footer */
     .footer-row,
     .footer-bottom {
         flex-direction: column;
@@ -1938,7 +1844,6 @@ details p b {
     }
 }
 
-/* --- The narrowest phones: slightly smaller type and edges, so every line still fits --- */
 @media (max-width: 380px) {
     :root {
         --text-lg: 14px;

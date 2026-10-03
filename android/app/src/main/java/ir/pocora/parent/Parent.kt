@@ -200,6 +200,19 @@ class Parent(
         changed()
     }
 
+    // A child paired again from Settings. Runs just before the phone is saved: the same phone starts fresh,
+    // and a new phone takes the old one's place, which is not told, as it is most likely gone.
+    fun repairing(
+        old: Peer,
+        peer: Peer,
+    ) {
+        clearData(peer)
+        if (peer.id != old.id) {
+            app.peerStore.remove(old.id)
+            clearData(old)
+        }
+    }
+
     // Everything kept about a child but its pairing. Also cleared when a phone paired before pairs again, as after
     // it disconnected while this app was closed, so it starts fresh.
     fun clearData(child: Peer) {

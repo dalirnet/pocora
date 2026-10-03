@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ir.pocora.PocoraApp
 import ir.pocora.R
+import ir.pocora.model.Peer
 import ir.pocora.model.Rules
 import ir.pocora.protocol.PairRequest
 import ir.pocora.transport.PairingHost
@@ -263,13 +264,16 @@ private const val DEFAULT_AGE = 10
 private const val DIMMED_ALPHA = 0.3f
 
 // The pairing code, and the accept sheet over it. Unpaired phones can reach this one only while this screen is open.
+// Reconnecting is the same code for a child already added, from Settings, without the steps of adding one.
 @Composable
 fun PairingCodeScreen(
     childName: String,
     childAge: Int?,
     rules: Rules,
     onBack: () -> Unit,
-    onPaired: () -> Unit,
+    onPaired: (Peer) -> Unit,
+    reconnecting: Boolean = false,
+    onPairing: ((Peer) -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val app = context.applicationContext as PocoraApp
@@ -286,8 +290,8 @@ fun PairingCodeScreen(
                 identity = { app.identity },
                 peerStore = app.peerStore,
                 onRequest = { request = it },
-                onPairing = app.parent::clearData,
-                onPaired = { currentOnPaired() },
+                onPairing = onPairing ?: app.parent::clearData,
+                onPaired = { currentOnPaired(it) },
                 onRequestGone = { request = null },
             )
         }
@@ -303,9 +307,13 @@ fun PairingCodeScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {
         Screen(
-            title = stringResource(R.string.connect_childs_phone, childName),
+            title =
+                stringResource(
+                    if (reconnecting) R.string.reconnect_childs_phone else R.string.connect_childs_phone,
+                    childName,
+                ),
             onBack = onBack,
-            trailing = { StepDots(current = 1, count = 2) },
+            trailing = { if (!reconnecting) StepDots(current = 1, count = 2) },
         ) {
             Card(horizontalAlignment = Alignment.CenterHorizontally) {
                 val codeModifier =
@@ -392,6 +400,15 @@ fun PairingCodeScreen(
                             fontSize = Dimens.caption,
                         )
                     }
+                }
+                // Already paired with another parent: it keeps its name and rules, and this parent sees them.
+                asking.childName?.let { name ->
+                    PointRow(
+                        AppIcons.FamilyRestroom,
+                        AppColors.blue,
+                        stringResource(R.string.has_another_parent, name),
+                        stringResource(R.string.has_another_parent_text),
+                    )
                 }
                 ButtonPair(
                     quiet = stringResource(R.string.reject),

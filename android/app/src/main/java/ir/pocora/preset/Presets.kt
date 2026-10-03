@@ -113,13 +113,14 @@ data class AppGroup(
     }
 }
 
-// A set of app groups that have internet in an Allowed mark.
+// A set of app groups that have internet in an Allowed mark. A list made for an age also names the quota that suits it.
 @Serializable
 data class AppsListPreset(
     val id: String,
     val name: Names,
     val section: String,
     val ages: List<Int>? = null,
+    val quota: String? = null,
     val groups: List<String>,
 ) {
     fun fitsAge(age: Int?): Boolean = age != null && ages != null && age in ages[0]..ages[1]

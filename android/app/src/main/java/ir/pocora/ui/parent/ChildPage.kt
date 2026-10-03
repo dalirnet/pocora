@@ -204,6 +204,6 @@ private fun levelColor(megabytes: Int?) =
         else -> AppColors.red
     }
 
-private const val LIGHT_MEGABYTES = 25
-private const val MEDIUM_MEGABYTES = 100
-private const val HIGH_MEGABYTES = 250
+private const val LIGHT_MEGABYTES = 50
+private const val MEDIUM_MEGABYTES = 200
+private const val HIGH_MEGABYTES = 500

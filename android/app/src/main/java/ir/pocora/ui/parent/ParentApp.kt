@@ -37,10 +37,10 @@ import java.time.LocalDate
 
 private const val STATUS_REFRESH_MILLISECONDS = 30_000L
 private const val TAB_HOME = 0
-private const val TAB_ACTIVITY = 1
+private const val TAB_EVENTS = 1
 private const val TAB_SETTINGS = 2
 
-// The parent app's screens and the way between them. Welcome, name and age, and the code add a child. Then Home, Activity and Settings
+// The parent app's screens and the way between them. Welcome, name and age, and the code add a child. Then Home, Events and Settings
 // are the three places of the bottom bar, and every feature of a child is its own screen.
 @Composable
 fun ParentApp(
@@ -95,7 +95,7 @@ fun ParentApp(
             selectedId = id
             navigator.reset(Route.Home)
             when (target) {
-                ParentNotifications.OPEN_ALERTS -> navigator.replace(Route.Activity)
+                ParentNotifications.OPEN_ALERTS -> navigator.replace(Route.Events)
                 ParentNotifications.OPEN_SCHEDULE -> navigator.go(Route.ChooseSchedule(id))
                 ParentNotifications.OPEN_COPY_FRIDAY -> navigator.go(Route.Times(id, copyFriday = true))
                 ParentNotifications.OPEN_USAGE -> navigator.go(Route.Usage(id))
@@ -109,7 +109,7 @@ fun ParentApp(
     BackHandler(enabled = navigator.stack.size > 1) { navigator.back() }
     BackHandler(
         enabled =
-            route == Route.Activity || (route == Route.Settings && navigator.stack.size == 1 && children.isNotEmpty()),
+            route == Route.Events || (route == Route.Settings && navigator.stack.size == 1 && children.isNotEmpty()),
     ) {
         navigator.replace(Route.Home)
     }
@@ -124,21 +124,21 @@ fun ParentApp(
                     BarItem(AppIcons.Home, stringResource(R.string.nav_home)),
                     BarItem(
                         AppIcons.Notifications,
-                        stringResource(R.string.nav_activity),
+                        stringResource(R.string.nav_events),
                         selected?.unseenAlerts ?: 0,
                     ),
                     BarItem(AppIcons.Settings, stringResource(R.string.settings)),
                 ),
             selected =
                 when (route) {
-                    Route.Activity -> TAB_ACTIVITY
+                    Route.Events -> TAB_EVENTS
                     Route.Settings -> TAB_SETTINGS
                     else -> TAB_HOME
                 },
             onSelect = {
                 navigator.reset(
                     when (it) {
-                        TAB_ACTIVITY -> Route.Activity
+                        TAB_EVENTS -> Route.Events
                         TAB_SETTINGS -> Route.Settings
                         else -> Route.Home
                     },
@@ -158,7 +158,7 @@ fun ParentApp(
             is Route.ChooseApps -> route.childId?.let(::model)
             is Route.Group -> model(route.childId)
             is Route.Data -> model(route.childId)
-            Route.Home, Route.Activity -> selected
+            Route.Home, Route.Events -> selected
             else -> null
         }
 
@@ -190,13 +190,39 @@ fun ParentApp(
                     childAge = age,
                     rules = draft.rules(Suggested.rules(parent.presets, age, LocalDate.now())),
                     onBack = navigator::back,
-                    onPaired = {
+                    onPaired = { peer ->
                         children = parent.children()
-                        selectedId = children.lastOrNull()?.id
+                        selectedId = peer.id
                         setDraft(Draft())
                         navigator.reset(Route.Home)
                     },
                 )
+            }
+
+            is Route.Reconnect -> {
+                parent.child(route.childId)?.let { child ->
+                    // The rules the parent last saw, so a phone that was reset gets them back.
+                    val rules =
+                        remember(child.id) {
+                            parent.snapshots.read(child.id)?.rules
+                                ?: Suggested.rules(parent.presets, child.age, LocalDate.now())
+                        }
+                    PairingCodeScreen(
+                        childName = child.name,
+                        childAge = child.age,
+                        rules = rules,
+                        onBack = navigator::back,
+                        onPaired = { peer ->
+                            models.remove(child.id)
+                            models.remove(peer.id)
+                            children = parent.children()
+                            selectedId = peer.id
+                            navigator.reset(Route.Home)
+                        },
+                        reconnecting = true,
+                        onPairing = { parent.repairing(child, it) },
+                    )
+                }
             }
 
             Route.Home -> {
@@ -211,19 +237,20 @@ fun ParentApp(
                             setDraft(Draft())
                             navigator.go(Route.AddChild)
                         },
-                        go = { next -> if (next == Route.Activity) navigator.replace(next) else navigator.go(next) },
+                        go = { next -> if (next == Route.Events) navigator.replace(next) else navigator.go(next) },
                         bottom = bottom,
                     )
                 } ?: LaunchedEffect(route) { navigator.reset(Route.Welcome) }
             }
 
-            Route.Activity -> {
-                selected?.let { ActivityScreen(model = it, bottom = bottom) }
+            Route.Events -> {
+                selected?.let { EventsScreen(model = it, bottom = bottom) }
             }
 
             Route.Settings -> {
                 SettingsScreen(
                     children = children,
+                    onReconnect = { navigator.go(Route.Reconnect(it.id)) },
                     onForget = { child ->
                         scope.launchForget(parent, child) {
                             models.remove(child.id)

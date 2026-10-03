@@ -28,12 +28,18 @@ sealed interface Route {
     @Serializable
     data object Pairing : Route
 
+    // The pairing code again for a child already added: its phone reset or disconnected, or a new phone.
+    @Serializable
+    data class Reconnect(
+        val childId: String,
+    ) : Route
+
     // The three places of the bottom bar.
     @Serializable
     data object Home : Route
 
     @Serializable
-    data object Activity : Route
+    data object Events : Route
 
     @Serializable
     data object Settings : Route

@@ -60,6 +60,7 @@ import ir.pocora.ui.component.FeatureTile
 import ir.pocora.ui.component.HourAxis
 import ir.pocora.ui.component.IconHeader
 import ir.pocora.ui.component.IconTile
+import ir.pocora.ui.component.Refreshable
 import ir.pocora.ui.component.StackedBar
 import ir.pocora.ui.component.Strip
 import ir.pocora.ui.rememberFormat
@@ -74,11 +75,13 @@ private const val MINUTE_MILLISECONDS = 60_000L
 
 // Home in both apps: a gradient top layer with who, how they are now and what can be done,
 // then a white sheet with rounded corners for what is worth knowing today, then the bottom bar.
+// Pulled down, it reaches the other phone again.
 @Composable
 fun LayeredHome(
     top: @Composable ColumnScope.() -> Unit,
     sheet: @Composable ColumnScope.() -> Unit,
     bottom: @Composable () -> Unit,
+    onRefresh: suspend () -> Unit,
     overlay: @Composable BoxScope.() -> Unit = {},
 ) {
     val palette = LocalPalette.current
@@ -86,43 +89,49 @@ fun LayeredHome(
     var topHeight by remember { mutableIntStateOf(0) }
     Box(modifier = Modifier.fillMaxSize().background(palette.card)) {
         Column(modifier = Modifier.fillMaxSize()) {
-            BoxWithConstraints(modifier = Modifier.weight(1f)) {
-                // The sheet reaches at least the bottom of the screen, and an empty state on it centres in what is left.
-                val sheetHeight = maxHeight - with(density) { topHeight.toDp() } + Dimens.sheetCorner
-                Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
-                    Column(
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .onSizeChanged { topHeight = it.height }
-                                .background(Brush.verticalGradient(listOf(palette.backgroundTop, palette.background)))
-                                .statusBarsPadding()
-                                .padding(
-                                    start = Dimens.edge,
-                                    end = Dimens.edge,
-                                    top = Dimens.inside,
-                                    bottom =
-                                        Dimens.sheetCorner + Dimens.section,
-                                ),
-                        verticalArrangement = Arrangement.spacedBy(Dimens.section),
-                        content = top,
-                    )
-                    CompositionLocalProvider(
-                        LocalSheetSpace provides (sheetHeight - Dimens.section * 2).coerceAtLeast(0.dp),
-                    ) {
+            Refreshable(onRefresh, Modifier.weight(1f)) {
+                BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+                    // The sheet reaches at least the bottom of the screen, and an empty state on it centres in what is left.
+                    val sheetHeight = maxHeight - with(density) { topHeight.toDp() } + Dimens.sheetCorner
+                    Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
                         Column(
                             modifier =
                                 Modifier
                                     .fillMaxWidth()
-                                    .heightIn(min = sheetHeight)
-                                    .offset(y = -Dimens.sheetCorner)
+                                    .onSizeChanged { topHeight = it.height }
                                     .background(
-                                        palette.card,
-                                        RoundedCornerShape(topStart = Dimens.sheetCorner, topEnd = Dimens.sheetCorner),
-                                    ).padding(horizontal = Dimens.edge, vertical = Dimens.section),
-                            verticalArrangement = Arrangement.spacedBy(Dimens.inside),
-                            content = sheet,
+                                        Brush.verticalGradient(listOf(palette.backgroundTop, palette.background)),
+                                    ).statusBarsPadding()
+                                    .padding(
+                                        start = Dimens.edge,
+                                        end = Dimens.edge,
+                                        top = Dimens.inside,
+                                        bottom =
+                                            Dimens.sheetCorner + Dimens.section,
+                                    ),
+                            verticalArrangement = Arrangement.spacedBy(Dimens.section),
+                            content = top,
                         )
+                        CompositionLocalProvider(
+                            LocalSheetSpace provides (sheetHeight - Dimens.section * 2).coerceAtLeast(0.dp),
+                        ) {
+                            Column(
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .heightIn(min = sheetHeight)
+                                        .offset(y = -Dimens.sheetCorner)
+                                        .background(
+                                            palette.card,
+                                            RoundedCornerShape(
+                                                topStart = Dimens.sheetCorner,
+                                                topEnd = Dimens.sheetCorner,
+                                            ),
+                                        ).padding(horizontal = Dimens.edge, vertical = Dimens.section),
+                                verticalArrangement = Arrangement.spacedBy(Dimens.inside),
+                                content = sheet,
+                            )
+                        }
                     }
                 }
             }

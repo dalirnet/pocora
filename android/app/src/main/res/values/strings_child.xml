@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- The child app and its notifications. Persian, the default language. -->
 <resources>
-    <string name="set_up_this_phone">آماده‌سازی گوشی</string>
+    <string name="set_up_this_phone">آماده‌سازی موبایل</string>
+    <string name="add_another_parent">اتصال به والد دیگر</string>
+    <string name="add_another_parent_text">قوانین و نام تو همین می‌ماند</string>
     <string name="step_vpn">اجازهٔ VPN</string>
     <string name="step_vpn_why">برای وصل و قطع اینترنت برنامه‌ها</string>
     <string name="step_always_on">VPN همیشه روشن</string>
@@ -18,9 +20,9 @@
     <string name="step_battery">اجرا در پس‌زمینه</string>
     <string name="step_battery_why">تا اندروید پوکورا را نبندد.</string>
     <string name="done">تمام</string>
-    <string name="setup_title">آماده‌سازی گوشی</string>
+    <string name="setup_title">آماده‌سازی موبایل</string>
     <string name="setup_all_done">همه‌چیز آماده است</string>
-    <string name="setup_all_done_text">حالا می‌توانی از گوشی‌ات استفاده کنی.</string>
+    <string name="setup_all_done_text">حالا می‌توانی از موبایلت استفاده کنی.</string>
     <string name="finish_later">بعداً ادامه می‌دهم</string>
     <string name="setup_not_finished">آماده‌سازی تمام نشده</string>
     <string name="continue_setup">ادامه</string>
@@ -30,13 +32,15 @@
     <string name="waiting_for_rules">منتظر تنظیمات والدینت</string>
     <string name="data_this_half_hour">%1$s از %2$s مگ سهم این نیم‌ساعت مصرف شده</string>
     <string name="data_used_up">حجم این نیم‌ساعت تمام شد</string>
+    <string name="data_share_used">%1$s٪ از حجم این نیم‌ساعت مصرف شده</string>
+    <string name="paused_everything_open">همهٔ برنامه‌ها اینترنت دارند</string>
     <string name="offline_apps_work">برنامه‌های آفلاین کار می‌کنند.</string>
     <string name="last_contact">آخرین ارتباط با والدینت: %1$s</string>
-    <string name="no_contact_yet">هنوز به گوشی والدینت وصل نشده‌ای</string>
-    <string name="child_connected">به گوشی والدین وصل است</string>
+    <string name="no_contact_yet">هنوز به موبایل والدینت وصل نشده‌ای</string>
+    <string name="child_connected">به موبایل والدین وصل است</string>
     <string name="tile_parent_sees">والدین چه می‌بینند</string>
     <string name="only_parent_changes">این زمان‌ها را والدینت تعیین می‌کنند.</string>
-    <string name="my_activity">فعالیت‌های من</string>
+    <string name="events_title">رویدادها</string>
     <string name="parent_sees_these">والدینت هم همین‌ها را می‌بینند.</string>
     <string name="what_my_parent_sees">والدینم چه چیزهایی می‌بینند؟</string>
     <string name="parent_sees">والدینت می‌بینند</string>
@@ -44,13 +48,13 @@
     <string name="seen_apps_data">هر برنامه چقدر حجم مصرف می‌کند</string>
     <string name="seen_installed">چه برنامه‌هایی نصب کرده‌ای</string>
     <string name="seen_off">کی پوکورا خاموش بوده</string>
-    <string name="seen_restart">کی گوشی خاموش و روشن شده</string>
+    <string name="seen_restart">کی موبایل خاموش و روشن شده</string>
     <string name="parent_never_sees">والدینت هیچ‌وقت نمی‌بینند</string>
     <string name="not_seen_messages">پیام‌ها و عکس‌هایت</string>
     <string name="not_seen_typing">چیزهایی که می‌نویسی</string>
     <string name="not_seen_sites">سایت‌هایی که باز می‌کنی</string>
     <string name="connected_parents">وصل به %1$s والد</string>
-    <string name="connected_one_parent">وصل به گوشی والدینت</string>
+    <string name="connected_one_parent">وصل به موبایل والدینت</string>
     <string name="channel_status">وضعیت اینترنت</string>
     <string name="channel_allowed">وصل شدن اینترنت</string>
     <string name="channel_ending">قبل از قطع اینترنت</string>

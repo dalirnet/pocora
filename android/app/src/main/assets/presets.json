@@ -784,6 +784,7 @@
                 8,
                 9
             ],
+            "quota": "medium",
             "groups": [
                 "system",
                 "school",
@@ -802,6 +803,7 @@
                 10,
                 12
             ],
+            "quota": "fairly-high",
             "groups": [
                 "system",
                 "school",
@@ -826,6 +828,7 @@
                 13,
                 16
             ],
+            "quota": "high",
             "groups": [
                 "system",
                 "school",
@@ -2006,7 +2009,7 @@
                 "en": "Minimal",
                 "fa": "خیلی کم"
             },
-            "megabytesPerMark": 10
+            "megabytesPerMark": 25
         },
         {
             "id": "light",
@@ -2014,7 +2017,7 @@
                 "en": "Light",
                 "fa": "کم"
             },
-            "megabytesPerMark": 25
+            "megabytesPerMark": 50
         },
         {
             "id": "fairly-light",
@@ -2022,7 +2025,7 @@
                 "en": "Fairly light",
                 "fa": "نسبتاً کم"
             },
-            "megabytesPerMark": 50
+            "megabytesPerMark": 100
         },
         {
             "id": "medium",
@@ -2030,7 +2033,7 @@
                 "en": "Medium",
                 "fa": "متوسط"
             },
-            "megabytesPerMark": 100
+            "megabytesPerMark": 200
         },
         {
             "id": "fairly-high",
@@ -2038,7 +2041,7 @@
                 "en": "Fairly high",
                 "fa": "نسبتاً زیاد"
             },
-            "megabytesPerMark": 150
+            "megabytesPerMark": 300
         },
         {
             "id": "high",
@@ -2046,7 +2049,7 @@
                 "en": "High",
                 "fa": "زیاد"
             },
-            "megabytesPerMark": 250
+            "megabytesPerMark": 500
         },
         {
             "id": "very-high",
@@ -2054,7 +2057,7 @@
                 "en": "Very high",
                 "fa": "خیلی زیاد"
             },
-            "megabytesPerMark": 500
+            "megabytesPerMark": 1000
         },
         {
             "id": "no-limit",
