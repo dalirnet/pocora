@@ -126,6 +126,7 @@ fun HomeScreen(
             }
         },
         bottom = bottom,
+        onRefresh = model::read,
         overlay = { ChildSheets(model) },
     )
 }

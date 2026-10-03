@@ -41,6 +41,8 @@ import ir.pocora.ui.text
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 private const val CONTACT_FRESH_MILLISECONDS = 3 * 60_000L
 
@@ -130,6 +132,7 @@ fun HomeScreen(
             snapshot?.let { ScreenTimeSection(presets, it, onUsage) } ?: LoadingCards(1)
         },
         bottom = bottom,
+        onRefresh = { suspendCoroutine { done -> agent.pull { done.resume(Unit) } } },
     )
 }
 

@@ -129,6 +129,18 @@ class Agent(
 
     fun refresh() = handler.post { tick() }
 
+    // Home pulled down: every parent this phone can reach synced now, then a tick for what the answers changed.
+    // done runs once the sync has its answers, or has given up.
+    fun pull(done: () -> Unit) =
+        handler.post {
+            val sync = syncNow()
+            thread(name = "pocora-pull") {
+                sync?.join()
+                refresh()
+                done()
+            }
+        }
+
     // --- The tick ---
 
     private fun tick() {
@@ -321,14 +333,15 @@ class Agent(
     fun syncSoon() = handler.post { syncNow() }
 
     // To every paired parent this phone can reach. A parent that cannot be reached is simply tried again next time.
-    private fun syncNow() {
+    // Returns the thread doing it, if any.
+    private fun syncNow(): Thread? {
         lastSync = clock.now()
         sendGoodbyes()
         val parents = app.peerStore.all()
-        if (parents.isEmpty()) return
+        if (parents.isEmpty()) return null
         val snapshot = snapshot(fresh = true)
         val port = app.endpoint.port
-        thread(name = "pocora-sync") {
+        return thread(name = "pocora-sync") {
             for (parent in parents) {
                 val answer =
                     app.peerLink.call(parent, Sync(snapshot, port), Protocol.PARENT_PORT) as? SyncAnswer ?: continue
