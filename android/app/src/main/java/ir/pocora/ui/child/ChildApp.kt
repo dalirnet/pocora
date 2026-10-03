@@ -24,6 +24,7 @@ private val TABS = listOf(ChildStep.HOME, ChildStep.EVENTS, ChildStep.SETTINGS)
 // The child app's screens and the way between them, on the same plan as the parent app's.
 // First run: welcome, the scan, waiting for the parent, then the setup steps. Then Home, Events and Settings are the bottom bar,
 // and every other screen has a back arrow. A code handed in, instead of scanned, goes straight to waiting.
+// Once paired, Settings can scan another parent's code: the scan and the wait then return to Settings.
 @Composable
 fun ChildApp(
     handedCode: PairingCode?,
@@ -68,7 +69,10 @@ fun ChildApp(
         step = next
     }
 
-    BackHandler(enabled = step == ChildStep.SCAN || step == ChildStep.WAITING) { step = ChildStep.WELCOME }
+    // Where the scan and the wait return to: Welcome before pairing, Settings when adding another parent.
+    val beforeScan = if (paired) ChildStep.SETTINGS else ChildStep.WELCOME
+
+    BackHandler(enabled = step == ChildStep.SCAN || step == ChildStep.WAITING) { step = beforeScan }
     BackHandler(
         enabled =
             step in listOf(ChildStep.TIMES, ChildStep.USAGE, ChildStep.SEES) ||
@@ -112,7 +116,7 @@ fun ChildApp(
                     code = it.encode()
                     step = ChildStep.WAITING
                 },
-                onBack = { step = ChildStep.WELCOME },
+                onBack = { step = beforeScan },
             )
         }
 
@@ -122,10 +126,15 @@ fun ChildApp(
                 onResult = { result ->
                     val accepted = result == PairingResult.ACCEPTED
                     failure = if (accepted) null else result
-                    paired = accepted
-                    step = if (accepted) ChildStep.SETUP else ChildStep.WELCOME
+                    step =
+                        when {
+                            paired -> ChildStep.SETTINGS
+                            accepted -> ChildStep.SETUP
+                            else -> ChildStep.WELCOME
+                        }
+                    paired = paired || accepted
                 },
-                onCancel = { step = ChildStep.WELCOME },
+                onCancel = { step = beforeScan },
             )
         }
 
@@ -150,8 +159,13 @@ fun ChildApp(
         ChildStep.SETTINGS -> {
             SettingsScreen(
                 paired = paired,
+                failure = failure.takeIf { paired },
                 onBack = if (paired) null else ({ step = ChildStep.WELCOME }),
                 onSetup = { open(ChildStep.SETUP) },
+                onAddParent = {
+                    failure = null
+                    step = ChildStep.SCAN
+                },
                 onLanguage = onLanguage,
                 onLook = onLook,
                 onDisconnect = {

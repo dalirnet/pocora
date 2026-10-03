@@ -2,6 +2,8 @@
 <!-- The child app and its notifications. Persian, the default language. -->
 <resources>
     <string name="set_up_this_phone">آماده‌سازی موبایل</string>
+    <string name="add_another_parent">اتصال به والد دیگر</string>
+    <string name="add_another_parent_text">قوانین و نام تو همین می‌ماند</string>
     <string name="step_vpn">اجازهٔ VPN</string>
     <string name="step_vpn_why">برای وصل و قطع اینترنت برنامه‌ها</string>
     <string name="step_always_on">VPN همیشه روشن</string>

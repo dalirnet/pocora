@@ -111,6 +111,7 @@ enum class EventKind(
     APP_INSTALLED(false),
     APP_REMOVED(false),
     PAIRED(false),
+    PARENT_ADDED(false),
     RULES_CHANGED(false),
     NO_CONTACT(false),
     QUOTA_USED(false),

@@ -15,6 +15,7 @@ sealed interface Message
 // Child to parent, after scanning the code. The child's certificate arrives with the TLS handshake.
 // With both apps on one phone, the token the parent app handed over with its code: the parent asked for this
 // pairing on this phone, so it is accepted without asking again.
+// A phone already paired with another parent sends the name it goes by: the new parent takes it, and the rules stay.
 @Serializable
 @SerialName("pair_request")
 data class PairRequest(
@@ -22,6 +23,7 @@ data class PairRequest(
     val deviceName: String,
     val androidVersion: String,
     val token: String? = null,
+    val childName: String? = null,
 ) : Message
 
 // Parent to child, once the parent has accepted or rejected. An accepted child gets its first rules with it,

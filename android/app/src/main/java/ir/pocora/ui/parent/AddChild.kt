@@ -393,6 +393,15 @@ fun PairingCodeScreen(
                         )
                     }
                 }
+                // Already paired with another parent: it keeps its name and rules, and this parent sees them.
+                asking.childName?.let { name ->
+                    PointRow(
+                        AppIcons.FamilyRestroom,
+                        AppColors.blue,
+                        stringResource(R.string.has_another_parent, name),
+                        stringResource(R.string.has_another_parent_text),
+                    )
+                }
                 ButtonPair(
                     quiet = stringResource(R.string.reject),
                     onQuiet = reject,

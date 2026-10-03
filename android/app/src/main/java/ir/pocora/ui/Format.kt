@@ -235,6 +235,7 @@ object Labels {
             EventKind.APP_REMOVED -> R.string.event_app_removed
             EventKind.REQUEST_IGNORED -> R.string.event_request_ignored
             EventKind.PAIRED -> R.string.event_paired
+            EventKind.PARENT_ADDED -> R.string.event_parent_added
             EventKind.RULES_CHANGED -> R.string.event_rules_changed
             EventKind.NO_CONTACT -> R.string.event_no_contact
             EventKind.QUOTA_USED -> R.string.event_quota_used

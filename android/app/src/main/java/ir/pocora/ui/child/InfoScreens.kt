@@ -25,6 +25,7 @@ import ir.pocora.R
 import ir.pocora.config.Look
 import ir.pocora.model.Snapshot
 import ir.pocora.model.timeline
+import ir.pocora.transport.PairingResult
 import ir.pocora.ui.AppColors
 import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
@@ -154,13 +155,15 @@ private fun Line(
     }
 }
 
-// Language and theme for everyone, and setting up the phone once paired.
+// Language and theme for everyone. Once paired: setting up the phone, connecting another parent, and disconnecting.
 // There is no button to turn Pocora off: a child can still stop the VPN in Android's settings, and the parent sees that.
 @Composable
 fun SettingsScreen(
     paired: Boolean,
+    failure: PairingResult?,
     onBack: (() -> Unit)?,
     onSetup: () -> Unit,
+    onAddParent: () -> Unit,
     onLanguage: (String) -> Unit,
     onLook: (Look) -> Unit,
     onDisconnect: () -> Unit,
@@ -169,6 +172,7 @@ fun SettingsScreen(
     var disconnecting by remember { mutableStateOf(false) }
     Box(modifier = Modifier.fillMaxSize()) {
         Screen(title = stringResource(R.string.settings), onBack = onBack, bottom = bottom) {
+            failure?.let { PairingFailure(it) }
             if (paired) {
                 Card {
                     LinkRow(
@@ -176,6 +180,13 @@ fun SettingsScreen(
                         icon = AppIcons.Tune,
                         iconColor = AppColors.blue,
                         onClick = onSetup,
+                    )
+                    LinkRow(
+                        title = stringResource(R.string.add_another_parent),
+                        subtitle = stringResource(R.string.add_another_parent_text),
+                        icon = AppIcons.FamilyRestroom,
+                        iconColor = AppColors.violet,
+                        onClick = onAddParent,
                     )
                 }
             }

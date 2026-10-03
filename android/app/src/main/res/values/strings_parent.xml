@@ -179,6 +179,9 @@
     <string name="event_app_removed">برنامه حذف شد</string>
     <string name="event_request_ignored">درخواست رد شد</string>
     <string name="event_paired">دو موبایل به هم وصل شدند</string>
+    <string name="event_parent_added">والد دیگری هم وصل شد</string>
+    <string name="has_another_parent">به نام «%1$s» به والد دیگری هم وصل است</string>
+    <string name="has_another_parent_text">نام و قوانینش همان می‌ماند</string>
     <string name="event_rules_changed">قوانین تغییر کرد</string>
     <string name="event_no_contact">ارتباط دو موبایل قطع شد</string>
     <string name="event_quota_used">سهم حجم تمام شد</string>

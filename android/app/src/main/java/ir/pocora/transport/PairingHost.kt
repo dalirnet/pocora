@@ -64,7 +64,9 @@ class PairingHost(
             return
         }
         // Saved only once the answer is on its way, so a child that gave up is not left half paired.
-        if (!connection.send(answer(true, decision.rules, decision.name))) {
+        // A child that already has a parent keeps the name it goes by, so both parents call it the same.
+        val name = request.childName ?: decision.name
+        if (!connection.send(answer(true, decision.rules, name))) {
             mainHandler.post(onRequestGone)
             return
         }
@@ -72,7 +74,7 @@ class PairingHost(
             Peer(
                 request.id,
                 connection.peerFingerprint,
-                decision.name,
+                name,
                 request.deviceName,
                 decision.age,
                 Protocol.CHILD_PORT,

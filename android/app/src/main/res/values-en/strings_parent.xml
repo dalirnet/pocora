@@ -178,6 +178,9 @@
     <string name="event_app_removed">App removed</string>
     <string name="event_request_ignored">Request declined</string>
     <string name="event_paired">Phones paired</string>
+    <string name="event_parent_added">Another parent connected</string>
+    <string name="has_another_parent">Already with another parent as %1$s</string>
+    <string name="has_another_parent_text">Its name and rules stay the same</string>
     <string name="event_rules_changed">Rules changed</string>
     <string name="event_no_contact">Phones out of touch</string>
     <string name="event_quota_used">Data quota used up</string>

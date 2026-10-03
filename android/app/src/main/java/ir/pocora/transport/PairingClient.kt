@@ -23,6 +23,8 @@ class PairingClient(
     private val onAccepted: (PairAnswer) -> Unit,
     // Handed over by the parent app on this same phone, which then accepts without asking. See SamePhone.
     private val token: String? = null,
+    // The name this phone goes by with the parents it already has, when it has any.
+    private val childName: String? = null,
     private val onResult: (PairingResult) -> Unit,
 ) {
     companion object {
@@ -54,7 +56,9 @@ class PairingClient(
         val opened = connect() ?: return PairingResult.NOT_REACHABLE
         connection = opened
         return opened.use {
-            if (cancelled || !it.send(PairRequest(identity().id, Device.name, Device.androidVersion, token))) {
+            if (cancelled ||
+                !it.send(PairRequest(identity().id, Device.name, Device.androidVersion, token, childName))
+            ) {
                 return@use PairingResult.NOT_REACHABLE
             }
             val answer = it.receive(Protocol.PAIR_ANSWER_TIMEOUT_MILLISECONDS) as? PairAnswer

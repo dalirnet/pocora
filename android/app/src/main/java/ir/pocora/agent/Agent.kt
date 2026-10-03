@@ -473,8 +473,15 @@ class Agent(
     // --- The child's own actions ---
 
     // The parent's yes: the agent starts with the rules that came with it, and the header shows the child's name.
+    // Runs before the parent is saved. A phone that already has a parent keeps its rules and name; the new parent
+    // reads them as soon as its Home opens.
     fun paired(answer: PairAnswer) {
         goodbyes.remove(answer.id)
+        val parents = app.peerStore.all()
+        if (parents.isNotEmpty()) {
+            if (parents.none { it.id == answer.id }) events.add(EventKind.PARENT_ADDED, clock.now())
+            return
+        }
         app.configStore.pairedAt = System.currentTimeMillis()
         events.add(EventKind.PAIRED, clock.now())
         answer.childName?.let { app.configStore.childName = it }

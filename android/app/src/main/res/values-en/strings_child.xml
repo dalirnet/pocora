@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="set_up_this_phone">Set up this phone</string>
+    <string name="add_another_parent">Connect another parent</string>
+    <string name="add_another_parent_text">Your rules and name stay the same</string>
     <string name="step_vpn">Allow the VPN</string>
     <string name="step_vpn_why">It turns apps\' internet on and off.</string>
     <string name="step_always_on">Keep the VPN always on</string>

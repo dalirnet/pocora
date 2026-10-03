@@ -75,6 +75,7 @@ private fun look(kind: EventKind): Pair<ImageVector, Color> =
         EventKind.APP_REMOVED -> AppIcons.Delete to AppColors.slate
         EventKind.REQUEST_IGNORED -> AppIcons.HighlightOff to AppColors.slate
         EventKind.PAIRED -> AppIcons.PhonelinkRing to AppColors.green
+        EventKind.PARENT_ADDED -> AppIcons.FamilyRestroom to AppColors.green
         EventKind.RULES_CHANGED -> AppIcons.Tune to AppColors.violet
         EventKind.NO_CONTACT -> AppIcons.WifiOff to AppColors.slate
         EventKind.QUOTA_USED -> AppIcons.DataUsage to AppColors.orange
