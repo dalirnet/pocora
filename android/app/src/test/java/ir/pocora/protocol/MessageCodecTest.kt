@@ -36,7 +36,7 @@ class MessageCodecTest {
 
     @Test
     fun decode_roundTripAnswer() {
-        val answer = PairAnswer(false, "id", "گوشی مادر")
+        val answer = PairAnswer(false, "id", "موبایل مادر")
         assertEquals(answer, MessageCodec.decode(MessageCodec.encode(answer)))
     }
 
