@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -55,7 +54,6 @@ fun ParentApp(
     val scope = rememberCoroutineScope()
     val changes by parent.changes.collectAsState()
     var children by remember { mutableStateOf(parent.children()) }
-    var tick by remember { mutableIntStateOf(0) }
     val navigator = rememberNavigator(if (children.isEmpty()) Route.Welcome else Route.Home)
     var draftText by rememberSaveable { mutableStateOf(Json.encodeToString(Draft.serializer(), Draft())) }
     val draft = Json.decodeFromString(Draft.serializer(), draftText)
@@ -86,7 +84,6 @@ fun ParentApp(
         while (true) {
             delay(STATUS_REFRESH_MILLISECONDS)
             models.values.forEach { it.reload() }
-            tick++
         }
     }
     LaunchedEffect(opened) {
@@ -231,7 +228,6 @@ fun ParentApp(
                         model = it,
                         children = children,
                         online = { id -> model(id)?.online ?: false },
-                        tick = tick + changes.toInt(),
                         onChooseChild = { selectedId = it },
                         onAddChild = {
                             setDraft(Draft())

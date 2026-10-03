@@ -65,7 +65,6 @@ fun HomeScreen(
     model: ChildModel,
     children: List<Peer>,
     online: (String) -> Boolean,
-    tick: Int,
     onChooseChild: (String) -> Unit,
     onAddChild: () -> Unit,
     go: (Route) -> Unit,
@@ -78,7 +77,7 @@ fun HomeScreen(
     LayeredHome(
         top = {
             ChildRow(children, id, online, onChooseChild, onAddChild)
-            Status(parent, model, snapshot, tick)
+            Status(parent, model, snapshot)
             PauseHere(model)
             TileGrid(
                 listOf(
@@ -178,7 +177,6 @@ private fun Status(
     parent: Parent,
     model: ChildModel,
     snapshot: Snapshot?,
-    tick: Int,
 ) {
     val palette = LocalPalette.current
     val format = rememberFormat()
@@ -222,8 +220,9 @@ private fun Status(
         return
     }
     val off = snapshot.events.any { it.kind == EventKind.VPN_OFF && it.end == null }
-    val status = remember(tick, snapshot) { internetNow(schedule, snapshot) }
-    val allowed = status.allowed
+    // The internet as the child's phone has it, so this says what the child's own screen says.
+    val allowed = snapshot.state.allowed
+    val until = snapshot.state.until?.let(format::dateTime)
     // The two things a parent most often does, under the sentence they change.
     // The second one follows the state: stop the internet while there is some, allow it while there is none.
     // More data makes sense only with a limit, and inside the Allowed block on now.
@@ -268,27 +267,13 @@ private fun Status(
         StatusPanel(
             if (allowed) AppIcons.Wifi else AppIcons.WifiOff,
             if (allowed) palette.allowed else palette.muted,
-            internetSentence(status.allowed, status.until, toChild = false),
+            internetSentence(allowed, until, toChild = false),
             scheduleName,
             plan,
             changes,
             actions,
         )
     }
-}
-
-// What the schedule says now, worked out on this phone's clock.
-private class InternetNow(
-    val allowed: Boolean,
-    val until: LocalDateTime?,
-)
-
-private fun internetNow(
-    schedule: Schedule,
-    snapshot: Snapshot,
-): InternetNow {
-    val state = schedule.state(snapshot.rules, LocalDateTime.now())
-    return InternetNow(state.allowed && !snapshot.state.quotaReached, state.until)
 }
 
 // A season starting soon, or a holiday tomorrow, as one coloured card.

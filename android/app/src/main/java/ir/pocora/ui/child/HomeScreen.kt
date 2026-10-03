@@ -16,7 +16,6 @@ import androidx.compose.ui.text.font.FontWeight
 import ir.pocora.PocoraApp
 import ir.pocora.R
 import ir.pocora.agent.AgentStatus
-import ir.pocora.model.Schedule
 import ir.pocora.model.Snapshot
 import ir.pocora.ui.AppColors
 import ir.pocora.ui.AppIcons
@@ -40,7 +39,6 @@ import ir.pocora.ui.rememberFormat
 import ir.pocora.ui.text
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.time.LocalDate
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -146,7 +144,6 @@ private fun Status(
     val format = rememberFormat()
     val presets = rememberPresets()
     val scheduleName = status.rules?.let { presets.schedule(it.schedule).name.text() }
-    val schedule = remember(presets) { Schedule(presets) }
     when {
         !ready -> {
             LoadingCards(1)
@@ -179,7 +176,7 @@ private fun Status(
                 internetSentence(status.allowed, status.until, toChild = true),
                 scheduleName,
                 status.today,
-                status.rules?.let { schedule.differences(it, LocalDate.now()) } ?: emptyList(),
+                status.changes,
             ) {
                 val perMark = status.bytesPerMark
                 when {

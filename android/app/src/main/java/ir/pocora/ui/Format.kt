@@ -97,8 +97,10 @@ class Format(
 
     fun time(time: LocalDateTime): String = time(time.toLocalTime())
 
-    fun time(epochMilliseconds: Long): String =
-        time(LocalDateTime.ofInstant(Instant.ofEpochMilli(epochMilliseconds), ZoneId.systemDefault()))
+    fun time(epochMilliseconds: Long): String = time(dateTime(epochMilliseconds))
+
+    fun dateTime(epochMilliseconds: Long): LocalDateTime =
+        LocalDateTime.ofInstant(Instant.ofEpochMilli(epochMilliseconds), ZoneId.systemDefault())
 
     // A mark index as the time it starts: 35 is 17:30. 48 is the end of the day, 24:00.
     fun mark(mark: Int): String = String.format(locale, "%02d:%02d", mark / 2, mark % 2 * 30)
