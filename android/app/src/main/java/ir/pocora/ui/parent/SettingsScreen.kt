@@ -41,6 +41,7 @@ import ir.pocora.ui.component.Avatar
 import ir.pocora.ui.component.ButtonPair
 import ir.pocora.ui.component.Card
 import ir.pocora.ui.component.CardTitle
+import ir.pocora.ui.component.IconAction
 import ir.pocora.ui.component.IconTile
 import ir.pocora.ui.component.Screen
 import ir.pocora.ui.component.SectionTitle
@@ -48,10 +49,11 @@ import ir.pocora.ui.component.Sheet
 import ir.pocora.ui.component.SmallButton
 import ir.pocora.ui.component.SwitchRow
 
-// Children, notifications, language and theme, and the version at the foot.
+// Children, each with its code again and removing, notifications, language and theme, and the version at the foot.
 @Composable
 fun SettingsScreen(
     children: List<Peer>,
+    onReconnect: (Peer) -> Unit,
     onForget: (Peer) -> Unit,
     onBack: (() -> Unit)?,
     onLanguage: (String) -> Unit,
@@ -94,6 +96,10 @@ fun SettingsScreen(
                                     fontFamily = FontFamily.Default,
                                 )
                             }
+                            IconAction(
+                                AppIcons.QrCodeScanner,
+                                stringResource(R.string.connect_again),
+                            ) { onReconnect(child) }
                             SmallButton(text = stringResource(R.string.remove), onClick = { removing = child })
                         }
                     }

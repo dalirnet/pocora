@@ -39,6 +39,8 @@
     <string name="how_old_plain">چند سال دارد؟</string>
     <string name="years_old">%1$s ساله</string>
     <string name="connect_childs_phone">اتصال موبایل %1$s</string>
+    <string name="reconnect_childs_phone">اتصال دوبارهٔ موبایل %1$s</string>
+    <string name="connect_again">اتصال دوباره</string>
     <string name="pair_step_install">پوکورا فرزند را روی موبایل %1$s باز کنید</string>
     <string name="pair_step_wifi">هر دو موبایل را به یک وای‌فای وصل کنید</string>
     <string name="pair_step_scan">روی موبایل %1$s «اسکن کد» را بزنید</string>

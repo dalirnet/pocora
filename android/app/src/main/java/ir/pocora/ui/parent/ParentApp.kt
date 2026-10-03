@@ -190,13 +190,39 @@ fun ParentApp(
                     childAge = age,
                     rules = draft.rules(Suggested.rules(parent.presets, age, LocalDate.now())),
                     onBack = navigator::back,
-                    onPaired = {
+                    onPaired = { peer ->
                         children = parent.children()
-                        selectedId = children.lastOrNull()?.id
+                        selectedId = peer.id
                         setDraft(Draft())
                         navigator.reset(Route.Home)
                     },
                 )
+            }
+
+            is Route.Reconnect -> {
+                parent.child(route.childId)?.let { child ->
+                    // The rules the parent last saw, so a phone that was reset gets them back.
+                    val rules =
+                        remember(child.id) {
+                            parent.snapshots.read(child.id)?.rules
+                                ?: Suggested.rules(parent.presets, child.age, LocalDate.now())
+                        }
+                    PairingCodeScreen(
+                        childName = child.name,
+                        childAge = child.age,
+                        rules = rules,
+                        onBack = navigator::back,
+                        onPaired = { peer ->
+                            models.remove(child.id)
+                            models.remove(peer.id)
+                            children = parent.children()
+                            selectedId = peer.id
+                            navigator.reset(Route.Home)
+                        },
+                        reconnecting = true,
+                        onPairing = { parent.repairing(child, it) },
+                    )
+                }
             }
 
             Route.Home -> {
@@ -224,6 +250,7 @@ fun ParentApp(
             Route.Settings -> {
                 SettingsScreen(
                     children = children,
+                    onReconnect = { navigator.go(Route.Reconnect(it.id)) },
                     onForget = { child ->
                         scope.launchForget(parent, child) {
                             models.remove(child.id)
