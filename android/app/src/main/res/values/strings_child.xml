@@ -32,6 +32,8 @@
     <string name="waiting_for_rules">منتظر تنظیمات والدینت</string>
     <string name="data_this_half_hour">%1$s از %2$s مگ سهم این نیم‌ساعت مصرف شده</string>
     <string name="data_used_up">حجم این نیم‌ساعت تمام شد</string>
+    <string name="data_share_used">%1$s٪ از حجم این نیم‌ساعت مصرف شده</string>
+    <string name="paused_everything_open">همهٔ برنامه‌ها اینترنت دارند</string>
     <string name="offline_apps_work">برنامه‌های آفلاین کار می‌کنند.</string>
     <string name="last_contact">آخرین ارتباط با والدینت: %1$s</string>
     <string name="no_contact_yet">هنوز به موبایل والدینت وصل نشده‌ای</string>

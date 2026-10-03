@@ -31,6 +31,8 @@
     <string name="waiting_for_rules">Waiting for your parent\'s settings</string>
     <string name="data_this_half_hour">%1$s of %2$s MB used in this half hour</string>
     <string name="data_used_up">This half hour\'s data is used up</string>
+    <string name="data_share_used">%1$s%% of this half hour\'s data used</string>
+    <string name="paused_everything_open">Every app has internet</string>
     <string name="offline_apps_work">Offline apps still work.</string>
     <string name="last_contact">Last contact with your parent: %1$s</string>
     <string name="no_contact_yet">No contact with your parent yet</string>
