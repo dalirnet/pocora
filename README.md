@@ -55,7 +55,8 @@ On top of the preset the parent changes single days, for this week or every week
 ## Project
 
 ```
-docs/           the Persian landing page, served by GitHub Pages from main; tools/icons.sh writes its icon sprite
+docs/           the Persian landing page, served by GitHub Pages from main
+  tools/        icons.sh writes its icon sprite; shots.sh takes its screenshots from the virtual phones
 assets/         source artwork: fonts/ (Dana), icon/ (the app icon as SVG)
 android/        one Gradle project that builds both apps
   Makefile      check, image, phones, icons, format, test, build, release, run, run-both, pair, publish, clean
