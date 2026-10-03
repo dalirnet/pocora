@@ -18,7 +18,8 @@
 # are, wherever a thing has a fixed place: the bottom button, the keypad, the name field. The rest go by their text,
 # read once and tapped as soon as it shows. Animations are off while this runs, so screens settle at once.
 #
-# Every shot is named app-screen-detail: parent-home-child, child-setup-done. "other" is the child on the parent phone.
+# Every shot is named app-screen-detail: parent-home-child, child-setup-done. "other" is the child on the parent phone,
+# whose app's screens are taken last, on the same phone as the parent app.
 #
 # USAGE_MINUTES=5 sh tools/shots.sh    leaves YouTube open longer, for more screen time on the Home screens
 
@@ -443,6 +444,8 @@ addChild "$CHILD_NAME" "$CHILD_AGE" parent-add-child
 shot "$PARENT" parent-pair-child
 step "handing the code to the child phone"
 (cd "$ANDROID" && TWO_PHONES=1 bash scripts/pair.sh >/dev/null)
+# The way back: the parent phone reaches the child phone through this computer too, for reads and rules.
+adb -s "$CHILD" forward tcp:47602 tcp:47602 >/dev/null
 waitText "$CHILD" "کد اسکن شد"
 shot "$CHILD" child-pair-waiting
 waitText "$PARENT" "قبول"
@@ -487,7 +490,6 @@ waitText "$PARENT" "آماده‌سازی"
 setupChild "$PARENT"
 tapWhen "$PARENT" "تمام"
 waitText "$PARENT" "زمان اینترنت"
-shot "$PARENT" child-home-other
 
 # The rest of the screen time, if the other child took less than that.
 left=$((usageStart + USAGE_MINUTES * 60 - $(date +%s)))
@@ -501,14 +503,17 @@ sleep 1
 echo "The parent app..."
 open "$PARENT" ir.pocora.parent
 unlock
-step "home, the other child"
-tapWhen "$PARENT" "$OTHER_NAME"
-sleep 2
-shot "$PARENT" parent-home-other
-step "home, the child"
+# The child's phone pushes its screen time only while the parent app is on screen, once a minute. Pulled down,
+# its Home pushes now; the Home shots come last all the same, when the minutes have long arrived.
+step "the child's phone reporting in"
+on "$CHILD" input keyevent KEYCODE_HOME
+open "$CHILD" ir.pocora.child
+waitText "$CHILD" "زمان اینترنت"
+on "$CHILD" input swipe 540 700 540 1500 400
+sleep 4
+step "the child's screens, as the parent sees them"
 tapWhen "$PARENT" "$CHILD_NAME"
 sleep 2
-shot "$PARENT" parent-home-child
 step "internet times"
 tapWhen "$PARENT" "زمان اینترنت"
 sleep 1
@@ -574,5 +579,44 @@ shot "$CHILD" child-events-list
 tapWhen "$CHILD" "تنظیمات"
 sleep 1
 shot "$CHILD" child-settings-main
+
+echo "The parent's Home, last: with the screen time in..."
+unlock
+step "home, the other child"
+tapWhen "$PARENT" "$OTHER_NAME"
+sleep 2
+shot "$PARENT" parent-home-other
+step "home, the child"
+tapWhen "$PARENT" "$CHILD_NAME"
+sleep 2
+# Until the child's screen time is on it: pulled down to read the child's phone, and read again when not yet.
+for round in 1 2 3 4 5 6 7 8 9 10; do
+    on "$PARENT" input swipe 540 700 540 1500 400
+    sleep 6
+    texts "$PARENT" | grep -q "هنوز استفاده‌ای نبوده" || break
+    step "no screen time on the parent's Home yet"
+done
+shot "$PARENT" parent-home-child
+
+echo "The other child's app, on the same phone..."
+open "$PARENT" ir.pocora.child
+waitText "$PARENT" "زمان اینترنت"
+sleep 1
+shot "$PARENT" child-home-other
+step "the other child's screens"
+tapWhen "$PARENT" "زمان اینترنت"
+sleep 1
+shot "$PARENT" child-times-other
+back "$PARENT"
+tapWhen "$PARENT" "گزارش مصرف"
+sleep 1
+shot "$PARENT" child-usage-other
+back "$PARENT"
+tapWhen "$PARENT" "رویدادها"
+sleep 1
+shot "$PARENT" child-events-other
+tapWhen "$PARENT" "تنظیمات"
+sleep 1
+shot "$PARENT" child-settings-other
 
 echo "Done: $SHOTS"
