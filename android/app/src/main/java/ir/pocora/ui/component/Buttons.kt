@@ -42,7 +42,7 @@ import ir.pocora.ui.LocalPalette
 
 // Everything that is tapped: buttons, chips, small icons and arrows.
 
-// The one main action of a screen: violet and rounded. The quiet one is for the choice that changes nothing.
+// The one main action of a screen: in the brand colour and rounded. The quiet one is for the choice that changes nothing.
 // Give it Modifier.fillMaxWidth() to span the screen.
 @Composable
 fun MainButton(
@@ -51,7 +51,7 @@ fun MainButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     quiet: Boolean = false,
-    // For a step that is hard to undo, such as removing or turning off: orange instead of violet.
+    // For a step that is hard to undo, such as removing or turning off: orange instead of the brand colour.
     danger: Boolean = false,
 ) {
     val palette = LocalPalette.current

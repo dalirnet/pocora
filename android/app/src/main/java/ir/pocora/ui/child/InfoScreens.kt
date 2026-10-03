@@ -127,7 +127,7 @@ fun SeesScreen(onBack: () -> Unit) {
     val parents = remember { app.peerStore.all().size }
     Screen(title = stringResource(R.string.what_my_parent_sees), onBack = onBack) {
         SectionTitle(stringResource(R.string.parent_sees))
-        Card { for (line in SEEN) Line(AppIcons.Visibility, AppColors.violet, stringResource(line)) }
+        Card { for (line in SEEN) Line(AppIcons.Visibility, palette.brand, stringResource(line)) }
         SectionTitle(stringResource(R.string.parent_never_sees))
         Card { for (line in NOT_SEEN) Line(AppIcons.VisibilityOff, AppColors.green, stringResource(line)) }
         Text(
@@ -169,6 +169,7 @@ fun SettingsScreen(
     onDisconnect: () -> Unit,
     bottom: (@Composable () -> Unit)? = null,
 ) {
+    val palette = LocalPalette.current
     var disconnecting by remember { mutableStateOf(false) }
     Box(modifier = Modifier.fillMaxSize()) {
         Screen(title = stringResource(R.string.settings), onBack = onBack, bottom = bottom) {
@@ -185,7 +186,7 @@ fun SettingsScreen(
                         title = stringResource(R.string.add_another_parent),
                         subtitle = stringResource(R.string.add_another_parent_text),
                         icon = AppIcons.FamilyRestroom,
-                        iconColor = AppColors.violet,
+                        iconColor = palette.brand,
                         onClick = onAddParent,
                     )
                 }

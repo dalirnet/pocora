@@ -188,12 +188,13 @@ fun TemplateCard(
     rules: Rules,
     actions: @Composable ColumnScope.() -> Unit = {},
 ) {
+    val palette = LocalPalette.current
     val schedule = remember(presets) { Schedule(presets) }
     val fits = rules.schedule in remember(presets) { Seasons(presets) }.fitting(LocalDate.now())
     Card {
         IconHeader(
             icon = AppIcons.CalendarMonth,
-            color = AppColors.violet,
+            color = palette.brand,
             title = presets.schedule(rules.schedule).name.text(),
             subtitle = scheduleSummary(schedule, rules.schedule),
             chip = if (fits) ({ Chip(stringResource(R.string.fits_this_season)) }) else null,

@@ -88,7 +88,7 @@ fun HomeScreen(
                 listOf(
                     Tile(
                         AppIcons.AccessTime,
-                        AppColors.violet,
+                        palette.brand,
                         stringResource(R.string.tile_times),
                         status.rules != null,
                         onClick = onTimes,

@@ -67,6 +67,7 @@ fun WelcomeScreen(
     onScan: () -> Unit,
     onSettings: () -> Unit,
 ) {
+    val palette = LocalPalette.current
     Screen(
         title = stringResource(R.string.app_name_child),
         trailing = { IconAction(AppIcons.Settings, stringResource(R.string.settings), onSettings) },
@@ -83,7 +84,7 @@ fun WelcomeScreen(
         failure?.let { PairingFailure(it) }
         EmptyState(
             icon = AppIcons.QrCodeScanner,
-            color = AppColors.violet,
+            color = palette.brand,
             title = stringResource(R.string.connect_to_parent),
         )
         ConnectSteps()
@@ -93,8 +94,9 @@ fun WelcomeScreen(
 // How to connect, in two points: on the welcome, and under the camera.
 @Composable
 private fun ConnectSteps() {
+    val palette = LocalPalette.current
     Card {
-        PointRow(AppIcons.PhoneAndroid, AppColors.violet, stringResource(R.string.connect_step_ask))
+        PointRow(AppIcons.PhoneAndroid, palette.brand, stringResource(R.string.connect_step_ask))
         PointRow(AppIcons.Wifi, AppColors.teal, stringResource(R.string.connect_step_wifi))
     }
 }
@@ -228,6 +230,7 @@ fun WaitingScreen(
         onDispose { client?.cancel() }
     }
 
+    val palette = LocalPalette.current
     Screen(
         title = null,
         centered = true,
@@ -244,7 +247,7 @@ fun WaitingScreen(
     ) {
         EmptyState(
             icon = AppIcons.HourglassTop,
-            color = AppColors.violet,
+            color = palette.brand,
             title = stringResource(R.string.code_scanned),
             text = stringResource(R.string.waiting_for_parent),
         )
