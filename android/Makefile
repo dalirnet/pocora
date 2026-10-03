@@ -14,6 +14,7 @@ help:
 	@echo "  make image         install the system image for the virtual phones"
 	@echo "  make phones        create and start the virtual phone, both apps on it"
 	@echo "                     add TWO_PHONES=1 for a phone per app"
+	@echo "                     they go online through this computer's proxy when it has one; PROXY=http://host:port names another"
 	@echo "  make phones-stop   shut the virtual phones down"
 	@echo "Code"
 	@echo "  make icons         write AppIcons.kt from the Solar icon set"
