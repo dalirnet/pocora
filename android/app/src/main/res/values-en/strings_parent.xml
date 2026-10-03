@@ -5,7 +5,7 @@
     <string name="lock_repeat">Enter it again</string>
     <string name="lock_enter">Enter your password</string>
     <string name="lock_wrong">Wrong password</string>
-    <string name="lock_mismatch">The two didn\'t match. Try again.</string>
+    <string name="lock_mismatch">The two didn\'t match; try again</string>
     <string name="lock_delete">Delete</string>
     <string name="welcome_title">Internet time for your child</string>
     <string name="welcome_need_wifi">Both phones on the same Wi-Fi</string>

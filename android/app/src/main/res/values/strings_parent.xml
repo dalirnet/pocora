@@ -6,7 +6,7 @@
     <string name="lock_repeat">یک بار دیگر وارد کنید</string>
     <string name="lock_enter">رمز را وارد کنید</string>
     <string name="lock_wrong">رمز اشتباه است</string>
-    <string name="lock_mismatch">رمزها یکسان نبودند؛ دوباره امتحان کنید.</string>
+    <string name="lock_mismatch">رمزها یکسان نبودند؛ دوباره امتحان کنید</string>
     <string name="lock_delete">پاک کردن</string>
     <string name="welcome_title">اینترنت بچه‌ها، به‌اندازه و به‌موقع</string>
     <string name="welcome_need_wifi">کافی است هر دو موبایل به یک وای‌فای وصل باشند</string>
