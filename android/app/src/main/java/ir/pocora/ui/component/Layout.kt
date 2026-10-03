@@ -319,7 +319,7 @@ class BarItem(
     val badge: Int = 0,
 )
 
-// Each app's main places: an icon over a label. The chosen one sits in a soft violet pill.
+// Each app's main places: an icon over a label. The chosen one sits in a soft pill of the brand colour.
 @Composable
 fun BottomBar(
     items: List<BarItem>,

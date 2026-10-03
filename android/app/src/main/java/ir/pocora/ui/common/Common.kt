@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +35,8 @@ import ir.pocora.model.Seasons
 import ir.pocora.model.Week
 import ir.pocora.preset.PresetStore
 import ir.pocora.preset.Presets
+import ir.pocora.transport.Device
+import ir.pocora.transport.Releases
 import ir.pocora.ui.AppColors
 import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
@@ -43,12 +46,19 @@ import ir.pocora.ui.component.Card
 import ir.pocora.ui.component.CardTitle
 import ir.pocora.ui.component.Chip
 import ir.pocora.ui.component.IconHeader
+import ir.pocora.ui.component.ProgressLine
 import ir.pocora.ui.component.SectionTitle
 import ir.pocora.ui.component.Segmented
+import ir.pocora.ui.component.SmallButton
+import ir.pocora.ui.component.ToastMessage
+import ir.pocora.ui.component.Toasts
 import ir.pocora.ui.component.WeekGrid
 import ir.pocora.ui.component.WeekRow
 import ir.pocora.ui.rememberFormat
 import ir.pocora.ui.text
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 
 // Parts both apps use.
@@ -121,30 +131,53 @@ fun LanguageAndLook(
     }
 }
 
-// The app, its name and installed version, as the last card of the settings.
+// The app, its name and installed version, as the last card of the settings, with an Update button. The button asks
+// GitHub for the newest release: a newer one is downloaded here, with its progress under the card, then handed to
+// Android's installer; otherwise a toast says this is the newest, or that GitHub could not be reached.
 @Composable
 fun AppVersion() {
     val context = LocalContext.current
-    val version =
-        remember {
-            context.packageManager
-                .getPackageInfo(context.packageName, 0)
-                .versionName
-                .orEmpty()
-        }
+    val scope = rememberCoroutineScope()
+    val palette = LocalPalette.current
+    val version = remember { Device.appVersion(context) }
     val name = if (Role.current == Role.PARENT) R.string.app_name_parent else R.string.app_name_child
+    val newestText = stringResource(R.string.up_to_date)
+    val checkFailedText = stringResource(R.string.update_check_failed)
+    val downloadFailedText = stringResource(R.string.update_failed)
+    // While the button's work runs: asking GitHub, then the download, whose share this is once known.
+    var busy by remember { mutableStateOf(false) }
+    var progress by remember { mutableStateOf<Float?>(null) }
+
+    suspend fun fetchAndInstall() {
+        progress = 0f
+        val file = withContext(Dispatchers.IO) { Releases.download(context) { progress = it } }
+        progress = null
+        file?.let { Releases.install(context, it) } ?: Toasts.show(downloadFailedText, ToastMessage.Kind.PROBLEM)
+    }
+
+    fun update() {
+        busy = true
+        scope.launch {
+            val latest = withContext(Dispatchers.IO) { Releases.latest() }
+            when {
+                latest == null -> Toasts.show(checkFailedText, ToastMessage.Kind.PROBLEM)
+                !Releases.isNewer(latest, version) -> Toasts.show(newestText)
+                else -> fetchAndInstall()
+            }
+            busy = false
+        }
+    }
+
     Card {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Dimens.row)) {
             AppIcon(Dimens.rowIcon)
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 CardTitle(stringResource(name))
-                Text(
-                    text = stringResource(R.string.version, version),
-                    color = LocalPalette.current.muted,
-                    fontSize = Dimens.caption,
-                )
+                Text(text = stringResource(R.string.version, version), color = palette.muted, fontSize = Dimens.caption)
             }
+            SmallButton(text = stringResource(R.string.update), onClick = ::update, enabled = !busy, filled = true)
         }
+        progress?.let { ProgressLine(it, Modifier.fillMaxWidth(), color = palette.brand) }
     }
 }
 
@@ -155,12 +188,13 @@ fun TemplateCard(
     rules: Rules,
     actions: @Composable ColumnScope.() -> Unit = {},
 ) {
+    val palette = LocalPalette.current
     val schedule = remember(presets) { Schedule(presets) }
     val fits = rules.schedule in remember(presets) { Seasons(presets) }.fitting(LocalDate.now())
     Card {
         IconHeader(
             icon = AppIcons.CalendarMonth,
-            color = AppColors.violet,
+            color = palette.brand,
             title = presets.schedule(rules.schedule).name.text(),
             subtitle = scheduleSummary(schedule, rules.schedule),
             chip = if (fits) ({ Chip(stringResource(R.string.fits_this_season)) }) else null,

@@ -843,6 +843,15 @@ h3 {
     padding-bottom: var(--s16);
 }
 
+/* A pair of phones under a section's own content: the family's sides, the ages. */
+.sides + .stage,
+.ages + .stage {
+    --phone-pair: 180px;
+    min-height: 0;
+    margin-top: var(--s8);
+    padding-bottom: var(--s16);
+}
+
 .feature-card {
     display: flex;
     flex-direction: column;

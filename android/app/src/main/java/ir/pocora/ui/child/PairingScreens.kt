@@ -32,6 +32,7 @@ import androidx.core.content.ContextCompat
 import ir.pocora.PocoraApp
 import ir.pocora.R
 import ir.pocora.protocol.PairingCode
+import ir.pocora.transport.Device
 import ir.pocora.transport.PairingClient
 import ir.pocora.transport.PairingResult
 import ir.pocora.ui.AppColors
@@ -53,7 +54,7 @@ import ir.pocora.ui.component.Screen
 fun PairingFailure(failure: PairingResult) {
     val reason =
         when (failure) {
-            PairingResult.REJECTED -> R.string.parent_did_not_accept
+            PairingResult.Rejected -> R.string.parent_did_not_accept
             else -> R.string.could_not_reach_parent
         }
     Card { PointRow(AppIcons.LinkOff, AppColors.orange, stringResource(reason)) }
@@ -66,6 +67,7 @@ fun WelcomeScreen(
     onScan: () -> Unit,
     onSettings: () -> Unit,
 ) {
+    val palette = LocalPalette.current
     Screen(
         title = stringResource(R.string.app_name_child),
         trailing = { IconAction(AppIcons.Settings, stringResource(R.string.settings), onSettings) },
@@ -82,7 +84,7 @@ fun WelcomeScreen(
         failure?.let { PairingFailure(it) }
         EmptyState(
             icon = AppIcons.QrCodeScanner,
-            color = AppColors.violet,
+            color = palette.brand,
             title = stringResource(R.string.connect_to_parent),
         )
         ConnectSteps()
@@ -92,8 +94,9 @@ fun WelcomeScreen(
 // How to connect, in two points: on the welcome, and under the camera.
 @Composable
 private fun ConnectSteps() {
+    val palette = LocalPalette.current
     Card {
-        PointRow(AppIcons.PhoneAndroid, AppColors.violet, stringResource(R.string.connect_step_ask))
+        PointRow(AppIcons.PhoneAndroid, palette.brand, stringResource(R.string.connect_step_ask))
         PointRow(AppIcons.Wifi, AppColors.teal, stringResource(R.string.connect_step_wifi))
     }
 }
@@ -114,7 +117,22 @@ fun ScanScreen(
     val permission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted = it }
     LaunchedEffect(Unit) { if (!granted) permission.launch(Manifest.permission.CAMERA) }
 
-    Screen(title = stringResource(R.string.scan_the_code), onBack = onBack) {
+    // Without the camera there is nothing to scan: the screen says so in the middle, with the ask at the bottom.
+    val ask: @Composable () -> Unit = {
+        BottomAction {
+            MainButton(
+                text = stringResource(R.string.allow_camera),
+                onClick = { permission.launch(Manifest.permission.CAMERA) },
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    }
+    Screen(
+        title = stringResource(R.string.scan_the_code),
+        onBack = onBack,
+        bottom = if (granted) null else ask,
+        centered = !granted,
+    ) {
         if (granted) {
             var found by remember { mutableStateOf(false) }
             CameraPreview { text ->
@@ -126,13 +144,11 @@ fun ScanScreen(
             }
             ConnectSteps()
         } else {
-            Card {
-                Text(text = stringResource(R.string.camera_needed), color = palette.text, fontSize = Dimens.body)
-                MainButton(
-                    text = stringResource(R.string.allow_camera),
-                    onClick = { permission.launch(Manifest.permission.CAMERA) },
-                )
-            }
+            EmptyState(
+                icon = AppIcons.QrCodeScanner,
+                color = palette.brand,
+                title = stringResource(R.string.camera_needed),
+            )
         }
     }
 }
@@ -205,14 +221,16 @@ fun WaitingScreen(
                     peerStore = app.peerStore,
                     discovery = app.discovery,
                     code = it,
+                    version = Device.appVersion(app),
                     onAccepted = app.agent::paired,
                     childName = app.configStore.childName.takeIf { app.peerStore.all().isNotEmpty() },
                 ) { result -> currentOnResult(result) }
             }
-        if (client == null) currentOnResult(PairingResult.NOT_REACHABLE) else client.start()
+        if (client == null) currentOnResult(PairingResult.NotReachable) else client.start()
         onDispose { client?.cancel() }
     }
 
+    val palette = LocalPalette.current
     Screen(
         title = null,
         centered = true,
@@ -229,7 +247,7 @@ fun WaitingScreen(
     ) {
         EmptyState(
             icon = AppIcons.HourglassTop,
-            color = AppColors.violet,
+            color = palette.brand,
             title = stringResource(R.string.code_scanned),
             text = stringResource(R.string.waiting_for_parent),
         )

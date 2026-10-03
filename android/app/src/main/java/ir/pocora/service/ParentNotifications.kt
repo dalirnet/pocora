@@ -47,7 +47,13 @@ class ParentNotifications(
         idOf(child, CHANNEL_HOME),
         CHANNEL_HOME,
         text.getString(R.string.child_connected_title, child.name),
-        text.getString(R.string.child_connected_text, format.duration(screenToday), format.number(alerts)),
+        text.getString(
+            R.string.child_connected_text,
+            format.listed(
+                format.screenTime(screenToday),
+                alerts.takeIf { it > 0 }?.let { text.getString(R.string.new_alerts, format.number(it)) },
+            ) ?: text.getString(R.string.not_used),
+        ),
         openChild(child, OPEN_USAGE),
         text.getString(R.string.see),
     )

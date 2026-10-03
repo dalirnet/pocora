@@ -53,6 +53,7 @@ import ir.pocora.ui.component.Screen
 fun SetupScreen(onDone: () -> Unit) {
     val context = LocalContext.current
     val app = context.applicationContext as PocoraApp
+    val palette = LocalPalette.current
     var checks by remember { mutableIntStateOf(0) }
     LifecycleResumeEffect(Unit) {
         checks++
@@ -128,12 +129,12 @@ fun SetupScreen(onDone: () -> Unit) {
         } else {
             EmptyState(
                 icon = iconOf(open),
-                color = AppColors.violet,
+                color = palette.brand,
                 title = stringResource(open.title),
                 text = stringResource(open.why),
             )
         }
-        // Every step at a glance: done in green with a tick, this one in violet, the rest waiting in grey.
+        // Every step at a glance: done in green with a tick, this one in the brand colour, the rest waiting in grey.
         Card {
             for (step in SetupStep.entries) {
                 PointRow(
@@ -141,7 +142,7 @@ fun SetupScreen(onDone: () -> Unit) {
                     color =
                         when {
                             done[step] == true -> AppColors.green
-                            step == open -> AppColors.violet
+                            step == open -> palette.brand
                             else -> AppColors.grey
                         },
                     title = stringResource(step.title),
@@ -151,7 +152,7 @@ fun SetupScreen(onDone: () -> Unit) {
     }
 }
 
-// How far along, in the top bar: a dot per step, green when done, the current one long and violet.
+// How far along, in the top bar: a dot per step, green when done, the current one long and in the brand colour.
 @Composable
 private fun Progress(
     done: Map<SetupStep, Boolean>,

@@ -32,15 +32,15 @@ data class Presets(
 
     fun group(id: String): AppGroup = groups.firstOrNull { it.id == id } ?: groups.last()
 
+    // The app as the shipped lists know it, if they do.
+    fun knownApp(packageName: String): KnownApp? =
+        groups.firstNotNullOfOrNull { group -> group.apps.firstOrNull { it.`package` == packageName } }
+
     // The group the shipped lists put this app in, if any.
     fun knownGroupOf(packageName: String): String? =
-        groups
-            .firstOrNull { group ->
-                group.apps.any {
-                    it.`package` ==
-                        packageName
-                }
-            }?.id
+        groups.firstOrNull { group -> group.apps.any { it.`package` == packageName } }?.id
+
+    fun isAlways(packageName: String): Boolean = knownApp(packageName)?.always == true
 }
 
 // Reads the shipped presets once.
@@ -84,10 +84,12 @@ data class Holiday(
 )
 
 // An app the presets list by its Android id, so its group never depends on what the developer declared.
+// An always app has internet at every moment unless the parent says never: the school's own app, which lessons need.
 @Serializable
 data class KnownApp(
     val `package`: String,
     val name: Names,
+    val always: Boolean = false,
 )
 
 @Serializable

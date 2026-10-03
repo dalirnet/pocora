@@ -20,10 +20,10 @@ import ir.pocora.ui.AppColors
 import kotlin.math.ceil
 import kotlin.math.min
 
-// The status notification's words and data bar, drawn in the app's font and colours. Android lays notifications out
-// without an app's own fonts, so they travel as pictures; the plain text is set beside them for screen readers.
+// A notification's words and the status card's data bar, drawn in the app's font and colours. Android lays notifications
+// out without an app's own fonts, so they travel as pictures; the plain text is set beside them for screen readers.
 // Notifications are light before Android 10, and follow the phone's dark theme from it, so the palette does too.
-class StatusPicture(
+class NotificationPicture(
     private val context: Context,
     private val rtl: Boolean,
 ) {

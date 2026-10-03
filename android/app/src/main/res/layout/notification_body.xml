@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The status notification's content, under the header Android draws itself: the sentence and a line under it,
-     then this half hour's data and its bar when unfolded. Android ignores an app's own fonts here,
+<!-- Every notification's content, under the header Android draws itself: the sentence and a line under it,
+     then, on the unfolded status card, this half hour's data and its bar. Android ignores an app's own fonts here,
      so the words and the bar arrive as pictures drawn in the app's look. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
     <ImageView android:id="@+id/title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="start" android:adjustViewBounds="true"/>

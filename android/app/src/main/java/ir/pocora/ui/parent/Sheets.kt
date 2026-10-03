@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ir.pocora.R
+import ir.pocora.model.AppAccess
 import ir.pocora.model.AppChoice
 import ir.pocora.model.Mark
 import ir.pocora.model.Schedule
@@ -216,22 +217,14 @@ fun OneAppSheet(
     val style = Categories.of(app?.group ?: AppGroup.OTHER)
     val week = Week.startOf(LocalDate.now()).toEpochDay()
     val usage = snapshot.usage.filter { it.`package` == packageName && it.date >= week }
-    val choice = rules.apps[packageName]
+    // An app the presets keep always on offers no "as the list says": always is its default, and never the other way.
+    val always = presets.isAlways(packageName)
+    val choice = AppAccess.choiceOf(presets, rules, packageName)
     val setChoice: (AppChoice?) -> Unit = { next ->
-        if (next !=
-            choice
-        ) {
+        if (next != choice) {
+            val own = next.takeUnless { always && it == AppChoice.IN }
             model.apply(
-                rules.copy(
-                    apps =
-                        if (next ==
-                            null
-                        ) {
-                            rules.apps - packageName
-                        } else {
-                            rules.apps + (packageName to next)
-                        },
-                ),
+                rules.copy(apps = if (own == null) rules.apps - packageName else rules.apps + (packageName to own)),
             )
         }
     }
@@ -243,15 +236,9 @@ fun OneAppSheet(
         subtitle =
             listOfNotNull(
                 app?.let { presets.group(it.group).name.text() },
-                stringResource(
-                    R.string.app_week_use,
-                    format.duration(
-                        usage.sumOf {
-                            it.screenMilliseconds
-                        },
-                    ),
-                    format.size(usage.sumOf { it.bytes }),
-                ),
+                format.use(usage.sumOf { it.screenMilliseconds }, usage.sumOf { it.bytes })?.let {
+                    stringResource(R.string.app_week_use, it)
+                } ?: stringResource(R.string.app_week_not_used),
             ).joinToString("\n"),
     ) {
         Text(
@@ -260,9 +247,11 @@ fun OneAppSheet(
             fontSize = Dimens.body,
             fontWeight = FontWeight.Bold,
         )
-        OptionCard(AppIcons.Apps, AppColors.blue, stringResource(R.string.choice_by_list), choice == null, {
-            setChoice(null)
-        }, enabled = model.canEdit)
+        if (!always) {
+            OptionCard(AppIcons.Apps, AppColors.blue, stringResource(R.string.choice_by_list), choice == null, {
+                setChoice(null)
+            }, enabled = model.canEdit)
+        }
         OptionCard(AppIcons.Wifi, AppColors.green, stringResource(R.string.choice_always), choice == AppChoice.IN, {
             setChoice(AppChoice.IN)
         }, enabled = model.canEdit)

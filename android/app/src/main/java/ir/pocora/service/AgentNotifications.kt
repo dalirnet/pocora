@@ -2,9 +2,7 @@ package ir.pocora.service
 
 import android.app.Notification
 import android.app.NotificationManager
-import android.view.View
 import android.widget.RemoteViews
-import androidx.core.app.NotificationCompat
 import ir.pocora.PocoraApp
 import ir.pocora.R
 import ir.pocora.agent.AgentStatus
@@ -51,7 +49,7 @@ class AgentNotifications(
         val title: String,
         val detail: String? = null,
         val subtitle: String? = detail,
-        val data: StatusPicture.Data? = null,
+        val data: NotificationPicture.Data? = null,
     ) {
         // Folded, the line is orange when it is the news that the data ran out.
         val alert: Boolean
@@ -70,13 +68,13 @@ class AgentNotifications(
         val data =
             when {
                 status.quotaReached -> {
-                    StatusPicture.Data(text.getString(R.string.data_used_up), 1f, alert = true)
+                    NotificationPicture.Data(text.getString(R.string.data_used_up), 1f, alert = true)
                 }
 
                 status.bytesPerMark != null -> {
                     val share = (status.markBytes.toFloat() / status.bytesPerMark).coerceIn(0f, 1f)
                     val percent = format.number((share * PERCENT).toInt())
-                    StatusPicture.Data(text.getString(R.string.data_share_used, percent), share, alert = false)
+                    NotificationPicture.Data(text.getString(R.string.data_share_used, percent), share, alert = false)
                 }
 
                 else -> {
@@ -105,48 +103,27 @@ class AgentNotifications(
     }
 
     // The permanent card, the child's main view, drawn as the status card on Home under Android's own header.
-    // The plain title and text stay set, for the lock screen, watches and screen readers, which show those instead.
     fun statusNotification(status: AgentStatus): Notification {
         val look = look(status)
-        return builder(CHANNEL_STATUS)
+        return builder(STATUS_ID, CHANNEL_STATUS, look.title, look.detail, views(look, false), views(look, true))
             .setAutoCancel(false)
             .setOngoing(true)
             .setSilent(true)
             .setShowWhen(false)
             .setContentIntent(open())
-            .setContentTitle(look.title)
-            .setContentText(look.detail)
-            .setStyle(NotificationCompat.DecoratedCustomViewStyle())
-            .setCustomContentView(views(look, expanded = false))
-            .setCustomBigContentView(views(look, expanded = true))
             .build()
     }
 
-    // The layout runs right to left in Persian whatever the phone's own language, as the app does.
     private fun views(
         look: StatusLook,
         expanded: Boolean,
-    ): RemoteViews {
-        val rtl = text.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
-        val picture = StatusPicture(text, rtl)
-        val line = if (expanded) look.subtitle else look.detail
-        val data = look.data?.takeIf { expanded }
-        return RemoteViews(
-            app.packageName,
-            if (rtl) R.layout.notification_status_rtl else R.layout.notification_status_ltr,
-        ).apply {
-            setImageViewBitmap(R.id.title, picture.line(look.title, StatusPicture.Kind.TITLE))
-            setContentDescription(R.id.title, look.title)
-            setViewVisibility(R.id.text, if (line == null) View.GONE else View.VISIBLE)
-            line?.let {
-                val kind = if (!expanded && look.alert) StatusPicture.Kind.ALERT else StatusPicture.Kind.DETAIL
-                setImageViewBitmap(R.id.text, picture.line(it, kind))
-                setContentDescription(R.id.text, it)
-            }
-            setViewVisibility(R.id.data, if (data == null) View.GONE else View.VISIBLE)
-            data?.let { setImageViewBitmap(R.id.data, picture.data(it)) }
-        }
-    }
+    ): RemoteViews =
+        views(
+            look.title,
+            if (expanded) look.subtitle else look.detail,
+            if (!expanded && look.alert) NotificationPicture.Kind.ALERT else NotificationPicture.Kind.DETAIL,
+            look.data?.takeIf { expanded },
+        )
 
     fun status(status: AgentStatus) = manager.notify(STATUS_ID, statusNotification(status))
 

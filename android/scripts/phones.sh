@@ -54,6 +54,21 @@ configure() {
     done
 }
 
+# system_proxy  This computer's HTTP proxy, as "http://host:port", when one is on in its network settings.
+# The phones go online through it, so sites blocked here load there too. PROXY=http://host:port names another one.
+system_proxy() {
+    if [ -n "${PROXY:-}" ]; then
+        echo "$PROXY"
+        return
+    fi
+    command -v scutil >/dev/null 2>&1 || return 0
+    scutil --proxy | awk '
+        /HTTPEnable/ { on = $3 }
+        /HTTPProxy/ { host = $3 }
+        /HTTPPort/ { port = $3 }
+        END { if (on == 1 && host != "" && port != "") print "http://" host ":" port }'
+}
+
 # Two phones may share the computer's memory, so each one is kept small:
 # less memory, two cores, no sound, and the computer's own graphics card.
 # Without -gpu host the emulator falls back to software graphics when memory
@@ -69,11 +84,14 @@ boot() {
         return
     fi
     [ -x "$EMULATOR" ] || fail "the emulator is not installed. Install it with: sdkmanager \"emulator\""
+    local proxy
+    proxy=$(system_proxy)
+    # shellcheck disable=SC2086
     nohup "$EMULATOR" -avd "$name" -port "${serial#emulator-}" \
         -memory "$PHONE_MEMORY_MEGABYTES" -cores "$PHONE_CORES" -gpu host \
-        -no-audio -no-snapshot -no-boot-anim >"/tmp/$name.log" 2>&1 &
+        -no-audio -no-snapshot -no-boot-anim ${proxy:+-http-proxy "$proxy"} >"/tmp/$name.log" 2>&1 &
     PHONE_PID=$!
-    echo "  starting $name ($serial)"
+    echo "  starting $name ($serial)${proxy:+ through $proxy}"
 }
 
 wait_ready() {

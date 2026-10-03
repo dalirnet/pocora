@@ -6,9 +6,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-// The messages the two phones send each other.
-
-// Everything the two apps say to each other. Each message travels as one JSON frame.
+// The messages the two phones send each other. Each one travels as one JSON frame.
+// Pairing carries each side's Pocora version: the two apps are released together and must match,
+// so a request from another version is refused, and both phones say so.
 @Serializable
 sealed interface Message
 
@@ -24,6 +24,7 @@ data class PairRequest(
     val androidVersion: String,
     val token: String? = null,
     val childName: String? = null,
+    val version: String? = null,
 ) : Message
 
 // Parent to child, once the parent has accepted or rejected. An accepted child gets its first rules with it,
@@ -36,6 +37,7 @@ data class PairAnswer(
     val deviceName: String,
     val rules: Rules? = null,
     val childName: String? = null,
+    val version: String? = null,
 ) : Message
 
 // Child to parent, every 60 seconds and when something happens. The port is where the child listens.

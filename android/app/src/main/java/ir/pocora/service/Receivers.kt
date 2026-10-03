@@ -9,6 +9,7 @@ import android.os.Bundle
 import ir.pocora.PocoraApp
 import ir.pocora.R
 import ir.pocora.protocol.PairingCode
+import ir.pocora.transport.Device
 import ir.pocora.transport.PairingClient
 import ir.pocora.ui.SamePhone
 import kotlin.concurrent.thread
@@ -41,6 +42,7 @@ class PairHereReceiver : BroadcastReceiver() {
             peerStore = app.peerStore,
             discovery = app.discovery,
             code = code,
+            version = Device.appVersion(app),
             onAccepted = app.agent::paired,
             token = token,
         ) { pending.finish() }.start()

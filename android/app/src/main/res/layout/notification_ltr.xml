@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The status notification's content laid out left to right, for English.
+<!-- A notification's content laid out left to right, for English.
      The direction follows the app's language, not the phone's, so it is fixed here rather than left to the system. -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:layoutDirection="ltr">
-    <include layout="@layout/notification_status_body"/>
+    <include layout="@layout/notification_body"/>
 </FrameLayout>

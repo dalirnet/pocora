@@ -18,7 +18,6 @@
     <string name="change">تغییر</string>
     <string name="try_again">تلاش مجدد</string>
     <string name="allow">فعال‌سازی</string>
-    <string name="granted">فعال</string>
     <string name="settings">تنظیمات</string>
     <string name="language">زبان</string>
     <string name="look">حالت نمایش</string>
@@ -26,6 +25,11 @@
     <string name="look_light">روشن</string>
     <string name="look_dark">تیره</string>
     <string name="version">نسخهٔ %1$s</string>
+    <string name="update">به‌روزرسانی</string>
+    <string name="up_to_date">برنامه به‌روز است</string>
+    <string name="update_check_failed">بررسی نشد؛ اینترنت را چک کنید</string>
+    <string name="update_failed">دانلود نشد؛ دوباره امتحان کنید</string>
+    <string name="versions_differ">نسخهٔ دو برنامه یکی نیست؛ هر دو را به‌روز کنید</string>
     <string name="notifications">اعلان‌ها</string>
     <string name="time_range">%1$s تا %2$s</string>
     <string name="list_separator">"، "</string>

@@ -18,13 +18,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import ir.pocora.PocoraApp
 import ir.pocora.R
@@ -42,7 +39,6 @@ import ir.pocora.ui.component.ButtonPair
 import ir.pocora.ui.component.Card
 import ir.pocora.ui.component.CardTitle
 import ir.pocora.ui.component.IconAction
-import ir.pocora.ui.component.IconTile
 import ir.pocora.ui.component.Screen
 import ir.pocora.ui.component.SectionTitle
 import ir.pocora.ui.component.Sheet
@@ -108,18 +104,15 @@ fun SettingsScreen(
 
             SectionTitle(stringResource(R.string.notifications))
             Card {
-                PermissionRow(
-                    AppIcons.Notifications,
-                    AppColors.pink,
-                    stringResource(R.string.show_notifications),
-                    canNotify,
-                ) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                // Android's permission as a switch like the rest. On asks for it; off, which only Android's own
+                // settings can do, opens them.
+                SwitchRow(stringResource(R.string.show_notifications), canNotify, { on ->
+                    if (on && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         askNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
                     } else {
                         context.startActivity(Permissions.notificationSettingsIntent(context))
                     }
-                }
+                }, icon = AppIcons.Notifications, iconColor = AppColors.pink)
                 SwitchRow(stringResource(R.string.notify_when_connects), home, {
                     home = it
                     config.notifyHome = it
@@ -150,27 +143,6 @@ fun SettingsScreen(
                     onForget(child)
                 }, danger = true)
             }
-        }
-    }
-}
-
-// A permission: "On" once granted, otherwise a button that asks for it.
-@Composable
-private fun PermissionRow(
-    icon: ImageVector,
-    color: Color,
-    title: String,
-    granted: Boolean,
-    onAllow: () -> Unit,
-) {
-    val palette = LocalPalette.current
-    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Dimens.row)) {
-        IconTile(icon, color, Dimens.rowIcon)
-        Text(text = title, color = palette.text, fontSize = Dimens.body, modifier = Modifier.weight(1f))
-        if (granted) {
-            Text(text = stringResource(R.string.granted), color = palette.done, fontSize = 14.sp)
-        } else {
-            SmallButton(text = stringResource(R.string.allow), onClick = onAllow, filled = true)
         }
     }
 }

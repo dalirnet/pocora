@@ -39,6 +39,10 @@ data class AgentState(
     val markBytes: Long = 0,
     val quotaReached: Boolean = false,
     val paused: Boolean = false,
+    // The internet as the child's phone has it: whether there is some, and until when. The parent shows these as
+    // they are, instead of working them out again, so the two phones always say the same.
+    val allowed: Boolean = false,
+    val until: Long? = null,
 )
 
 // One day on the child's phone as it really ran: each mark's label as applied, and the data each mark used.

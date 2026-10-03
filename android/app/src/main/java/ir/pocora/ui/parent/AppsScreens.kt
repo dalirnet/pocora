@@ -106,7 +106,7 @@ fun AppsTab(
             LinkRow(
                 title = group.name.text(),
                 subtitle = stringResource(if (open) R.string.group_has_internet else R.string.group_no_internet),
-                note = stringResource(R.string.apps_count, format.number(count)),
+                note = format.appsCount(count),
                 icon = style.icon,
                 iconColor = if (open) style.color else palette.muted,
                 onClick = { go(Route.Group(model.child.id, group.id)) },
@@ -179,7 +179,7 @@ fun GroupScreen(
                     style.icon,
                     if (open) style.color else palette.muted,
                     stringResource(if (open) R.string.group_has_internet else R.string.group_no_internet),
-                    subtitle = stringResource(R.string.apps_count, format.number(apps.size)),
+                    subtitle = format.appsCount(apps.size),
                 )
             }
             if (apps.isEmpty()) {
@@ -188,11 +188,12 @@ fun GroupScreen(
             if (apps.isNotEmpty()) {
                 Card {
                     for ((app, screen, bytes) in apps) {
+                        val choice = AppAccess.choiceOf(presets, rules, app.`package`)
                         val chip =
                             when {
                                 app.`package` in rules.watch -> stringResource(R.string.watched)
-                                rules.apps[app.`package`] == AppChoice.IN -> stringResource(R.string.always_internet)
-                                rules.apps[app.`package`] == AppChoice.OUT -> stringResource(R.string.never_internet)
+                                choice == AppChoice.IN -> stringResource(R.string.always_internet)
+                                choice == AppChoice.OUT -> stringResource(R.string.never_internet)
                                 else -> null
                             }
                         AppRow(

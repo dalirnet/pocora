@@ -188,7 +188,10 @@ fun PreviewScheduleScreen(
                 AppIcons.AccessTime,
                 AppColors.cyan,
                 stringResource(R.string.row_internet_time),
-                stringResource(R.string.hours_a_week, format.durationOfMarks(schedule.allowedMarksPerWeek(scheduleId))),
+                // "6h a week", or just that there is none.
+                schedule.allowedMarksPerWeek(scheduleId).takeIf { it > 0 }?.let {
+                    stringResource(R.string.hours_a_week, format.durationOfMarks(it))
+                } ?: stringResource(R.string.none),
             )
             if (rules != null) {
                 Fact(

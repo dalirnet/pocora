@@ -18,7 +18,10 @@ import java.util.concurrent.ArrayBlockingQueue
 class PairingHost(
     private val identity: () -> Identity,
     private val peerStore: PeerStore,
+    private val version: String,
     private val onRequest: (PairRequest) -> Unit,
+    // A child's phone running another version of Pocora was turned away.
+    private val onOtherVersion: () -> Unit,
     // Runs on the connection's thread, just before the child is saved, for a phone paired before to start fresh.
     private val onPairing: (Peer) -> Unit,
     private val onPaired: (Peer) -> Unit,
@@ -43,6 +46,13 @@ class PairingHost(
     // Runs on the connection's own thread and keeps it until the parent has answered.
     fun handle(connection: Connection) {
         val request = connection.receive(Protocol.REQUEST_TIMEOUT_MILLISECONDS) as? PairRequest ?: return
+        // Both apps must be the same version. The answer carries this one, so the child's phone knows why.
+        if (request.version != version) {
+            connection.send(answer(false))
+            FileLogger.i(TAG, "Pairing refused: ${request.deviceName} runs Pocora ${request.version}, not $version")
+            mainHandler.post(onOtherVersion)
+            return
+        }
         val decisions = ArrayBlockingQueue<Decision>(1)
         synchronized(lock) {
             // One request at a time. A second phone asking meanwhile is turned away.
@@ -115,5 +125,5 @@ class PairingHost(
         accepted: Boolean,
         rules: Rules? = null,
         childName: String? = null,
-    ) = PairAnswer(accepted, identity().id, Device.name, rules, childName)
+    ) = PairAnswer(accepted, identity().id, Device.name, rules, childName, version)
 }

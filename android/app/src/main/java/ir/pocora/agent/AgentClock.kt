@@ -21,6 +21,9 @@ class AgentClock(
 
     fun localNow(): LocalDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(now()), ZoneId.systemDefault())
 
+    // The other way, for a time sent to the parent.
+    fun epochOf(time: LocalDateTime): Long = time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+
     fun setFromParent(parentTime: Long) =
         configStore.setClockOffset(
             bootCount(),

@@ -237,7 +237,7 @@ fun LinkRow(
     }
 }
 
-// One choice of several, as a card: its icon, title and details, and a clear chosen state, a violet edge and a tick.
+// One choice of several, as a card: its icon, title and details, and a clear chosen state, a brand-coloured edge and a tick.
 // When choosing opens another screen instead, it ends in an arrow. More can follow under it, such as small strips.
 @Composable
 fun OptionCard(

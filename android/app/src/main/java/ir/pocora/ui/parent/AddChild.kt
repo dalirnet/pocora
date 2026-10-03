@@ -47,6 +47,7 @@ import ir.pocora.R
 import ir.pocora.model.Peer
 import ir.pocora.model.Rules
 import ir.pocora.protocol.PairRequest
+import ir.pocora.transport.Device
 import ir.pocora.transport.PairingHost
 import ir.pocora.ui.AppColors
 import ir.pocora.ui.AppIcons
@@ -68,6 +69,8 @@ import ir.pocora.ui.component.PointRow
 import ir.pocora.ui.component.QrCode
 import ir.pocora.ui.component.Screen
 import ir.pocora.ui.component.Sheet
+import ir.pocora.ui.component.ToastMessage
+import ir.pocora.ui.component.Toasts
 import ir.pocora.ui.rememberFormat
 
 // Adding a child: welcome, name and age, and the pairing code.
@@ -284,12 +287,18 @@ fun PairingCodeScreen(
     val currentOnPaired by rememberUpdatedState(onPaired)
     var code by remember { mutableStateOf<String?>(null) }
     var request by remember { mutableStateOf<PairRequest?>(null) }
+    val otherVersionText = stringResource(R.string.versions_differ)
     val host =
         remember {
             PairingHost(
                 identity = { app.identity },
                 peerStore = app.peerStore,
+                version = Device.appVersion(app),
                 onRequest = { request = it },
+                onOtherVersion = {
+                    connectingHere = false
+                    Toasts.show(otherVersionText, ToastMessage.Kind.PROBLEM)
+                },
                 onPairing = onPairing ?: app.parent::clearData,
                 onPaired = { currentOnPaired(it) },
                 onRequestGone = { request = null },

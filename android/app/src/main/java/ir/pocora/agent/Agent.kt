@@ -232,6 +232,7 @@ class Agent(
                 quotaReached = quotaReached,
                 today = schedule.day(rules, date),
                 lastParentContact = app.configStore.lastParentContact,
+                changes = schedule.differences(rules, date),
                 childName = app.configStore.childName,
                 rules = rules,
             )
@@ -260,6 +261,7 @@ class Agent(
                 quotaReached = false,
                 today = schedule.day(rules, date),
                 lastParentContact = app.configStore.lastParentContact,
+                changes = schedule.differences(rules, date),
                 childName = app.configStore.childName,
                 rules = rules,
                 paused = true,
@@ -328,10 +330,9 @@ class Agent(
         appsList: String,
     ): List<String> {
         val withInternet = catalog.withInternet().toSet()
-        if (!allowed) return withInternet.sorted()
         return catalog
             .installed()
-            .filter { it.`package` in withInternet && !AppAccess.hasInternet(presets, rules, it, appsList) }
+            .filter { it.`package` in withInternet && !AppAccess.hasInternet(presets, rules, it, appsList, allowed) }
             .map { it.`package` }
             .sorted()
     }
@@ -467,6 +468,8 @@ class Agent(
                         markBytes = status.markBytes,
                         quotaReached = status.quotaReached,
                         paused = status.paused,
+                        allowed = status.allowed,
+                        until = status.until?.let(clock::epochOf),
                     ),
                 days = days.all(),
                 apps = catalog.installed(),

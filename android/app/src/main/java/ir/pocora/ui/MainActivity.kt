@@ -18,6 +18,7 @@ import ir.pocora.config.ConfigStore
 import ir.pocora.config.Language
 import ir.pocora.config.Look
 import ir.pocora.protocol.PairingCode
+import ir.pocora.service.NotificationPreview
 import ir.pocora.ui.child.ChildApp
 import ir.pocora.ui.component.LocalLocked
 import ir.pocora.ui.component.WithToasts
@@ -51,6 +52,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         savedInstanceState?.let { locked.value = it.getBoolean(STATE_LOCKED, locked.value) }
         val handedCode = if (isHandedCode()) intent.getStringExtra(SamePhone.EXTRA_PAIRING_CODE) else null
+        if (isPreview()) NotificationPreview.show(application as PocoraApp)
         handleOpen(intent)
         look.value = (application as PocoraApp).configStore.look
         setContent {
@@ -123,6 +125,9 @@ class MainActivity : ComponentActivity() {
     // A code handed in instead of scanned, in a debug build only: by a script, for a virtual phone with no camera.
     // In a release build only a person holding the phone can start pairing.
     private fun isHandedCode(): Boolean = isDebuggable()
+
+    // Asked by a script to show every notification with sample words, in a debug build only.
+    private fun isPreview(): Boolean = isDebuggable() && intent.getBooleanExtra(NotificationPreview.EXTRA, false)
 
     private fun isDebuggable(): Boolean = applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
 }
