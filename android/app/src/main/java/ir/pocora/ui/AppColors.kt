@@ -5,11 +5,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ir.pocora.Role
 import ir.pocora.config.Look
 
 // Every colour of both apps, light and dark. No colour is written anywhere else.
+// The brand is each app's own, as its icon: violet in the parent app, cyan in the child app.
 object AppColors {
-    val light =
+    private val parentLight =
         Palette(
             backgroundTop = Color(0xFFEFEAFF),
             background = Color(0xFFF8F7FC),
@@ -25,7 +27,7 @@ object AppColors {
             dark = false,
         )
 
-    val dark =
+    private val parentDark =
         Palette(
             backgroundTop = Color(0xFF1A1630),
             background = Color(0xFF100E1C),
@@ -40,6 +42,19 @@ object AppColors {
             shadow = Color(0x66000000),
             dark = true,
         )
+
+    // The child's cyan: the icon's deep end on light, its bright end on dark.
+    private val childBrandLight = Color(0xFF0E9FCC)
+    private val childBrandDark = Color(0xFF3DD6F5)
+
+    val light: Palette =
+        if (Role.current == Role.CHILD) {
+            parentLight.copy(brand = childBrandLight, shadow = Color(0x330E9FCC))
+        } else {
+            parentLight
+        }
+
+    val dark: Palette = if (Role.current == Role.CHILD) parentDark.copy(brand = childBrandDark) else parentDark
 
     // A pairing code is black on white in both themes, so every camera can read it.
     val code = Color(0xFF000000)
