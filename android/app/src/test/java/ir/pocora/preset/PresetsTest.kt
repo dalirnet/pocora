@@ -43,6 +43,17 @@ class PresetsTest {
     }
 
     @Test
+    fun knownGroupOf_appWithoutAndroidCategory() {
+        assertEquals(AppGroup.MUSIC, presets.knownGroupOf("com.spotify.music"))
+    }
+
+    @Test
+    fun groups_eachAppOnce() {
+        val packages = presets.groups.flatMap { group -> group.apps.map { it.`package` } }
+        assertEquals(packages.size, packages.toSet().size)
+    }
+
+    @Test
     fun knownGroupOf_unlistedApp() {
         assertNull(presets.knownGroupOf("com.example.unknown"))
     }
