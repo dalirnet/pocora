@@ -241,7 +241,9 @@ page() {
                 gap: 3.5mm;
             }
 
-            .side {
+            /* The site's cards, stripped to bare columns; .side.child is named too, to outrank the site's own tint. */
+            .side,
+            .side.child {
                 gap: var(--s4);
                 padding: 0;
                 background: none;
@@ -314,6 +316,12 @@ page() {
                 background: var(--text);
             }
 
+            /* The words start level with the top of the QR code; the tags end level with its foot. */
+            .foot-text {
+                align-self: start;
+                margin-top: 1mm;
+            }
+
             .foot h2 {
                 margin: 0 0 1.5mm;
                 font-size: 17pt;
@@ -322,7 +330,7 @@ page() {
             }
 
             .foot .lead {
-                margin: 0 0 3.5mm;
+                margin: 0 0 7mm;
                 font-size: var(--text-base);
                 color: rgba(255, 255, 255, 0.72);
             }
@@ -421,7 +429,7 @@ page() {
                     <span class="logo"><span class="mark"><svg viewBox="$MARK_BOX">$MARK</svg></span>پوکورا</span>
                     <span class="pill"><b>رایگان</b>ساخته‌شده برای خانواده‌های ایرانی</span>
                     <h1>فرزندتان همیشه<br /><span class="gradient">سرگرم موبایل</span> است؟</h1>
-                    <p class="lead">با پوکورا، اینترنت فرزندان به‌اندازه و به‌موقع می‌شود</p>
+                    <p class="lead">با پوکورا، فرزندان به‌اندازه و به‌موقع اینترنت دارند</p>
                 </div>
                 <div class="stage">
                     <figure class="phone child behind">
@@ -442,12 +450,12 @@ page() {
                             <div class="row-body"><b>تا دیروقت با موبایل بیدار است</b><small>هر شب همین ماجرا تکرار می‌شود</small></div>
                         </div>
                         <div class="row">
-                            <span class="tile"><svg><use href="#wallet-money" /></svg></span>
-                            <div class="row-body"><b>بستهٔ اینترنت زود تمام می‌شود</b><small>و هر بار باید بستهٔ تازه‌ای خرید</small></div>
+                            <span class="tile"><svg><use href="#hourglass" /></svg></span>
+                            <div class="row-body"><b>حجم اینترنت زود تمام می‌شود</b><small>هر بار باید دوباره حجم خرید</small></div>
                         </div>
                         <div class="row">
                             <span class="tile"><svg><use href="#question-circle" /></svg></span>
-                            <div class="row-body"><b>معلوم نیست وقت او صرف چه می‌شود</b><small>کدام برنامه و چند ساعت؟</small></div>
+                            <div class="row-body"><b>معلوم نیست وقت او صرف چه می‌شود</b><small>نه برنامه مشخص است و نه مدت آن</small></div>
                         </div>
                     </div>
                 </div>
@@ -455,23 +463,23 @@ page() {
                     <div class="side-head"><b>پوکورا راه‌حل شماست!</b></div>
                     <div class="rows">
                         <div class="row">
-                            <span class="tile"><svg><use href="#alarm-add" /></svg></span>
-                            <div class="row-body"><b>اینترنت فقط سر وقت</b><small>ساعت آن را شما تعیین می‌کنید</small></div>
+                            <span class="tile"><svg><use href="#clock-circle" /></svg></span>
+                            <div class="row-body"><b>اینترنت فقط در ساعت مقرر وصل است</b><small>زمان آن را شما مشخص می‌کنید</small></div>
                         </div>
                         <div class="row">
                             <span class="tile"><svg><use href="#pie-chart-2" /></svg></span>
-                            <div class="row-body"><b>حجم، به‌اندازه</b><small>هر ساعت سقف مشخصی دارد</small></div>
+                            <div class="row-body"><b>حجم اینترنت به‌اندازه مصرف می‌شود</b><small>هر ساعت سقف مشخصی از حجم دارد</small></div>
                         </div>
                         <div class="row">
                             <span class="tile"><svg><use href="#eye" /></svg></span>
-                            <div class="row-body"><b>همه‌چیز پیش چشم شما</b><small>هر برنامه چقدر زمان و حجم مصرف کرده است</small></div>
+                            <div class="row-body"><b>تمام مصرف فرزند پیش چشم شماست</b><small>زمان و حجم هر برنامه مشخص است</small></div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <footer class="foot">
-                <div>
+                <div class="foot-text">
                     <h2>همین امروز نصب کنید</h2>
                     <p class="lead">دو برنامه، رایگان و بدون تبلیغ، برای اندروید</p>
                     <div class="apps">
