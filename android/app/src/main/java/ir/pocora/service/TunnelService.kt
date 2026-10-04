@@ -89,7 +89,6 @@ class TunnelService : VpnService() {
                 .setSession("Pocora")
                 .addAddress(ADDRESS, 32)
                 .addAddress(ADDRESS_V6, 128)
-                .addDnsServer(DNS)
                 .setBlocking(true)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) builder.setMetered(false)
         var added = 0
@@ -101,10 +100,12 @@ class TunnelService : VpnService() {
             }
         }
         if (added > 0) {
-            builder.addRoute("0.0.0.0", 0).addRoute("::", 0)
+            // The blocked apps' DNS goes into the tunnel too, or their names would still resolve.
+            builder.addDnsServer(DNS).addRoute("0.0.0.0", 0).addRoute("::", 0)
         } else {
-            // Nothing to block. The VPN stays up, so Android still counts it as on, but carries nothing.
-            builder.addDisallowedApplication(packageName).addRoute(DNS, 32)
+            // Nothing to block. The VPN stays up, so Android still counts it as on, but carries nothing: it takes in
+            // only Pocora itself, with no route and no DNS server, so every other app is as it would be with no VPN.
+            builder.addAllowedApplication(packageName)
         }
         val next =
             try {
