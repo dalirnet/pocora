@@ -7,6 +7,7 @@
 #
 # Solar is by 480 Design, under CC BY 4.0: https://icon-sets.iconify.design/solar/
 # The page uses an icon as <svg><use href="assets/icons/sprite.svg#name"/></svg>. Add a name here, then run this again.
+# The flyer (tools/flyer.sh) draws from the same sprite.
 
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/../assets/icons"
@@ -17,10 +18,12 @@ done
 
 ICONS="
 alarm-add
+clock-circle
 cloud
 danger-triangle
 eye
 home-2
+hourglass
 incognito
 lock-keyhole
 pie-chart-2
