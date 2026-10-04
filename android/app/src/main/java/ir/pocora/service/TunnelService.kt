@@ -65,7 +65,6 @@ class TunnelService : VpnService() {
     }
 
     private var tunnel: ParcelFileDescriptor? = null
-    private var drain: Thread? = null
 
     override fun onStartCommand(
         intent: Intent?,
@@ -83,33 +82,11 @@ class TunnelService : VpnService() {
         return START_STICKY
     }
 
+    // Builds the tunnel for these apps and swaps it in for the one in place, which is closed once the new one is up.
     private fun establish(apps: List<String>) {
-        val builder =
-            Builder()
-                .setSession("Pocora")
-                .addAddress(ADDRESS, 32)
-                .addAddress(ADDRESS_V6, 128)
-                .setBlocking(true)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) builder.setMetered(false)
-        var added = 0
-        for (app in apps) {
-            try {
-                builder.addAllowedApplication(app)
-                added++
-            } catch (_: PackageManager.NameNotFoundException) {
-            }
-        }
-        if (added > 0) {
-            // The blocked apps' DNS goes into the tunnel too, or their names would still resolve.
-            builder.addDnsServer(DNS).addRoute("0.0.0.0", 0).addRoute("::", 0)
-        } else {
-            // Nothing to block. The VPN stays up, so Android still counts it as on, but carries nothing: it takes in
-            // only Pocora itself, with no route and no DNS server, so every other app is as it would be with no VPN.
-            builder.addAllowedApplication(packageName)
-        }
         val next =
             try {
-                builder.establish()
+                builderFor(apps).establish()
             } catch (error: RuntimeException) {
                 FileLogger.e(TAG, "Could not start the VPN", error)
                 null
@@ -121,34 +98,64 @@ class TunnelService : VpnService() {
         val previous = tunnel
         tunnel = next
         running = true
-        startDrain(next)
-        try {
-            previous?.close()
-        } catch (_: IOException) {
-        }
+        drain(next)
+        closeQuietly(previous)
         FileLogger.i(TAG, "VPN on, ${apps.size} apps without internet")
     }
 
+    // The tunnel's shape. The blocked apps go in with every route and the DNS, so none of their traffic gets out.
+    // With nothing to block, it takes in only Pocora itself, with no route and no DNS server: the VPN stays up,
+    // so Android still counts it as on, and every other app is as it would be with no VPN.
+    private fun builderFor(apps: List<String>): Builder {
+        val builder =
+            Builder()
+                .setSession("Pocora")
+                .addAddress(ADDRESS, 32)
+                .addAddress(ADDRESS_V6, 128)
+                .setBlocking(true)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) builder.setMetered(false)
+        val taken = apps.count { builder.take(it) }
+        if (taken > 0) {
+            builder.addDnsServer(DNS).addRoute("0.0.0.0", 0).addRoute("::", 0)
+        } else {
+            builder.addAllowedApplication(packageName)
+        }
+        return builder
+    }
+
+    // An app may have been removed since the list was made.
+    private fun Builder.take(app: String): Boolean =
+        try {
+            addAllowedApplication(app)
+            true
+        } catch (_: PackageManager.NameNotFoundException) {
+            false
+        }
+
     // Reads and throws away every packet, so the blocked apps' connections fail fast instead of filling a queue.
-    private fun startDrain(descriptor: ParcelFileDescriptor) {
-        drain =
-            thread(name = "pocora-tunnel") {
-                val input = FileInputStream(descriptor.fileDescriptor)
-                val packet = ByteArray(PACKET_SIZE_BYTES)
-                try {
-                    while (input.read(packet) >= 0) Unit
-                } catch (_: IOException) {
-                }
+    // The thread ends on its own once the tunnel is closed.
+    private fun drain(descriptor: ParcelFileDescriptor) {
+        thread(name = "pocora-tunnel") {
+            val input = FileInputStream(descriptor.fileDescriptor)
+            val packet = ByteArray(PACKET_SIZE_BYTES)
+            try {
+                while (input.read(packet) >= 0) Unit
+            } catch (_: IOException) {
             }
+        }
     }
 
     private fun close() {
-        try {
-            tunnel?.close()
-        } catch (_: IOException) {
-        }
+        closeQuietly(tunnel)
         tunnel = null
         running = false
+    }
+
+    private fun closeQuietly(descriptor: ParcelFileDescriptor?) {
+        try {
+            descriptor?.close()
+        } catch (_: IOException) {
+        }
     }
 
     // The child turned the VPN off in Android's settings, or another VPN took its place.
