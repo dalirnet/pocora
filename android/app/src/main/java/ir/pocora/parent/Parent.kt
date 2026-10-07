@@ -11,6 +11,7 @@ import ir.pocora.model.alerts
 import ir.pocora.preset.PresetStore
 import ir.pocora.protocol.Applied
 import ir.pocora.protocol.Message
+import ir.pocora.protocol.PairRequest
 import ir.pocora.protocol.Protocol
 import ir.pocora.protocol.Read
 import ir.pocora.protocol.SetRules
@@ -97,6 +98,19 @@ class Parent(
             FileLogger.i(TAG, "${child.name} disconnected")
             drop(child)
             notifications.disconnected(child)
+            return
+        }
+        // Its app was reset or it disconnected while this app was closed: it pairs again through the code on screen.
+        if (message is PairRequest) {
+            if (!app.endpoint.pairAgain(connection, message)) {
+                FileLogger.w(TAG, "${child.name} asked to pair again, with no pairing code open")
+                return
+            }
+            // Paired again under a new id, which took the old entry's place: what was kept under the old id goes too.
+            if (app.peerStore.all().none { it.id == child.id }) {
+                clearData(child)
+                changed()
+            }
             return
         }
         val sync = message as? Sync
