@@ -71,6 +71,7 @@
     <string name="channel_allowed">وصل شدن اینترنت</string>
     <string name="channel_ending">قبل از قطع اینترنت</string>
     <string name="channel_quota">حجم</string>
+    <string name="channel_wifi">درخواست اتصال والدین</string>
     <string name="notify_internet_until">اینترنت تا ساعت %1$s</string>
     <string name="notify_no_internet_until">تا ساعت %1$s اینترنت نداری</string>
     <string name="notify_internet_started">اینترنت وصل شد، تا ساعت %1$s</string>
@@ -78,6 +79,9 @@
     <string name="notify_ending">اینترنت %1$s دقیقه دیگر قطع می‌شود</string>
     <string name="notify_data_left">فقط %1$s از حجم این نیم‌ساعت مانده</string>
     <string name="notify_data_used">حجم تمام شد؛ نیم‌ساعت بعد وصل می‌شود.</string>
+    <string name="notify_turn_on_wifi">وای‌فای را روشن کن</string>
+    <string name="notify_join_home_wifi">به وای‌فای خانه وصل شو</string>
+    <string name="notify_parent_waiting">موبایل والدینت منتظر اتصال است</string>
     <string name="parent_sees_admin_off">والدینت باخبر می‌شوند.</string>
     <string name="tile_internet">اینترنت وصل</string>
     <string name="tile_no_internet">اینترنت قطع</string>

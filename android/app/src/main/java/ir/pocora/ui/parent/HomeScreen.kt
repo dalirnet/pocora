@@ -198,17 +198,6 @@ private fun Status(
             .schedule(snapshot.rules.schedule)
             .name
             .text()
-    if (!model.online) {
-        StatusPanel(
-            AppIcons.CloudOff,
-            palette.muted,
-            stringResource(R.string.last_update, format.dayAndTime(snapshot.takenAt)),
-            scheduleName,
-            plan,
-            changes,
-        )
-        return
-    }
     if (snapshot.state.paused) {
         StatusPanel(
             AppIcons.PowerSettingsNew,
@@ -253,6 +242,19 @@ private fun Status(
                 model.canEdit,
             )
         }
+    }
+    // Away: the last update, with the actions still there, as a change wakes the child's phone.
+    if (!model.online) {
+        StatusPanel(
+            AppIcons.CloudOff,
+            palette.muted,
+            stringResource(R.string.last_update, format.dayAndTime(snapshot.takenAt)),
+            scheduleName,
+            plan,
+            changes,
+            actions,
+        )
+        return
     }
     if (off) {
         StatusPanel(

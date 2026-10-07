@@ -1,6 +1,7 @@
 package ir.pocora.service
 
 import android.app.Service
+import android.bluetooth.BluetoothAdapter
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -9,7 +10,8 @@ import android.os.IBinder
 import ir.pocora.PocoraApp
 
 // Keeps the agent running: a foreground service with the status card as its notification.
-// It also hears apps being installed or removed, and the Wi-Fi changing.
+// It also hears apps being installed or removed, the Wi-Fi changing, and Bluetooth coming on, which the listening
+// for the parent's wake-up signal needs again.
 class AgentService : Service() {
     companion object {
         fun start(context: Context) = Foreground.start(context, AgentService::class.java)
@@ -28,6 +30,17 @@ class AgentService : Service() {
                 // An update is a removal and an install of the same app. Neither is worth noting.
                 if (intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) return
                 app.agent.onPackageChanged(packageName, intent.action == Intent.ACTION_PACKAGE_ADDED)
+            }
+        }
+
+    private val bluetooth =
+        object : BroadcastReceiver() {
+            override fun onReceive(
+                context: Context,
+                intent: Intent,
+            ) {
+                val state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
+                if (state == BluetoothAdapter.STATE_ON) app.listenIfPaired()
             }
         }
 
@@ -53,8 +66,10 @@ class AgentService : Service() {
                 addDataScheme("package")
             },
         )
+        registerReceiver(bluetooth, IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED))
         network.start()
         app.agent.start()
+        app.listenIfPaired()
     }
 
     override fun onStartCommand(
@@ -68,6 +83,7 @@ class AgentService : Service() {
 
     override fun onDestroy() {
         unregisterReceiver(packages)
+        unregisterReceiver(bluetooth)
         network.stop()
         super.onDestroy()
     }

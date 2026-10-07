@@ -112,6 +112,13 @@ enum class EventKind(
     VPN_APP_INSTALLED(true),
     DEVICE_ADMIN_OFF(true),
     WATCHED_APP(true),
+
+    // The parent's phone asked for Wi-Fi and it stayed off; Bluetooth off, or before Android 12 location, so the
+    // parent's phone cannot wake this one; Pocora's notifications off, so a request for Wi-Fi is never seen.
+    WIFI_KEPT_OFF(true),
+    BLUETOOTH_OFF(true),
+    LOCATION_OFF(true),
+    NOTIFICATIONS_OFF(true),
     REBOOT(false),
     APP_INSTALLED(false),
     APP_REMOVED(false),

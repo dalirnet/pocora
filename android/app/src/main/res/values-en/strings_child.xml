@@ -70,6 +70,7 @@
     <string name="channel_allowed">Internet starts</string>
     <string name="channel_ending">Internet ends soon</string>
     <string name="channel_quota">Data</string>
+    <string name="channel_wifi">Parent\'s connection requests</string>
     <string name="notify_internet_until">Internet until %1$s</string>
     <string name="notify_no_internet_until">No internet until %1$s</string>
     <string name="notify_internet_started">Internet is on until %1$s</string>
@@ -77,6 +78,9 @@
     <string name="notify_ending">Internet stops in %1$s minutes</string>
     <string name="notify_data_left">Only %1$s left for this half hour</string>
     <string name="notify_data_used">Data used up; back next half hour.</string>
+    <string name="notify_turn_on_wifi">Turn on Wi-Fi</string>
+    <string name="notify_join_home_wifi">Connect to the home Wi-Fi</string>
+    <string name="notify_parent_waiting">Your parent\'s phone is waiting to connect</string>
     <string name="parent_sees_admin_off">Your parent will see this.</string>
     <string name="tile_internet">Internet on</string>
     <string name="tile_no_internet">No internet</string>

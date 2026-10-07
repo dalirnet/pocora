@@ -8,21 +8,58 @@ import android.content.Intent
 import android.os.Bundle
 import ir.pocora.PocoraApp
 import ir.pocora.R
+import ir.pocora.Role
 import ir.pocora.protocol.PairingCode
 import ir.pocora.transport.Device
 import ir.pocora.transport.PairingClient
+import ir.pocora.transport.Wake
 import ir.pocora.ui.SamePhone
 import kotlin.concurrent.thread
 
 // The broadcast receivers.
 
 // Starts the agent after the phone restarts, or after Pocora is updated, once the phone is paired.
+// In both apps, it also listens again for the other phone's Bluetooth signal, which a restart or an update ends.
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(
         context: Context,
         intent: Intent,
     ) {
-        (context.applicationContext as PocoraApp).startServiceIfPaired()
+        val app = context.applicationContext as PocoraApp
+        app.startServiceIfPaired()
+        app.listenIfPaired()
+    }
+}
+
+// The other phone's Bluetooth signal was heard, or it is time to listen again. See Wake.
+// The child's agent is already running and takes it from here. The parent app may have been closed, so it reaches
+// the child in the time Android gives a receiver.
+class WakeReceiver : BroadcastReceiver() {
+    override fun onReceive(
+        context: Context,
+        intent: Intent,
+    ) {
+        val app = context.applicationContext as PocoraApp
+        when (intent.action) {
+            Wake.ACTION_LISTEN -> {
+                app.listenIfPaired()
+            }
+
+            Wake.ACTION_HEARD -> {
+                if (Role.current == Role.CHILD) {
+                    app.agent.onCalled(intent)
+                    return
+                }
+                val pending = goAsync()
+                thread(name = "pocora-wake") {
+                    try {
+                        app.parent.onCalled(intent)
+                    } finally {
+                        pending.finish()
+                    }
+                }
+            }
+        }
     }
 }
 

@@ -177,6 +177,10 @@
     <string name="event_vpn_app_installed">یک فیلترشکن نصب شد</string>
     <string name="event_device_admin_off">سرپرست دستگاه غیرفعال شد</string>
     <string name="event_watched_app">برنامهٔ زیر نظر باز شد</string>
+    <string name="event_wifi_kept_off">وای‌فای روشن نشد</string>
+    <string name="event_bluetooth_off">بلوتوث خاموش شد</string>
+    <string name="event_location_off">مکان خاموش شد</string>
+    <string name="event_notifications_off">اعلان‌های پوکورا خاموش شد</string>
     <string name="event_reboot">موبایل خاموش و روشن شد</string>
     <string name="event_app_installed">برنامه نصب شد</string>
     <string name="event_app_removed">برنامه حذف شد</string>
@@ -196,6 +200,8 @@
     <string name="part_quota">حجم</string>
     <string name="part_extra_data">حجم اضافه</string>
     <string name="part_watch">برنامه‌های زیر نظر</string>
+    <string name="child_calling">%1$s می‌خواهد وصل شود</string>
+    <string name="child_calling_text">وای‌فای را روشن کنید</string>
     <string name="event_missing">یک هفته است خبری نیست</string>
     <string name="cant_reach">موبایل %1$s در دسترس نیست</string>
     <string name="cant_reach_text">هر دو موبایل باید روی یک وای‌فای باشند.</string>

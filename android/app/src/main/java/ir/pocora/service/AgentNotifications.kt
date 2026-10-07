@@ -3,10 +3,12 @@ package ir.pocora.service
 import android.app.Notification
 import android.app.NotificationManager
 import android.widget.RemoteViews
+import androidx.core.app.NotificationManagerCompat
 import ir.pocora.PocoraApp
 import ir.pocora.R
 import ir.pocora.agent.AgentStatus
 import ir.pocora.preset.PresetStore
+import ir.pocora.transport.Radios
 import java.time.LocalDateTime
 
 // The child's notifications. Each kind is its own channel, so it can be silenced alone in the phone's settings.
@@ -19,6 +21,7 @@ class AgentNotifications(
             Triple(CHANNEL_ALLOWED, R.string.channel_allowed, NotificationManager.IMPORTANCE_LOW),
             Triple(CHANNEL_ENDING, R.string.channel_ending, NotificationManager.IMPORTANCE_DEFAULT),
             Triple(CHANNEL_QUOTA, R.string.channel_quota, NotificationManager.IMPORTANCE_DEFAULT),
+            Triple(CHANNEL_WIFI, R.string.channel_wifi, NotificationManager.IMPORTANCE_HIGH),
         ),
     ) {
     companion object {
@@ -26,11 +29,13 @@ class AgentNotifications(
         private const val ALLOWED_ID = 2
         private const val ENDING_ID = 3
         private const val QUOTA_ID = 4
+        private const val WIFI_ID = 5
 
         private const val CHANNEL_STATUS = "status"
         private const val CHANNEL_ALLOWED = "allowed"
         private const val CHANNEL_ENDING = "ending"
         private const val CHANNEL_QUOTA = "quota"
+        private const val CHANNEL_WIFI = "wifi"
         private const val PERCENT = 100
 
         // The channel of the parent's requests, a feature since removed.
@@ -142,6 +147,24 @@ class AgentNotifications(
         show(QUOTA_ID, CHANNEL_QUOTA, text.getString(R.string.notify_data_left, format.size(bytes)))
 
     fun quotaUsed() = show(QUOTA_ID, CHANNEL_QUOTA, text.getString(R.string.notify_data_used))
+
+    // The parent's phone called and could not reach this one: it pops up over whatever is open, and a tap opens the
+    // Wi-Fi panel there. On another network, it asks for the home Wi-Fi.
+    fun askForWifi(homeWifi: Boolean) =
+        show(
+            WIFI_ID,
+            CHANNEL_WIFI,
+            text.getString(if (homeWifi) R.string.notify_join_home_wifi else R.string.notify_turn_on_wifi),
+            text.getString(R.string.notify_parent_waiting),
+            openScreen(Radios.wifiIntent(app)),
+        )
+
+    fun cancelWifi() = manager.cancel(WIFI_ID)
+
+    // Whether a request for Wi-Fi can be seen: Pocora's notifications on, and that channel not silenced.
+    fun canAsk(): Boolean =
+        NotificationManagerCompat.from(app).areNotificationsEnabled() &&
+            manager.getNotificationChannel(CHANNEL_WIFI)?.importance != NotificationManager.IMPORTANCE_NONE
 
     // After disconnecting: nothing from the old pairing stays on screen.
     fun cancelAll() = manager.cancelAll()

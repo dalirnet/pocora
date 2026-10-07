@@ -8,6 +8,7 @@ import ir.pocora.model.EventKind
 import ir.pocora.model.Peer
 import ir.pocora.preset.Holiday
 import ir.pocora.preset.SchedulePreset
+import ir.pocora.transport.Radios
 import ir.pocora.ui.Labels
 import ir.pocora.ui.MainActivity
 
@@ -116,8 +117,20 @@ class ParentNotifications(
         text.getString(R.string.use_fridays_hours),
     )
 
+    // A child's phone called over Bluetooth while this phone's Wi-Fi was off: a tap opens the Wi-Fi panel.
+    fun childCalling(child: Peer) =
+        show(
+            idOf(child, CALLING),
+            CHANNEL_HOME,
+            text.getString(R.string.child_calling, child.name),
+            text.getString(R.string.child_calling_text),
+            openScreen(Radios.wifiIntent(app)),
+        )
+
+    fun cancelCalling(child: Peer) = manager.cancel(idOf(child, CALLING))
+
     fun cancelChild(child: Peer) =
-        listOf(CHANNEL_HOME, CHANNEL_SUGGESTIONS, HOLIDAY, MISSING).forEach {
+        listOf(CHANNEL_HOME, CHANNEL_SUGGESTIONS, HOLIDAY, MISSING, CALLING).forEach {
             manager.cancel(idOf(child, it))
         }
 
@@ -135,3 +148,4 @@ class ParentNotifications(
 private const val HOLIDAY = "holiday"
 private const val MISSING = "missing"
 private const val DISCONNECTED = "disconnected"
+private const val CALLING = "calling"

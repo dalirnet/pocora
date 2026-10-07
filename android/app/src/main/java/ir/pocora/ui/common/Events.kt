@@ -63,6 +63,16 @@ private fun EventRow(
     }
 }
 
+// Episodes of something switched off, which end when it is back on.
+private val BACK_ON =
+    setOf(
+        EventKind.VPN_OFF,
+        EventKind.PAUSED,
+        EventKind.BLUETOOTH_OFF,
+        EventKind.LOCATION_OFF,
+        EventKind.NOTIFICATIONS_OFF,
+    )
+
 private fun look(kind: EventKind): Pair<ImageVector, Color> =
     when (kind) {
         EventKind.POCORA_STOPPED -> AppIcons.WarningAmber to AppColors.orange
@@ -70,6 +80,10 @@ private fun look(kind: EventKind): Pair<ImageVector, Color> =
         EventKind.OTHER_VPN, EventKind.VPN_APP_INSTALLED -> AppIcons.VpnKey to AppColors.red
         EventKind.DEVICE_ADMIN_OFF -> AppIcons.AdminPanelSettings to AppColors.red
         EventKind.WATCHED_APP -> AppIcons.Visibility to AppColors.violet
+        EventKind.WIFI_KEPT_OFF -> AppIcons.WifiOff to AppColors.orange
+        EventKind.BLUETOOTH_OFF -> AppIcons.Bluetooth to AppColors.orange
+        EventKind.LOCATION_OFF -> AppIcons.Location to AppColors.orange
+        EventKind.NOTIFICATIONS_OFF -> AppIcons.Notifications to AppColors.orange
         EventKind.REBOOT -> AppIcons.RestartAlt to AppColors.slate
         EventKind.APP_INSTALLED -> AppIcons.Download to AppColors.green
         EventKind.APP_REMOVED -> AppIcons.Delete to AppColors.slate
@@ -103,11 +117,11 @@ private fun detail(
             null
         }
 
-        event.kind == EventKind.NO_CONTACT -> {
+        event.kind == EventKind.NO_CONTACT || event.kind == EventKind.WIFI_KEPT_OFF -> {
             stringResource(R.string.reconnected_at, format.time(end))
         }
 
-        event.kind == EventKind.VPN_OFF || event.kind == EventKind.PAUSED -> {
+        event.kind in BACK_ON -> {
             stringResource(R.string.back_on_at, format.time(end))
         }
 

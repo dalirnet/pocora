@@ -41,11 +41,13 @@ data class PairAnswer(
 ) : Message
 
 // Child to parent, every 60 seconds and when something happens. The port is where the child listens.
+// The wake key is this pair's key for the Bluetooth wake-up signal, see WakeTag.
 @Serializable
 @SerialName("sync")
 data class Sync(
     val snapshot: Snapshot,
     val port: Int,
+    val wakeKey: String? = null,
 ) : Message
 
 // Parent to child: the parent's clock, which the child counts forward from, and the child's name as the parent

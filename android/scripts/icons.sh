@@ -28,6 +28,7 @@ Backspace backspace
 BarChart chart-2
 BatteryChargingFull battery-charge
 BeachAccess umbrella
+Bluetooth bluetooth
 Build sledgehammer
 Cake balloon
 CalendarMonth calendar
@@ -54,6 +55,7 @@ HourglassEmpty hourglass-line
 HourglassTop hourglass
 Language global
 LinkOff link-broken
+Location map-point
 Lock lock-keyhole
 MenuBook book-bookmark
 MoreTime alarm-add

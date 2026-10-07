@@ -30,10 +30,14 @@ import ir.pocora.protocol.SetRules
 import ir.pocora.protocol.Sync
 import ir.pocora.protocol.SyncAnswer
 import ir.pocora.protocol.Unpair
+import ir.pocora.protocol.WakeTag
 import ir.pocora.service.AgentNotifications
 import ir.pocora.service.AgentService
 import ir.pocora.service.TunnelService
 import ir.pocora.transport.Connection
+import ir.pocora.transport.Radios
+import ir.pocora.transport.Wake
+import ir.pocora.transport.WakeAccess
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.io.File
@@ -66,6 +70,12 @@ class Agent(
 
         // Longer than a phone asleep or a walk out of the house, so only a real absence is noted.
         private const val NO_CONTACT_MILLISECONDS = 15 * 60_000L
+
+        // Pulled down with no parent reached: how long Home waits for the parent's phone to wake and call back.
+        private const val PULL_WAIT_MILLISECONDS = 15_000L
+
+        // Bluetooth or notifications off this long is an episode; a quick switch off and on is not.
+        private const val OFF_GAP_MILLISECONDS = 2 * 60_000L
     }
 
     private val presets = PresetStore.get(app)
@@ -79,6 +89,7 @@ class Agent(
     val usage = UsageReader(app)
     private val meter = TrafficMeter()
     val notifications = AgentNotifications(app)
+    private val wifiRequest = WifiRequest(app.configStore, events, notifications)
 
     private val thread = HandlerThread("pocora-agent").apply { start() }
     private val handler = Handler(thread.looper)
@@ -103,6 +114,11 @@ class Agent(
     private var wasAllowed: Boolean? = null
     private var vpnDownSince: Long? = null
     private var cachedSnapshot: Snapshot? = null
+    private val offSince = mutableMapOf<EventKind, Long>()
+
+    // Goes up with every contact with a parent, so a wait can tell one came, whatever the parent did to the clock.
+    @Volatile
+    private var contactCount = 0L
 
     // --- Life ---
 
@@ -135,16 +151,30 @@ class Agent(
     fun refresh() = handler.post { tick() }
 
     // Home pulled down: every parent this phone can reach synced now, then a tick for what the answers changed.
-    // done runs once the sync has its answers, or has given up.
+    // With none reached, each parent's phone is called over Bluetooth, see Wake, and reads this one as it wakes.
+    // done runs once a parent has answered, or the wait is over.
     fun pull(done: () -> Unit) =
         handler.post {
+            val before = contactCount
             val sync = syncNow()
             thread(name = "pocora-pull") {
                 sync?.join()
+                if (contactCount == before && callParents()) {
+                    Wake.waitFor(PULL_WAIT_MILLISECONDS) { contactCount != before }
+                }
                 refresh()
                 done()
             }
         }
+
+    // True when at least one parent's phone was called.
+    private fun callParents(): Boolean {
+        val now = clock.now()
+        return app.peerStore
+            .all()
+            .map { app.wake.call(it, now) }
+            .any { it }
+    }
 
     // --- The tick ---
 
@@ -208,19 +238,23 @@ class Agent(
             }
         }
 
-        val allowedNow = state.allowed && !quotaReached
+        val keptWifiOff = wifiRequest.keptOff(nowTime)
+        val allowedNow = state.allowed && !quotaReached && !keptWifiOff
         TunnelService.apply(app, blockedApps(rules, allowedNow, state.appsList))
         watchVpn(nowTime)
         watchApps(rules, nowTime)
         watchContact(nowTime)
+        watchWake(nowTime)
         notifyChanges(allowedNow, state.until, now)
 
         status =
             AgentStatus(
                 allowed = allowedNow,
-                // A used-up quota holds the internet back until the next mark.
+                // A used-up quota holds the internet back until the next mark. Wi-Fi kept off, until the next contact.
                 until =
-                    if (quotaReached) {
+                    if (keptWifiOff) {
+                        null
+                    } else if (quotaReached) {
                         date.atStartOfDay().plusMinutes(
                             (mark + 1L) * Mark.DURATION_MINUTES,
                         )
@@ -235,6 +269,7 @@ class Agent(
                 changes = schedule.differences(rules, date),
                 childName = app.configStore.childName,
                 rules = rules,
+                wifiAsked = wifiRequest.open,
             )
         notifications.status(status)
         keepUp(rules, nowTime, date)
@@ -320,7 +355,65 @@ class Agent(
     private fun contacted() {
         val now = clock.now()
         app.configStore.lastParentContact = now
+        contactCount++
         events.close(EventKind.NO_CONTACT, now)
+        // The calls to the parents' phones are answered.
+        app.peerStore.all().forEach { app.wake.stop(it.id) }
+        if (wifiRequest.met(now)) refresh()
+    }
+
+    // --- The parent's phone calling over Bluetooth, see Wake ---
+
+    // From the receiver: a paired parent's phone called. Syncs now, and with Wi-Fi off, or the sync not getting
+    // through, asks the child for Wi-Fi.
+    fun onCalled(intent: Intent) {
+        if (app.wake.callers(intent, app.peerStore.all(), clock.now()).isEmpty()) return
+        handler.post {
+            // Paused, the parent is using this phone itself.
+            if (paused) return@post
+            FileLogger.i(TAG, "Called by a parent")
+            if (!Radios.isWifiOn(app)) {
+                askForWifi(homeWifi = false)
+                return@post
+            }
+            val before = contactCount
+            val sync = syncNow()
+            thread(name = "pocora-called") {
+                sync?.join()
+                if (contactCount == before) handler.post { askForWifi(homeWifi = true) }
+            }
+        }
+    }
+
+    private fun askForWifi(homeWifi: Boolean) {
+        wifiRequest.ask(clock.now(), homeWifi)
+        tick()
+    }
+
+    // Bluetooth off, or its permission taken back, means the parent's phone cannot wake this one; before Android 12,
+    // so does location, switched off or not allowed. Notifications off means a request for Wi-Fi is never seen.
+    // Each is an episode the parent is told about. Back on, listening starts again.
+    private fun watchWake(now: Long) {
+        val bluetoothBack = watchOff(EventKind.BLUETOOTH_OFF, WakeAccess.bluetoothBlocked(app), now)
+        val locationBack = watchOff(EventKind.LOCATION_OFF, WakeAccess.locationBlocked(app), now)
+        if (bluetoothBack || locationBack) app.wake.listen()
+        watchOff(EventKind.NOTIFICATIONS_OFF, !notifications.canAsk(), now)
+    }
+
+    // True when it has just come back on.
+    private fun watchOff(
+        kind: EventKind,
+        off: Boolean,
+        now: Long,
+    ): Boolean {
+        if (!off) {
+            val wasOff = offSince.remove(kind) != null
+            if (events.close(kind, now)) syncSoon()
+            return wasOff
+        }
+        val since = offSince.getOrPut(kind) { now }
+        if (now - since >= OFF_GAP_MILLISECONDS && events.open(kind, since)) syncSoon()
+        return false
     }
 
     // The packages that must not have internet now. In a Limited mark that is every app that could use it.
@@ -425,14 +518,15 @@ class Agent(
     private fun syncNow(): Thread? {
         lastSync = clock.now()
         sendGoodbyes()
-        val parents = app.peerStore.all()
+        val parents = app.peerStore.all().map(::withWakeKey)
         if (parents.isEmpty()) return null
         val snapshot = snapshot(fresh = true)
         val port = app.endpoint.port
         return thread(name = "pocora-sync") {
             for (parent in parents) {
                 val answer =
-                    app.peerLink.call(parent, Sync(snapshot, port), Protocol.PARENT_PORT) as? SyncAnswer ?: continue
+                    app.peerLink.call(parent, Sync(snapshot, port, parent.wakeKey), Protocol.PARENT_PORT) as? SyncAnswer
+                        ?: continue
                 clock.setFromParent(answer.time)
                 contacted()
                 val name = answer.childName
@@ -442,6 +536,14 @@ class Agent(
                 }
             }
         }
+    }
+
+    // Each parent gets its own key for the Bluetooth wake-up, made here once and sent with every sync.
+    private fun withWakeKey(parent: Peer): Peer {
+        if (parent.wakeKey != null) return parent
+        val keyed = parent.copy(wakeKey = WakeTag.newKey())
+        app.peerStore.save(keyed)
+        return keyed
     }
 
     fun snapshot(fresh: Boolean = false): Snapshot {
@@ -579,6 +681,8 @@ class Agent(
         endingNotified = 0
         wasAllowed = null
         vpnDownSince = null
+        offSince.clear()
+        wifiRequest.forget()
         tick()
     }
 
