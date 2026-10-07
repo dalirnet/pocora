@@ -212,6 +212,18 @@ demoOff() {
     on "$1" am broadcast -a com.android.systemui.demo -e command exit >/dev/null
 }
 
+# bluetooth <serial>  Bluetooth on, as on a family's phones: off, Home shows its line asking for it in every shot.
+# Asked again until Android says it is on, as a virtual phone may take a moment, or turn it off again meanwhile.
+bluetooth() {
+    local tries
+    for tries in 1 2 3 4 5; do
+        [ "$(on "$1" settings get global bluetooth_on | tr -d '\r')" = "1" ] && return
+        on "$1" cmd bluetooth_manager enable >/dev/null 2>&1 || true
+        sleep 2
+    done
+    fail "could not turn Bluetooth on on $1"
+}
+
 # clock <serial>  The phone's clock set to today at SCENE_TIME, which needs root: the virtual phones give it.
 clock() {
     local tries
@@ -263,8 +275,8 @@ home() {
 
 # --- Steps ---
 
-# prepare <serial>  The phone as the scene needs it: the apps fresh from the build, with the child's permissions
-# given, no animations, the clock at the scene's hour, and the demo status bar.
+# prepare <serial>  The phone as the scene needs it: the apps fresh from the build, with the permissions adb can
+# give, Bluetooth on, no animations, the clock at the scene's hour, and the demo status bar.
 prepare() {
     local serial=$1
     on "$serial" pm clear ir.pocora.child >/dev/null
@@ -273,11 +285,14 @@ prepare() {
     [ "$serial" = "$CHILD" ] ||
         adb -s "$serial" install -r -t -d "$(find "$APKS/parent/debug" -name '*.apk' | head -1)" >/dev/null
     adb -s "$serial" install -r "$KEYBOARD_APK" >/dev/null
-    # The child's setup steps that adb can grant. The VPN and its always-on switch are done on screen.
-    local role
+    # The setup steps adb can grant. The VPN and its always-on switch are done on screen.
+    local role permission
     for role in child parent; do
-        on "$serial" pm grant "ir.pocora.$role" android.permission.POST_NOTIFICATIONS 2>/dev/null || true
+        for permission in POST_NOTIFICATIONS BLUETOOTH_SCAN BLUETOOTH_ADVERTISE BLUETOOTH_CONNECT; do
+            on "$serial" pm grant "ir.pocora.$role" "android.permission.$permission" 2>/dev/null || true
+        done
     done
+    bluetooth "$serial"
     on "$serial" appops set ir.pocora.child android:get_usage_stats allow
     on "$serial" dpm set-active-admin ir.pocora.child/ir.pocora.service.AdminReceiver >/dev/null
     on "$serial" dumpsys deviceidle whitelist +ir.pocora.child >/dev/null
@@ -397,7 +412,6 @@ setupChild() {
 
 need adb cwebp curl python3
 [ -f "$ANDROID/scripts/compile.sh" ] || fail "the android folder is not beside docs."
-on "$CHILD" pm list packages | grep -q "^package:$USAGE_APP$" || fail "$USAGE_APP is not on $CHILD, and the shots want its screen time."
 [ -f "$KEYBOARD_APK" ] || curl -sL -o "$KEYBOARD_APK" "$KEYBOARD_URL" || fail "could not fetch the ADB Keyboard."
 mkdir -p "$SHOTS"
 if [ -f "$PID_FILE" ] && kill -0 "$(cat "$PID_FILE")" 2>/dev/null; then
@@ -421,6 +435,7 @@ echo "The phones..."
 for serial in "$PARENT" "$CHILD"; do
     adb devices | grep -q "^$serial[[:space:]]*device" || fail "$serial is not connected."
 done
+on "$CHILD" pm list packages | grep -q "^package:$USAGE_APP$" || fail "$USAGE_APP is not on $CHILD, and the shots want its screen time."
 
 echo "Building the apps..."
 (cd "$ANDROID" && bash scripts/compile.sh debug >/dev/null) || fail "the build failed. Run it alone to see why: cd android && make build"
@@ -556,6 +571,7 @@ waitText "$PARENT" "رمز"
 shot "$PARENT" parent-lock-enter
 
 echo "The child app, on the child phone..."
+bluetooth "$CHILD"
 open "$CHILD" ir.pocora.child
 waitText "$CHILD" "زمان اینترنت"
 sleep 1
@@ -581,6 +597,7 @@ sleep 1
 shot "$CHILD" child-settings-main
 
 echo "The parent's Home, last: with the screen time in..."
+bluetooth "$PARENT"
 unlock
 step "home, the other child"
 tapWhen "$PARENT" "$OTHER_NAME"

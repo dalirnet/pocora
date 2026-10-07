@@ -136,7 +136,6 @@ svg {
 
 h1,
 h2,
-h3,
 .lead,
 .pill,
 .eyebrow,
@@ -305,12 +304,6 @@ h2 {
     line-height: var(--leading-title);
 }
 
-h3 {
-    margin: var(--s2) 0 var(--s4);
-    font-size: var(--text-lg);
-    line-height: 1.5;
-}
-
 .gradient {
     background: linear-gradient(110deg, var(--accent), #f5a524 80%);
     -webkit-background-clip: text;
@@ -322,6 +315,11 @@ h3 {
     margin: 0 0 var(--s6);
     font-size: var(--text-lg);
     color: var(--muted);
+}
+
+/* A section's title stands apart from what follows it, more than the cards below stand apart from each other. */
+.section-head .lead {
+    margin-bottom: var(--s10);
 }
 
 .eyebrow {
@@ -840,15 +838,6 @@ h3 {
 .trio .stage {
     --phone-pair: 180px;
     min-height: 0;
-    padding-bottom: var(--s16);
-}
-
-/* A pair of phones under a section's own content: the family's sides, the ages. */
-.sides + .stage,
-.ages + .stage {
-    --phone-pair: 180px;
-    min-height: 0;
-    margin-top: var(--s8);
     padding-bottom: var(--s16);
 }
 
@@ -1388,19 +1377,6 @@ details p b {
     color: var(--text);
 }
 
-#download {
-    justify-content: space-between;
-    padding-bottom: 0;
-}
-
-.download-body {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-bottom: var(--s12);
-}
-
 .apps {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 360px));
@@ -1649,6 +1625,10 @@ details p b {
 
     .screen {
         padding: calc(var(--nav) + var(--s6)) 0 var(--s12);
+    }
+
+    .section-head .lead {
+        margin-bottom: var(--s8);
     }
 
     .hero-grid {

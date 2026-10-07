@@ -1,6 +1,6 @@
 # Pocora
 
-Parental supervision for families in Iran. Two Android apps, one on the parent's phone and one on the child's, talk directly over the home Wi-Fi. No server, no account, nothing leaves the home. Persian by default, and English.
+Parental supervision for families in Iran. Two Android apps, one on the parent's phone and one on the child's, talk directly over a shared Wi-Fi. No server, no account, nothing leaves the home. Persian by default, and English.
 
 Pocora is not a lock. It turns what happens on the child's phone into moments for a conversation: "Aparat, 3 hours today" is a reason to talk, and so is a child turning Pocora off.
 
