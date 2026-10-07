@@ -16,6 +16,10 @@
     <string name="step_admin">Device admin</string>
     <string name="step_admin_why">So Pocora isn\'t removed by mistake.</string>
     <string name="step_admin_action">Turn on</string>
+    <string name="step_nearby">Nearby devices</string>
+    <string name="step_nearby_why">So your parent reaches your phone even when locked.</string>
+    <string name="step_location">Location access</string>
+    <string name="step_location_why">Only for Bluetooth; Pocora never sees where you are.</string>
     <string name="step_battery">Run in the background</string>
     <string name="step_battery_why">So Android doesn\'t close Pocora.</string>
     <string name="step_auto_start">Start automatically</string>
@@ -23,6 +27,8 @@
     <string name="setup_how">On the next screen</string>
     <string name="how_confirm">Tap OK in the window that opens</string>
     <string name="how_allow">Tap Allow in the window that opens</string>
+    <string name="how_allow_all_time">Choose Allow all the time</string>
+    <string name="how_location_on">Turn on location too</string>
     <string name="how_gear">Tap the gear next to Pocora Child</string>
     <string name="how_always_on">Turn on Always-on VPN</string>
     <string name="how_find">Find Pocora Child in the list</string>
@@ -60,6 +66,7 @@
     <string name="seen_installed">Which apps are installed</string>
     <string name="seen_off">When Pocora was off</string>
     <string name="seen_restart">When the phone restarted</string>
+    <string name="seen_radios_off">When Wi-Fi, Bluetooth or location was off</string>
     <string name="parent_never_sees">Your parent never sees</string>
     <string name="not_seen_messages">Your messages and photos</string>
     <string name="not_seen_typing">What you type</string>
@@ -81,6 +88,7 @@
     <string name="notify_turn_on_wifi">Turn on Wi-Fi</string>
     <string name="notify_join_home_wifi">Connect to the home Wi-Fi</string>
     <string name="notify_parent_waiting">Your parent\'s phone is waiting to connect</string>
+    <string name="radio_home_wifi">You\'re not on the home Wi-Fi</string>
     <string name="parent_sees_admin_off">Your parent will see this.</string>
     <string name="tile_internet">Internet on</string>
     <string name="tile_no_internet">No internet</string>

@@ -22,7 +22,9 @@ import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
 import ir.pocora.ui.LocalPalette
 import ir.pocora.ui.common.HomeHeader
+import ir.pocora.ui.common.HomeNotice
 import ir.pocora.ui.common.LayeredHome
+import ir.pocora.ui.common.RadiosNotice
 import ir.pocora.ui.common.ScreenTimeSection
 import ir.pocora.ui.common.StatusPanel
 import ir.pocora.ui.common.Tile
@@ -84,6 +86,15 @@ fun HomeScreen(
                     },
             ) {}
             Status(status, ready)
+            RadiosNotice(homeWifi = status.wifiAsked)
+            if (missingSetup) {
+                HomeNotice(
+                    AppIcons.Tune,
+                    stringResource(R.string.setup_not_finished),
+                    stringResource(R.string.continue_setup),
+                    onSetup,
+                )
+            }
             TileGrid(
                 listOf(
                     Tile(
@@ -109,24 +120,6 @@ fun HomeScreen(
             )
         },
         sheet = {
-            if (missingSetup) {
-                Card(onClick = onSetup) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(Dimens.row),
-                    ) {
-                        IconTile(AppIcons.Tune, AppColors.orange, Dimens.rowIcon)
-                        Text(
-                            text = stringResource(R.string.setup_not_finished),
-                            color = palette.text,
-                            fontSize = Dimens.body,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.weight(1f),
-                        )
-                        SmallButton(text = stringResource(R.string.continue_setup), onClick = onSetup, filled = true)
-                    }
-                }
-            }
             snapshot?.let { ScreenTimeSection(presets, it, onUsage) } ?: LoadingCards(1)
         },
         bottom = bottom,

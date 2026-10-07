@@ -6,6 +6,7 @@ import android.content.ActivityNotFoundException
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.net.VpnService
 import android.os.Build
 import android.provider.Settings
@@ -40,6 +41,8 @@ import ir.pocora.PocoraApp
 import ir.pocora.R
 import ir.pocora.debug.FileLogger
 import ir.pocora.service.AdminReceiver
+import ir.pocora.transport.Radios
+import ir.pocora.transport.WakeAccess
 import ir.pocora.ui.AppColors
 import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
@@ -75,10 +78,20 @@ fun SetupScreen(onDone: () -> Unit) {
             app.agent.refresh()
         }
     val askNotifications = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { checks++ }
+    val askNearby =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+            checks++
+            app.listenIfPaired()
+        }
 
     fun start(step: SetupStep) {
         if (step == SetupStep.NOTIFICATIONS && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             askNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
+            return
+        }
+        val nearby = WakeAccess.nextPrompt(context)
+        if (step == SetupStep.NEARBY && nearby.isNotEmpty()) {
+            askNearby.launch(nearby)
             return
         }
         if (step == SetupStep.ALWAYS_ON) app.configStore.alwaysOnOpened = true
@@ -243,6 +256,7 @@ private fun iconOf(step: SetupStep): ImageVector =
         SetupStep.ALWAYS_ON -> AppIcons.Autorenew
         SetupStep.USAGE -> AppIcons.BarChart
         SetupStep.NOTIFICATIONS -> AppIcons.Notifications
+        SetupStep.NEARBY -> AppIcons.Bluetooth
         SetupStep.ADMIN -> AppIcons.AdminPanelSettings
         SetupStep.BATTERY -> AppIcons.BatteryChargingFull
         SetupStep.AUTO_START -> AppIcons.RestartAlt
@@ -258,6 +272,13 @@ enum class SetupStep(
     ALWAYS_ON(R.string.step_always_on, R.string.step_always_on_why, R.string.step_always_on_action),
     USAGE(R.string.step_usage, R.string.step_usage_why, R.string.step_usage_action),
     NOTIFICATIONS(R.string.step_notifications, R.string.step_notifications_why, R.string.allow),
+
+    // Before Android 12, hearing Bluetooth goes through location: the same step, under its real name.
+    NEARBY(
+        if (WakeAccess.needsLocation) R.string.step_location else R.string.step_nearby,
+        if (WakeAccess.needsLocation) R.string.step_location_why else R.string.step_nearby_why,
+        R.string.allow,
+    ),
     ADMIN(R.string.step_admin, R.string.step_admin_why, R.string.step_admin_action),
     BATTERY(R.string.step_battery, R.string.step_battery_why, R.string.allow),
     AUTO_START(R.string.step_auto_start, R.string.step_auto_start_why, R.string.allow),
@@ -280,6 +301,10 @@ enum class SetupStep(
 
             NOTIFICATIONS -> {
                 Permissions.canNotify(context)
+            }
+
+            NEARBY -> {
+                WakeAccess.isAllowed(context) && WakeAccess.isLocationReady(context)
             }
 
             ADMIN -> {
@@ -320,6 +345,26 @@ enum class SetupStep(
                 listOf(R.string.how_allow)
             }
 
+            // Android 10 and 11 ask whether location is allowed all the time, which hearing in the background needs.
+            NEARBY -> {
+                when {
+                    !WakeAccess.needsLocation -> {
+                        listOf(R.string.how_allow)
+                    }
+
+                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> {
+                        listOf(
+                            R.string.how_allow_all_time,
+                            R.string.how_location_on,
+                        )
+                    }
+
+                    else -> {
+                        listOf(R.string.how_allow, R.string.how_location_on)
+                    }
+                }
+            }
+
             ADMIN -> {
                 listOf(R.string.how_activate)
             }
@@ -330,7 +375,7 @@ enum class SetupStep(
             }
         }
 
-    // The screen that grants the step. Null for notifications, which use the permission prompt, and the VPN, which uses its own.
+    // The screen that grants the step. Notifications and nearby devices use the permission prompt, and the VPN its own.
     fun intent(context: Context): Intent? =
         when (this) {
             VPN -> {
@@ -347,6 +392,15 @@ enum class SetupStep(
 
             NOTIFICATIONS -> {
                 Permissions.notificationSettingsIntent(context)
+            }
+
+            // Allowed, so what is left is location switched on, or a prompt Android no longer shows.
+            NEARBY -> {
+                if (WakeAccess.isAllowed(context)) {
+                    Radios.locationIntent()
+                } else {
+                    Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${context.packageName}"))
+                }
             }
 
             ADMIN -> {

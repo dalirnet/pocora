@@ -17,6 +17,10 @@
     <string name="step_admin">سرپرست دستگاه</string>
     <string name="step_admin_why">تا پوکورا اشتباهی حذف نشود.</string>
     <string name="step_admin_action">فعال‌سازی</string>
+    <string name="step_nearby">دستگاه‌های اطراف</string>
+    <string name="step_nearby_why">تا والدینت حتی در حالت قفل به موبایلت وصل شوند</string>
+    <string name="step_location">دسترسی به مکان</string>
+    <string name="step_location_why">فقط برای بلوتوث؛ پوکورا مکانت را نمی‌بیند</string>
     <string name="step_battery">اجرا در پس‌زمینه</string>
     <string name="step_battery_why">تا اندروید پوکورا را نبندد.</string>
     <string name="step_auto_start">شروع خودکار</string>
@@ -24,6 +28,8 @@
     <string name="setup_how">در صفحهٔ بعد</string>
     <string name="how_confirm">در پنجرهٔ باز شده «تأیید» را بزن</string>
     <string name="how_allow">در پنجرهٔ باز شده اجازه بده</string>
+    <string name="how_allow_all_time">گزینهٔ «همیشه» را انتخاب کن</string>
+    <string name="how_location_on">مکان را هم روشن کن</string>
     <string name="how_gear">چرخ‌دندهٔ کنار پوکورا فرزند را بزن</string>
     <string name="how_always_on">«VPN همیشه روشن» را روشن کن</string>
     <string name="how_find">پوکورا فرزند را در فهرست پیدا کن</string>
@@ -61,6 +67,7 @@
     <string name="seen_installed">چه برنامه‌هایی نصب کرده‌ای</string>
     <string name="seen_off">کی پوکورا خاموش بوده</string>
     <string name="seen_restart">کی موبایل خاموش و روشن شده</string>
+    <string name="seen_radios_off">کی وای‌فای، بلوتوث یا مکان خاموش بوده</string>
     <string name="parent_never_sees">والدینت هیچ‌وقت نمی‌بینند</string>
     <string name="not_seen_messages">پیام‌ها و عکس‌هایت</string>
     <string name="not_seen_typing">چیزهایی که می‌نویسی</string>
@@ -82,6 +89,7 @@
     <string name="notify_turn_on_wifi">وای‌فای را روشن کن</string>
     <string name="notify_join_home_wifi">به وای‌فای خانه وصل شو</string>
     <string name="notify_parent_waiting">موبایل والدینت منتظر اتصال است</string>
+    <string name="radio_home_wifi">به وای‌فای خانه وصل نیستی</string>
     <string name="parent_sees_admin_off">والدینت باخبر می‌شوند.</string>
     <string name="tile_internet">اینترنت وصل</string>
     <string name="tile_no_internet">اینترنت قطع</string>

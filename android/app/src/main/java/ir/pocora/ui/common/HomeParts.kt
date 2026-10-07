@@ -61,6 +61,7 @@ import ir.pocora.ui.component.HourAxis
 import ir.pocora.ui.component.IconHeader
 import ir.pocora.ui.component.IconTile
 import ir.pocora.ui.component.Refreshable
+import ir.pocora.ui.component.SmallButton
 import ir.pocora.ui.component.StackedBar
 import ir.pocora.ui.component.Strip
 import ir.pocora.ui.rememberFormat
@@ -184,6 +185,29 @@ fun HomeHeader(
             }
         }
         action()
+    }
+}
+
+// Something to see to now, such as setup or Wi-Fi, under the status card: one line in bold and the button that does it.
+@Composable
+fun HomeNotice(
+    icon: ImageVector,
+    title: String,
+    action: String,
+    onClick: () -> Unit,
+) {
+    Card(onClick = onClick) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Dimens.row)) {
+            IconTile(icon, AppColors.orange, Dimens.rowIcon)
+            Text(
+                text = title,
+                color = LocalPalette.current.text,
+                fontSize = Dimens.body,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.weight(1f),
+            )
+            SmallButton(text = action, onClick = onClick, filled = true)
+        }
     }
 }
 

@@ -43,6 +43,7 @@ import ir.pocora.ui.LocalPalette
 import ir.pocora.ui.SamePhone
 import ir.pocora.ui.common.LayeredHome
 import ir.pocora.ui.common.LocalSheetSpace
+import ir.pocora.ui.common.RadiosNotice
 import ir.pocora.ui.common.ScreenTimeSection
 import ir.pocora.ui.common.StatusPanel
 import ir.pocora.ui.common.Tile
@@ -79,6 +80,7 @@ fun HomeScreen(
             ChildRow(children, id, online, onChooseChild, onAddChild)
             Status(parent, model, snapshot)
             PauseHere(model)
+            RadiosNotice(askPermission = true)
             TileGrid(
                 listOf(
                     Tile(
