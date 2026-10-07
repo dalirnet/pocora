@@ -50,6 +50,7 @@ android {
 
     sourceSets {
         getByName("child") { manifest.srcFile("manifests/child.xml") }
+        getByName("parent") { manifest.srcFile("manifests/parent.xml") }
     }
 
     buildFeatures {

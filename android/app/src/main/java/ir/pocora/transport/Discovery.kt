@@ -2,6 +2,7 @@ package ir.pocora.transport
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import ir.pocora.debug.FileLogger
@@ -110,12 +111,24 @@ class Discovery(
     }
 
     // The network's gateway. On a hotspot it is the phone that hosts it, where discovery is unreliable.
-    fun gateway(): InetAddress? =
-        connectivityManager
-            .getLinkProperties(connectivityManager.activeNetwork)
-            ?.routes
-            ?.firstOrNull { it.isDefaultRoute && it.gateway is Inet4Address }
-            ?.gateway
+    // Read from the real network, never a VPN: Pocora's own VPN may take Pocora in with no gateway, and then the
+    // active network has none.
+    @Suppress("DEPRECATION")
+    fun gateway(): InetAddress? {
+        val active = connectivityManager.activeNetwork
+        val networks = listOfNotNull(active) + connectivityManager.allNetworks.filter { it != active }
+        return networks
+            .filter {
+                connectivityManager.getNetworkCapabilities(it)?.hasTransport(NetworkCapabilities.TRANSPORT_VPN) ==
+                    false
+            }.firstNotNullOfOrNull { network ->
+                connectivityManager
+                    .getLinkProperties(network)
+                    ?.routes
+                    ?.firstOrNull { it.isDefaultRoute && it.gateway is Inet4Address }
+                    ?.gateway
+            }
+    }
 
     // Where a paired phone may be, tried in order: found by discovery, the hotspot's host at the gateway, and this
     // phone itself, for both apps on one phone. Lazy, so discovery waits only if it is reached.

@@ -255,6 +255,10 @@ object Labels {
             EventKind.VPN_APP_INSTALLED -> R.string.event_vpn_app_installed
             EventKind.DEVICE_ADMIN_OFF -> R.string.event_device_admin_off
             EventKind.WATCHED_APP -> R.string.event_watched_app
+            EventKind.WIFI_KEPT_OFF -> R.string.event_wifi_kept_off
+            EventKind.BLUETOOTH_OFF -> R.string.event_bluetooth_off
+            EventKind.LOCATION_OFF -> R.string.event_location_off
+            EventKind.NOTIFICATIONS_OFF -> R.string.event_notifications_off
             EventKind.REBOOT -> R.string.event_reboot
             EventKind.APP_INSTALLED -> R.string.event_app_installed
             EventKind.APP_REMOVED -> R.string.event_app_removed

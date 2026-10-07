@@ -30,8 +30,10 @@ class ConfigStore(
         private const val KEY_SETUP_DONE = "setup_done"
         private const val KEY_ALWAYS_ON_OPENED = "always_on_opened"
         private const val KEY_BATTERY_OPENED = "battery_opened"
+        private const val KEY_AUTO_START_OPENED = "auto_start_opened"
         private const val KEY_PAIRED_AT = "paired_at"
         private const val KEY_PAUSED = "paused"
+        private const val KEY_WIFI_ASKED_AT = "wifi_asked_at"
         private const val KEY_DONE_ONCE = "done_once"
         private const val KEY_PASSWORD_SALT = "password_salt"
         private const val KEY_PASSWORD_HASH = "password_hash"
@@ -103,6 +105,12 @@ class ConfigStore(
         get() = preferences.getBoolean(KEY_BATTERY_OPENED, false)
         set(value) = preferences.edit().putBoolean(KEY_BATTERY_OPENED, value).apply()
 
+    // For a Xiaomi phone that does not say whether Pocora may start by itself: the step counts as done once its page
+    // was opened.
+    var autoStartOpened: Boolean
+        get() = preferences.getBoolean(KEY_AUTO_START_OPENED, false)
+        set(value) = preferences.edit().putBoolean(KEY_AUTO_START_OPENED, value).apply()
+
     // When this child's phone was paired, so usage from before it is left out. Zero for phones paired before this was kept.
     var pairedAt: Long
         get() = preferences.getLong(KEY_PAIRED_AT, 0)
@@ -112,6 +120,11 @@ class ConfigStore(
     var paused: Boolean
         get() = preferences.getBoolean(KEY_PAUSED, false)
         set(value) = preferences.edit().putBoolean(KEY_PAUSED, value).apply()
+
+    // When the parent's phone called over Bluetooth and found this phone's Wi-Fi off. Zero once they are in touch again.
+    var wifiAskedAt: Long
+        get() = preferences.getLong(KEY_WIFI_ASKED_AT, 0)
+        set(value) = preferences.edit().putLong(KEY_WIFI_ASKED_AT, value).apply()
 
     // The child's phone after disconnecting: everything learned while paired goes, so the next pairing starts fresh.
     // The language, the look and this phone's id stay.
@@ -125,8 +138,10 @@ class ConfigStore(
             .remove(KEY_SETUP_DONE)
             .remove(KEY_ALWAYS_ON_OPENED)
             .remove(KEY_BATTERY_OPENED)
+            .remove(KEY_AUTO_START_OPENED)
             .remove(KEY_PAIRED_AT)
             .remove(KEY_PAUSED)
+            .remove(KEY_WIFI_ASKED_AT)
             .remove(KEY_DONE_ONCE)
             .apply()
     }

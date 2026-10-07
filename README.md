@@ -1,6 +1,6 @@
 # Pocora
 
-Parental supervision for families in Iran. Two Android apps, one on the parent's phone and one on the child's, talk directly over the home Wi-Fi. No server, no account, nothing leaves the home. Persian by default, and English.
+Parental supervision for families in Iran. Two Android apps, one on the parent's phone and one on the child's, talk directly over a shared Wi-Fi. No server, no account, nothing leaves the home. Persian by default, and English.
 
 Pocora is not a lock. It turns what happens on the child's phone into moments for a conversation: "Aparat, 3 hours today" is a reason to talk, and so is a child turning Pocora off.
 
@@ -28,7 +28,9 @@ Made for children aged 8 to 16. Outside Iran, Google Family Link already does th
 
 - **The child's phone is the source of truth.** It holds the rules and the last 7 days, and keeps enforcing them when no parent is around.
 - **The parent sees things when the phones meet**, usually in the evening. Away from the child, the parent app shows the last snapshot with its time.
-- **Changes need the child's phone in reach.** Nothing is queued; a change that gets no answer offers a retry.
+- **Changes need the child's phone in reach.** Nothing is queued; a change that gets no answer, even after waking the phone, offers a retry.
+- **A sleeping phone is woken.** A locked phone often misses the other one on Wi-Fi. Opening the parent app, making a change, or pulling Home down in either app tries Wi-Fi first, then sends a short Bluetooth signal that wakes the other phone to sync. The data still goes over Wi-Fi.
+- **Wi-Fi off on the child's phone** is met with a notification that opens the Wi-Fi panel. Left off for 5 minutes after the parent's phone asked, the internet is as in a Limited mark until the phones are in touch again.
 - **A family** can have two parents and many children. Each parent pairs with each child; parents never sync with each other.
 
 ## Rules
@@ -43,12 +45,13 @@ Each child has three settings, all picked from [presets](./android/app/src/main/
 
 On top of the preset the parent changes single days, for this week or every week, or with one tap: 30 more minutes, more data, stop internet, allow internet. Apps can be marked **watched**: using one raises an alert.
 
-**Alerts** reach the parent as local notifications when the phones meet: Pocora stopped, VPN turned off, another VPN app, a VPN app installed, device admin off, a watched app used, a child missing for 7 days. The child sees the same list on the Activity tab of its own app.
+**Alerts** reach the parent as local notifications when the phones meet: Pocora stopped, VPN turned off, another VPN app, a VPN app installed, device admin off, a watched app used, Wi-Fi kept off when asked, Bluetooth off, location off before Android 12, Pocora's notifications off, a child missing for 7 days. The child sees the same list on the Activity tab of its own app.
 
 ## Connection and security
 
 - **Discovery:** both apps announce `_pocora._tcp` with Android's NSD, carrying only a random id and a port (parent 47601, child 47602). On a hotspot, where discovery is unreliable, the child tries the gateway address; with both apps on one phone, loopback.
 - **Pairing:** the parent app shows a QR code with its id, certificate fingerprint and port. The child scans it and asks; the parent accepts. Both keep the other's fingerprint. A leaked code pairs nothing without the parent's approval. With both apps on one phone, no camera can scan its own screen: the parent app hands its code and a one-time token to the child app, through a receiver only an app signed with Pocora's key may reach, and accepts the request that brings the token back.
+- **Wake-up:** a Bluetooth Low Energy signal with no name, carrying an 8-byte tag: an HMAC of the time, in 5-minute slots, under a key the child's phone makes for each parent and sends over TLS. Another phone cannot send a tag that counts or follow a phone by it. The Bluetooth chip listens and wakes the app only for Pocora's signal. Hearing needs Android's permission: from Android 12, nearby devices. Before it, Android hands Bluetooth to an app in the background only with location access, all the time from Android 10, and with location on; Pocora never reads the location. Sending needs only Bluetooth on.
 - **Security:** every connection is TLS in both directions, each side pinned to the other's certificate fingerprint, kept in Android's Keystore. Another device on the Wi-Fi cannot read or change anything.
 - **Parent app password:** a 4-digit PIN, asked every time the app comes back to the screen, since the child may use the same phone. Only a salted hash is stored.
 
@@ -130,6 +133,9 @@ gh secret set POCORA_KEY_PASSWORD
 | Phones apart                                   | Nothing is seen or changed until they meet; after 7 days the oldest record is gone |
 | Child clears Pocora's data                     | The record is lost; the child shows as missing                                     |
 | Router isolates Wi-Fi devices                  | Use a phone's hotspot                                                              |
+| Child turns Wi-Fi off                          | Asked by notification; after 5 minutes Limited until in touch, and an alert        |
+| Child turns Bluetooth off                      | The phone cannot be woken; the parent gets an alert                                |
+| Location off, Android 9 to 11                  | The phone cannot be woken; the parent gets an alert                                |
 | Parent has an iPhone                           | Not supported                                                                      |
 
 A child who truly wants to get around Pocora probably will. That is a conversation worth having.

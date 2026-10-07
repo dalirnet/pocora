@@ -36,9 +36,10 @@ class ChildModel(
     val rules: Rules?
         get() = snapshot?.rules
 
-    // Changing anything needs the child's phone, which holds the only real copy.
+    // Changing anything needs the child's phone, which holds the only real copy. Shown as away, it is tried all the
+    // same: the change wakes it over Bluetooth, and a phone truly away leaves a retry.
     val canEdit: Boolean
-        get() = online && snapshot != null && !busy
+        get() = snapshot != null && !busy
 
     // From the stores, after a sync arrived.
     fun reload() {

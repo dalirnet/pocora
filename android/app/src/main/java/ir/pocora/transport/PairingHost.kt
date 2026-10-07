@@ -44,8 +44,13 @@ class PairingHost(
     private var pending: ArrayBlockingQueue<Decision>? = null
 
     // Runs on the connection's own thread and keeps it until the parent has answered.
-    fun handle(connection: Connection) {
-        val request = connection.receive(Protocol.REQUEST_TIMEOUT_MILLISECONDS) as? PairRequest ?: return
+    // A phone paired before has already sent its request, which comes in as read.
+    fun handle(
+        connection: Connection,
+        received: PairRequest? = null,
+    ) {
+        val request =
+            received ?: connection.receive(Protocol.REQUEST_TIMEOUT_MILLISECONDS) as? PairRequest ?: return
         // Both apps must be the same version. The answer carries this one, so the child's phone knows why.
         if (request.version != version) {
             connection.send(answer(false))

@@ -18,6 +18,13 @@
     <string name="change">تغییر</string>
     <string name="try_again">تلاش مجدد</string>
     <string name="allow">فعال‌سازی</string>
+    <string name="turn_on">روشن کردن</string>
+    <string name="radio_wifi_off">وای‌فای خاموش است</string>
+    <string name="radio_bluetooth_off">بلوتوث خاموش است</string>
+    <string name="radio_both_off">وای‌فای و بلوتوث خاموش‌اند</string>
+    <string name="radio_nearby_needed">دسترسی به دستگاه‌های اطراف لازم است</string>
+    <string name="radio_location_needed">برای بلوتوث، دسترسی به مکان لازم است</string>
+    <string name="radio_location_off">مکان خاموش است</string>
     <string name="settings">تنظیمات</string>
     <string name="language">زبان</string>
     <string name="look">حالت نمایش</string>

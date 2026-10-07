@@ -13,6 +13,7 @@ import ir.pocora.service.AgentService
 import ir.pocora.transport.Discovery
 import ir.pocora.transport.Endpoint
 import ir.pocora.transport.PeerLink
+import ir.pocora.transport.Wake
 
 class PocoraApp : Application() {
     companion object {
@@ -33,6 +34,8 @@ class PocoraApp : Application() {
 
     lateinit var peerLink: PeerLink
         private set
+
+    val wake: Wake by lazy { Wake(this) }
 
     // The child's agent. Made on first use, so the parent app never builds one.
     val agent: Agent by lazy { Agent(this) }
@@ -70,5 +73,10 @@ class PocoraApp : Application() {
     fun startServiceIfPaired() {
         if (Role.current != Role.CHILD || peerStore.all().isEmpty()) return
         AgentService.start(this)
+    }
+
+    // A paired phone, of either app, listens for the other's Bluetooth wake-up signal. See Wake.
+    fun listenIfPaired() {
+        if (peerStore.all().isNotEmpty()) wake.listen()
     }
 }

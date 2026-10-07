@@ -7,6 +7,7 @@ import ir.pocora.config.Identity
 import ir.pocora.config.PeerStore
 import ir.pocora.debug.FileLogger
 import ir.pocora.model.Peer
+import ir.pocora.protocol.PairRequest
 import ir.pocora.protocol.PairingCode
 import ir.pocora.protocol.Protocol
 import kotlin.concurrent.thread
@@ -93,6 +94,17 @@ class Endpoint(
     fun reannounce() {
         val running = server ?: return
         discovery.announce(identity().id, running.port)
+    }
+
+    // A phone paired before asks to pair again, as after it disconnected while this app was closed, or its app
+    // was reset. Its key is the same, so it came in as paired. Only the pairing code on screen may take it.
+    fun pairAgain(
+        connection: Connection,
+        request: PairRequest,
+    ): Boolean {
+        val host = pairingHost ?: return false
+        host.handle(connection, request)
+        return true
     }
 
     // A phone that is not paired gets through the handshake only while the pairing code is on screen.

@@ -115,6 +115,7 @@ private val SEEN =
         R.string.seen_installed,
         R.string.seen_off,
         R.string.seen_restart,
+        R.string.seen_radios_off,
     )
 private val NOT_SEEN = listOf(R.string.not_seen_messages, R.string.not_seen_typing, R.string.not_seen_sites)
 

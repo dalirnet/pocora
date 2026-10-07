@@ -13,4 +13,6 @@ data class Peer(
     val age: Int? = null,
     // The port the other phone listens on, for when discovery finds nothing.
     val port: Int? = null,
+    // The key the Bluetooth wake-up tags are made from. The child's phone makes it and sends it with each sync.
+    val wakeKey: String? = null,
 )

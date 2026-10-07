@@ -23,6 +23,8 @@ data class AgentStatus(
     val rules: Rules? = null,
     // Paused by the parent on this same phone: nothing is limited.
     val paused: Boolean = false,
+    // The parent's phone called and asked for Wi-Fi, and the two phones are not in touch yet.
+    val wifiAsked: Boolean = false,
 ) {
     val hasRules: Boolean
         get() = rules != null

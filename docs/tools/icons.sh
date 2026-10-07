@@ -18,6 +18,7 @@ done
 
 ICONS="
 alarm-add
+bluetooth
 clock-circle
 cloud
 danger-triangle
@@ -26,6 +27,7 @@ home-2
 hourglass
 incognito
 lock-keyhole
+map-point
 pie-chart-2
 qr-code
 question-circle

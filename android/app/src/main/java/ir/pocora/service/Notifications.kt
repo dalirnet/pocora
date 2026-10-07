@@ -109,6 +109,15 @@ abstract class Notifications(
         }
     }
 
+    // Opens one of Android's own screens, such as the Wi-Fi panel.
+    protected fun openScreen(intent: Intent): PendingIntent =
+        PendingIntent.getActivity(
+            app,
+            intent.action.hashCode(),
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
+
     // Opens the app. Each set of extras needs its own request code, or Android would reuse the first one's.
     protected fun open(vararg extras: Pair<String, Any?>): PendingIntent {
         val intent =
