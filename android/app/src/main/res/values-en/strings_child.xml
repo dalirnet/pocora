@@ -86,9 +86,9 @@
     <string name="notify_data_left">Only %1$s left for this half hour</string>
     <string name="notify_data_used">Data used up; back next half hour.</string>
     <string name="notify_turn_on_wifi">Turn on Wi-Fi</string>
-    <string name="notify_join_home_wifi">Connect to the home Wi-Fi</string>
+    <string name="notify_join_parent_wifi">Connect to your parent\'s Wi-Fi</string>
     <string name="notify_parent_waiting">Your parent\'s phone is waiting to connect</string>
-    <string name="radio_home_wifi">You\'re not on the home Wi-Fi</string>
+    <string name="radio_parent_wifi">You\'re not on your parent\'s Wi-Fi</string>
     <string name="parent_sees_admin_off">Your parent will see this.</string>
     <string name="tile_internet">Internet on</string>
     <string name="tile_no_internet">No internet</string>

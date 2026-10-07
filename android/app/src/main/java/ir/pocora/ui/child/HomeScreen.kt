@@ -86,7 +86,7 @@ fun HomeScreen(
                     },
             ) {}
             Status(status, ready)
-            RadiosNotice(homeWifi = status.wifiAsked)
+            RadiosNotice(parentWifi = status.wifiAsked)
             if (missingSetup) {
                 HomeNotice(
                     AppIcons.Tune,

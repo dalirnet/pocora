@@ -20,22 +20,22 @@ class WifiRequest(
 
     // On another network: kept only while the agent runs, as it counts toward nothing.
     @Volatile
-    private var homeWifi = false
+    private var parentWifi = false
 
     val open: Boolean
-        get() = configStore.wifiAskedAt != 0L || homeWifi
+        get() = configStore.wifiAskedAt != 0L || parentWifi
 
     // Each call from the parent's phone pops the notification up again, even one the child cleared.
     fun ask(
         now: Long,
-        homeWifi: Boolean,
+        parentWifi: Boolean,
     ) {
-        if (homeWifi) {
-            this.homeWifi = true
+        if (parentWifi) {
+            this.parentWifi = true
         } else if (configStore.wifiAskedAt == 0L) {
             configStore.wifiAskedAt = now
         }
-        notifications.askForWifi(homeWifi)
+        notifications.askForWifi(parentWifi)
     }
 
     // Wi-Fi left off past the limit: the internet is as in a Limited mark until the phones are in touch again, and apps
@@ -56,7 +56,7 @@ class WifiRequest(
     }
 
     fun forget() {
-        homeWifi = false
+        parentWifi = false
         configStore.wifiAskedAt = 0L
         notifications.cancelWifi()
     }

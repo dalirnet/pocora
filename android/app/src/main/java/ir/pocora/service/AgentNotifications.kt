@@ -149,12 +149,12 @@ class AgentNotifications(
     fun quotaUsed() = show(QUOTA_ID, CHANNEL_QUOTA, text.getString(R.string.notify_data_used))
 
     // The parent's phone called and could not reach this one: it pops up over whatever is open, and a tap opens the
-    // Wi-Fi panel there. On another network, it asks for the home Wi-Fi.
-    fun askForWifi(homeWifi: Boolean) =
+    // Wi-Fi panel there. On another network, it asks for the parent's Wi-Fi.
+    fun askForWifi(parentWifi: Boolean) =
         show(
             WIFI_ID,
             CHANNEL_WIFI,
-            text.getString(if (homeWifi) R.string.notify_join_home_wifi else R.string.notify_turn_on_wifi),
+            text.getString(if (parentWifi) R.string.notify_join_parent_wifi else R.string.notify_turn_on_wifi),
             text.getString(R.string.notify_parent_waiting),
             openScreen(Radios.wifiIntent(app)),
         )

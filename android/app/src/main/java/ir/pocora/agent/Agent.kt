@@ -373,20 +373,20 @@ class Agent(
             if (paused) return@post
             FileLogger.i(TAG, "Called by a parent")
             if (!Radios.isWifiOn(app)) {
-                askForWifi(homeWifi = false)
+                askForWifi(parentWifi = false)
                 return@post
             }
             val before = contactCount
             val sync = syncNow()
             thread(name = "pocora-called") {
                 sync?.join()
-                if (contactCount == before) handler.post { askForWifi(homeWifi = true) }
+                if (contactCount == before) handler.post { askForWifi(parentWifi = true) }
             }
         }
     }
 
-    private fun askForWifi(homeWifi: Boolean) {
-        wifiRequest.ask(clock.now(), homeWifi)
+    private fun askForWifi(parentWifi: Boolean) {
+        wifiRequest.ask(clock.now(), parentWifi)
         tick()
     }
 

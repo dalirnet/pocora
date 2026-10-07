@@ -29,11 +29,11 @@ import ir.pocora.ui.AppIcons
 // Wi-Fi and Bluetooth, which the two phones need to reach each other: one line on Home while either is off, with the
 // one tap that turns it on, Wi-Fi first as it carries the data. Gone by itself once both are on.
 // The parent app also asks here for nearby devices, or location before Android 12; the child app asks in its setup.
-// With homeWifi, the parent's phone called and found this one on another network.
+// With parentWifi, the parent's phone called and found this one on another network.
 @Composable
 fun RadiosNotice(
     askPermission: Boolean = false,
-    homeWifi: Boolean = false,
+    parentWifi: Boolean = false,
 ) {
     val context = LocalContext.current
     val app = context.applicationContext as PocoraApp
@@ -123,8 +123,8 @@ fun RadiosNotice(
             }
         }
 
-        homeWifi -> {
-            HomeNotice(AppIcons.Wifi, stringResource(R.string.radio_home_wifi), stringResource(R.string.change)) {
+        parentWifi -> {
+            HomeNotice(AppIcons.Wifi, stringResource(R.string.radio_parent_wifi), stringResource(R.string.change)) {
                 open(Radios.wifiIntent(context))
             }
         }

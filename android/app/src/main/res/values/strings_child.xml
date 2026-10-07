@@ -87,9 +87,9 @@
     <string name="notify_data_left">فقط %1$s از حجم این نیم‌ساعت مانده</string>
     <string name="notify_data_used">حجم تمام شد؛ نیم‌ساعت بعد وصل می‌شود.</string>
     <string name="notify_turn_on_wifi">وای‌فای را روشن کن</string>
-    <string name="notify_join_home_wifi">به وای‌فای خانه وصل شو</string>
+    <string name="notify_join_parent_wifi">به وای‌فای والدینت وصل شو</string>
     <string name="notify_parent_waiting">موبایل والدینت منتظر اتصال است</string>
-    <string name="radio_home_wifi">به وای‌فای خانه وصل نیستی</string>
+    <string name="radio_parent_wifi">به وای‌فای والدینت وصل نیستی</string>
     <string name="parent_sees_admin_off">والدینت باخبر می‌شوند.</string>
     <string name="tile_internet">اینترنت وصل</string>
     <string name="tile_no_internet">اینترنت قطع</string>
