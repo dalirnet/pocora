@@ -94,9 +94,9 @@ More, including virtual phones and pairing without a camera: [`android/README.md
 
 ## Download and releases
 
-The apps are on the [Releases](https://github.com/dalirnet/pocora/releases) page: `pocora-parent-<version>.apk` for the parent's phone and `pocora-child-<version>.apk` for the child's, with their SHA-256 sums. Each release also carries `pocora-parent.apk` and `pocora-child.apk`, the same files without the version, so `releases/latest/download/pocora-parent.apk` always downloads the newest; the landing page links there.
+The apps are on the [Releases](https://github.com/dalirnet/pocora/releases) page: `pocora-parent-<version>.apk` for the parent's phone and `pocora-child-<version>.apk` for the child's, with their SHA-256 sums. Each release also carries `pocora-parent.apk` and `pocora-child.apk`, the same files without the version, so `releases/latest/download/pocora-parent.apk` always downloads the newest; the landing page links there. The `pocora-parent-myket-<version>.apk` and `pocora-child-myket-<version>.apk` files are the builds for the Myket store.
 
-The two apps are released together and must be the same version: when pairing, each tells the other its version, and a pairing between different versions is refused, with both phones saying so. Each app's Settings shows its version with an Update button: it asks GitHub for the newest release and, when there is one, downloads the APK and hands it to Android's installer, which replaces the app and keeps its data.
+The two apps are released together and must be the same version: when pairing, each tells the other its version, and a pairing between different versions is refused, with both phones saying so. Each app's Settings shows its version with an Update button: it asks GitHub for the newest release and, when there is one, downloads the APK and hands it to Android's installer, which replaces the app and keeps its data. The Myket builds hand the button over to Myket instead, and leave out the permission to install apps.
 
 - **Every push** runs `.github/workflows/build.yml`: tests, debug APKs kept as a run artifact for 14 days.
 - **A version tag** runs `.github/workflows/release.yml`: tests, signed and minified APKs, and a GitHub Release with generated notes.
