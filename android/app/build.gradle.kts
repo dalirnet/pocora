@@ -68,6 +68,11 @@ android {
                 "proguard-rules.pro",
             )
         }
+        // The release for the Myket store. Myket updates it, so it does without the permission to install apps.
+        create("myket") {
+            initWith(getByName("release"))
+            matchingFallbacks += "release"
+        }
     }
 
     compileOptions {
@@ -86,20 +91,27 @@ android {
     }
 }
 
-// Writes the role as a Kotlin constant. BuildConfig would do the same, but it is generated as Java,
-// and this project is kept free of Java sources so it builds with only the Kotlin compiler.
-abstract class GenerateRoleTask : DefaultTask() {
+// Writes the role, and whether this is the Myket build, as Kotlin constants. BuildConfig would do the same, but it is
+// generated as Java, and this project is kept free of Java sources so it builds with only the Kotlin compiler.
+abstract class GenerateBuildTask : DefaultTask() {
     @get:Input
     abstract val role: Property<String>
+
+    @get:Input
+    abstract val myket: Property<Boolean>
 
     @get:OutputDirectory
     abstract val outputDirectory: DirectoryProperty
 
     @TaskAction
     fun generate() {
-        val file = outputDirectory.get().file("ir/pocora/BuildRole.kt").asFile
+        val file = outputDirectory.get().file("ir/pocora/Build.kt").asFile
         file.parentFile.mkdirs()
-        file.writeText("package ir.pocora\n\ninternal const val BUILD_ROLE = \"${role.get()}\"\n")
+        file.writeText(
+            "package ir.pocora\n\n" +
+                "internal const val BUILD_ROLE = \"${role.get()}\"\n" +
+                "internal const val BUILD_MYKET = ${myket.get()}\n",
+        )
     }
 }
 
@@ -111,12 +123,13 @@ androidComponents {
     }
 
     onVariants { variant ->
-        val taskName = "generate" + variant.name.replaceFirstChar { it.uppercase() } + "Role"
+        val taskName = "generate" + variant.name.replaceFirstChar { it.uppercase() } + "Build"
         val task =
-            tasks.register<GenerateRoleTask>(taskName) {
+            tasks.register<GenerateBuildTask>(taskName) {
                 role.set(variant.productFlavors.first().second)
+                myket.set(variant.buildType == "myket")
             }
-        variant.sources.kotlin?.addGeneratedSourceDirectory(task, GenerateRoleTask::outputDirectory)
+        variant.sources.kotlin?.addGeneratedSourceDirectory(task, GenerateBuildTask::outputDirectory)
     }
 }
 

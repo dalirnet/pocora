@@ -25,7 +25,7 @@ make format        # format Kotlin, JSON and XML (requires ktlint, jq, xmllint)
 make test          # run the unit tests of both apps
 
 make build         # debug APKs, child and parent
-make release       # release APKs, minified
+make release       # release APKs, minified, and the Myket builds
 
 make run           # build, install and open the child app on its phone
 make run ROLE=parent

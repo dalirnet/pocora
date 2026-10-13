@@ -57,13 +57,16 @@ jobs:
           POCORA_KEY_ALIAS: ${{ secrets.POCORA_KEY_ALIAS }}
           POCORA_KEY_PASSWORD: ${{ secrets.POCORA_KEY_PASSWORD }}
         run: |
-          ./gradlew --no-configuration-cache assembleRelease
+          ./gradlew --no-configuration-cache assembleRelease assembleMyket
           mkdir -p "$RUNNER_TEMP/out"
           for role in child parent; do
             cp app/build/outputs/apk/$role/release/*.apk "$RUNNER_TEMP/out/pocora-$role-$VERSION.apk"
             # The same file under a name without the version, so the landing page in docs/ can link straight to the newest one:
             # https://github.com/<repo>/releases/latest/download/pocora-<role>.apk
+            # The app's Update button downloads it from there too.
             cp app/build/outputs/apk/$role/release/*.apk "$RUNNER_TEMP/out/pocora-$role.apk"
+            # The build for the Myket store, uploaded there by hand. It leaves updates to Myket.
+            cp app/build/outputs/apk/$role/myket/*.apk "$RUNNER_TEMP/out/pocora-$role-myket-$VERSION.apk"
           done
           (cd "$RUNNER_TEMP/out" && sha256sum *.apk > SHA256SUMS.txt)
           ls -l "$RUNNER_TEMP/out"

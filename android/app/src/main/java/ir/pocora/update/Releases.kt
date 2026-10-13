@@ -1,4 +1,4 @@
-package ir.pocora.transport
+package ir.pocora.update
 
 import android.content.Context
 import android.content.Intent

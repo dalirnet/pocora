@@ -24,6 +24,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import ir.pocora.BUILD_MYKET
 import ir.pocora.PocoraApp
 import ir.pocora.R
 import ir.pocora.Role
@@ -36,7 +37,6 @@ import ir.pocora.model.Week
 import ir.pocora.preset.PresetStore
 import ir.pocora.preset.Presets
 import ir.pocora.transport.Device
-import ir.pocora.transport.Releases
 import ir.pocora.ui.AppColors
 import ir.pocora.ui.AppIcons
 import ir.pocora.ui.Dimens
@@ -56,6 +56,8 @@ import ir.pocora.ui.component.WeekGrid
 import ir.pocora.ui.component.WeekRow
 import ir.pocora.ui.rememberFormat
 import ir.pocora.ui.text
+import ir.pocora.update.Myket
+import ir.pocora.update.Releases
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -131,9 +133,10 @@ fun LanguageAndLook(
     }
 }
 
-// The app, its name and installed version, as the last card of the settings, with an Update button. The button asks
-// GitHub for the newest release: a newer one is downloaded here, with its progress under the card, then handed to
-// Android's installer; otherwise a toast says this is the newest, or that GitHub could not be reached.
+// The app, its name and installed version, as the last card of the settings, with an Update button. In the Myket
+// build the button hands over to Myket. Otherwise it asks GitHub for the newest release: a newer one is downloaded
+// here, with its progress under the card, then handed to Android's installer; otherwise a toast says this is the
+// newest, or that GitHub could not be reached.
 @Composable
 fun AppVersion() {
     val context = LocalContext.current
@@ -156,6 +159,7 @@ fun AppVersion() {
     }
 
     fun update() {
+        if (BUILD_MYKET) return Myket.checkUpdate(context)
         busy = true
         scope.launch {
             val latest = withContext(Dispatchers.IO) { Releases.latest() }
